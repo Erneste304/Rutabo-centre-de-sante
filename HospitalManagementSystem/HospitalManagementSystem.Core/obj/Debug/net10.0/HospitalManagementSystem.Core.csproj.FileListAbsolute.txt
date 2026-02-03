@@ -1,0 +1,5 @@
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.AssemblyInfoInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.AssemblyInfo.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.csproj.CoreCompileInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.sourcelink.json
