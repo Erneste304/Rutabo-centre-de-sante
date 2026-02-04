@@ -57,6 +57,11 @@ namespace HospitalManagementSystem.Data.Repositories
             }
         }
 
+                public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Patients.AnyAsync(p => p.PatientId == id);
+        }
+
         public async Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(int patientId)
         {
             return await _context.Appointments

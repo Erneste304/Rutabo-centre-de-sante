@@ -1,80 +1,152 @@
-﻿using HospitalManagementSystem.Core.Models;
-using HospitalManagementSystem.Core.Services;
+﻿using System;
+using System.Threading.Tasks;
+using HospitalManagementSystem.Console.Dashboard;
+using HospitalManagementSystem.Console.Models;
+using HospitalManagementSystem.Console.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 class Program
 {
     static async Task Main(string[] args)
     {
+        Console.Title = "Hospital Management System";
+        
+        // Setup Dependency Injection
         var services = new ServiceCollection();
         ConfigureServices(services);
-        
         var serviceProvider = services.BuildServiceProvider();
-        var authService = serviceProvider.GetService<IAuthService>();
         
-        await ShowMainMenu(authService);
+        // Get services
+        var menuService = serviceProvider.GetRequiredService<IMenuService>();
+        var authService = serviceProvider.GetRequiredService<IAuthenticationService>();
+        var dashboardService = serviceProvider.GetRequiredService<IDashboardService>();
+        
+        await RunApplication(menuService, authService, dashboardService);
     }
-
+    
     static void ConfigureServices(ServiceCollection services)
     {
-        // Register services here
-        // services.AddScoped<IUserService, UserService>();
-        // services.AddScoped<IPatientService, PatientService>();
+        services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<IDataService, DataService>();
+        services.AddSingleton<IMenuService, MenuService>();
+        services.AddSingleton<IDashboardService, DashboardService>();
     }
-
-    static async Task ShowMainMenu(IAuthService? authService)
+    
+    static async Task RunApplication(IMenuService menuService, IAuthenticationService authService, IDashboardService dashboardService)
     {
         while (true)
         {
-            Console.Clear();
-            Console.WriteLine("=== Hospital Management System ===");
-            Console.WriteLine("1. Login");
-            Console.WriteLine("2. Register");
-            Console.WriteLine("3. Exit");
-            Console.Write("Select option: ");
-            
+            await menuService.ShowMainMenuAsync();
             var choice = Console.ReadLine();
             
             switch (choice)
             {
                 case "1":
-                    await Login(authService);
+                    await Login(authService, dashboardService);
                     break;
                 case "2":
-                    await Register();
+                    ((MenuService)menuService).ShowEmergencyInfo();
                     break;
                 case "3":
+                    ((MenuService)menuService).ShowHospitalDirectory();
+                    break;
+                case "4":
+                    await ShowVisitorInformation();
+                    break;
+                case "5":
+                    await ShowAbout();
+                    break;
+                case "6":
+                    Console.WriteLine("\nThank you for using Hospital Management System!");
                     return;
                 default:
-                    Console.WriteLine("Invalid option. Press any key to continue...");
+                    Console.WriteLine("\nInvalid option. Press any key to continue...");
                     Console.ReadKey();
                     break;
             }
         }
     }
-
-    static async Task Login(IAuthService? authService)
+    
+    static async Task Login(IAuthenticationService authService, IDashboardService dashboardService)
     {
         Console.Clear();
-        Console.WriteLine("=== Login ===");
+        Console.WriteLine("=== LOGIN ===");
+        
         Console.Write("Username: ");
         var username = Console.ReadLine();
+        
         Console.Write("Password: ");
         var password = Console.ReadLine();
         
-        // Implement login logic
-        Console.WriteLine("Login functionality to be implemented...");
-        Console.ReadKey();
+        Console.WriteLine("\nAuthenticating...");
+        
+        var session = await authService.AuthenticateAsync(username, password);
+        
+        if (session != null)
+        {
+            Console.WriteLine($"\nLogin successful! Welcome, {session.FullName}");
+            Console.WriteLine($"User Type: {session.UserType}");
+            await Task.Delay(1500);
+            
+            await dashboardService.ShowDashboardAsync(session);
+        }
+        else
+        {
+            Console.WriteLine("\nInvalid username or password!");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
     }
-
-    static async Task Register()
+    
+    static async Task ShowVisitorInformation()
     {
         Console.Clear();
-        Console.WriteLine("=== Registration ===");
-        
-        // Implement registration logic
-        
-        Console.WriteLine("Registration functionality to be implemented...");
+        Console.WriteLine("╔══════════════════════════════════════╗");
+        Console.WriteLine("║         VISITOR INFORMATION          ║");
+        Console.WriteLine("╠══════════════════════════════════════╣");
+        Console.WriteLine("║   Visiting Hours:                    ║");
+        Console.WriteLine("║   • General: 10:00 AM - 8:00 PM      ║");
+        Console.WriteLine("║   • ICU: 11:00 AM - 7:00 PM          ║");
+        Console.WriteLine("║   • Pediatrics: 9:00 AM - 9:00 PM    ║");
+        Console.WriteLine("║                                      ║");
+        Console.WriteLine("║   Parking:                           ║");
+        Console.WriteLine("║   • Visitor Parking: Lot A & B       ║");
+        Console.WriteLine("║   • First 2 hours: Free              ║");
+        Console.WriteLine("║   • Disabled Parking: Available      ║");
+        Console.WriteLine("║                                      ║");
+        Console.WriteLine("║   Amenities:                         ║");
+        Console.WriteLine("║   • Cafeteria: Floor 1               ║");
+        Console.WriteLine("║   • Gift Shop: Main Lobby            ║");
+        Console.WriteLine("║   • Chapel: Floor 2                  ║");
+        Console.WriteLine("║   • WiFi: Free for visitors          ║");
+        Console.WriteLine("╚══════════════════════════════════════╝");
+        Console.WriteLine("\nPress any key to continue...");
+        Console.ReadKey();
+    }
+    
+    static async Task ShowAbout()
+    {
+        Console.Clear();
+        Console.WriteLine("╔══════════════════════════════════════╗");
+        Console.WriteLine("║             ABOUT                    ║");
+        Console.WriteLine("╠══════════════════════════════════════╣");
+        Console.WriteLine("║   Hospital Management System v1.0    ║");
+        Console.WriteLine("║                                      ║");
+        Console.WriteLine("║   Developed by:                      ║");
+        Console.WriteLine("║   • Your Name/Team                  ║");
+        Console.WriteLine("║                                      ║");
+        Console.WriteLine("║   Features:                          ║");
+        Console.WriteLine("║   • Patient Management              ║");
+        Console.WriteLine("║   • Appointment Scheduling          ║");
+        Console.WriteLine("║   • Medical Records                 ║");
+        Console.WriteLine("║   • Billing System                  ║");
+        Console.WriteLine("║   • Role-based Dashboards           ║");
+        Console.WriteLine("║                                      ║");
+        Console.WriteLine("║   Contact:                          ║");
+        Console.WriteLine("║   • support@hospital.com            ║");
+        Console.WriteLine("║   • (555) 123-4567                  ║");
+        Console.WriteLine("╚══════════════════════════════════════╝");
+        Console.WriteLine("\nPress any key to continue...");
         Console.ReadKey();
     }
 }

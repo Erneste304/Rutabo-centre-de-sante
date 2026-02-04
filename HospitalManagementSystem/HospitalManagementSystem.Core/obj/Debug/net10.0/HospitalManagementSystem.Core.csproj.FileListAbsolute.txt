@@ -3,3 +3,10 @@ C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\Hosp
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.AssemblyInfo.cs
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.csproj.CoreCompileInputs.cache
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.sourcelink.json
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\bin\Debug\net10.0\HospitalManagementSystem.Core.deps.json
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\bin\Debug\net10.0\HospitalManagementSystem.Core.dll
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\bin\Debug\net10.0\HospitalManagementSystem.Core.pdb
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.dll
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\refint\HospitalManagementSystem.Core.dll
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\HospitalManagementSystem.Core.pdb
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Core\obj\Debug\net10.0\ref\HospitalManagementSystem.Core.dll

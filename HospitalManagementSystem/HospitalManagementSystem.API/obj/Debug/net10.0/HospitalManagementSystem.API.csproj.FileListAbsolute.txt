@@ -1,0 +1,9 @@
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.csproj.AssemblyReference.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.AssemblyInfoInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.AssemblyInfo.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.csproj.CoreCompileInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.sourcelink.json

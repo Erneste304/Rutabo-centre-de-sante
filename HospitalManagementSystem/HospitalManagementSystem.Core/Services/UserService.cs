@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using HospitalManagementSystem.Core.Models;
-using HospitalManagementSystem.Data.Repositories;
+using HospitalManagementSystem.Core.Repositories;
 
 namespace HospitalManagementSystem.Core.Services
 {
