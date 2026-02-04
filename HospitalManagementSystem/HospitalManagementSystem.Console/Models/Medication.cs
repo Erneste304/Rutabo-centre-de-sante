@@ -1,4 +1,4 @@
-﻿namespace HospitalManagementSystem.Console.Models
+﻿namespace HospitalManagementSystem.ConsoleApp.Models
 {
     public class Medication
     {

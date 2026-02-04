@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace HospitalManagementSystem.Console.Services
+namespace HospitalManagementSystem.ConsoleApp.Services
 {
     public interface IMenuService
     {
@@ -19,12 +19,13 @@ namespace HospitalManagementSystem.Console.Services
             Console.WriteLine("╔══════════════════════════════════════╗");
             Console.WriteLine("║     HOSPITAL MANAGEMENT SYSTEM       ║");
             Console.WriteLine("╠══════════════════════════════════════╣");
-            Console.WriteLine("║   1. Login                           ║");
-            Console.WriteLine("║   2. Emergency Information           ║");
-            Console.WriteLine("║   3. Hospital Directory              ║");
-            Console.WriteLine("║   4. Visitor Information             ║");
-            Console.WriteLine("║   5. About                           ║");
-            Console.WriteLine("║   6. Exit                            ║");
+            Console.WriteLine("║   1. 📝 Register                       ║");
+            Console.WriteLine("║   2. Login                           ║");
+            Console.WriteLine("║   3. Emergency Information           ║");
+            Console.WriteLine("║   4. Hospital Directory              ║");
+            Console.WriteLine("║   5. Visitor Information             ║");
+            Console.WriteLine("║   6. About                           ║");
+            Console.WriteLine("║   7. Exit                            ║");
             Console.WriteLine("╚══════════════════════════════════════╝");
             Console.Write("\nSelect option: ");
         }

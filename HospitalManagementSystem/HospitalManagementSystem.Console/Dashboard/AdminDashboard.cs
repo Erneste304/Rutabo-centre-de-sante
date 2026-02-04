@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace HospitalManagementSystem.Console.Dashboard
+namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class AdminDashboard : IDashboard
     {
@@ -133,6 +133,21 @@ namespace HospitalManagementSystem.Console.Dashboard
             Console.WriteLine("5. Back to Dashboard");
             Console.Write("\nSelect: ");
             
+            Console.ReadKey();
+        }
+
+        private async Task ManagePatients()
+        {
+            Console.Clear();
+            Console.WriteLine("=== PATIENT MANAGEMENT ===\n");
+
+            Console.WriteLine("1. Register Patient");
+            Console.WriteLine("2. View All Patients");
+            Console.WriteLine("3. Update Patient Details");
+            Console.WriteLine("4. Discharge Patient");
+            Console.WriteLine("5. Back to Dashboard");
+            Console.Write("\nSelect: ");
+
             Console.ReadKey();
         }
         

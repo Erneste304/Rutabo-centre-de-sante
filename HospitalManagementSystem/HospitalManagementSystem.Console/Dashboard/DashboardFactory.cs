@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HospitalManagementSystem.Console.Dashboard
+namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public static class DashboardFactory
     {

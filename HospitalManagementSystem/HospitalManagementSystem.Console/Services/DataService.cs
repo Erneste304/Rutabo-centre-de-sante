@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HospitalManagementSystem.Console.Models;
+using HospitalManagementSystem.ConsoleApp.Models;
 
-namespace HospitalManagementSystem.Console.Services
+namespace HospitalManagementSystem.ConsoleApp.Services
 {
     public interface IDataService
     {

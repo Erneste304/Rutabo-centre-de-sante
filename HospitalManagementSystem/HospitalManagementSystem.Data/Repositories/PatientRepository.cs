@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystem.Core.Models;
-using HospitalManagementSystem.Data.Repositories;
+using HospitalManagementSystem.Core.Repositories;
 
 namespace HospitalManagementSystem.Data.Repositories
 {
@@ -70,11 +70,5 @@ namespace HospitalManagementSystem.Data.Repositories
                 .OrderByDescending(a => a.AppointmentDate)
                 .ToListAsync();
         }
-    }
-
-    public interface IPatientRepository : IRepository<Patient>
-    {
-        Task<Patient?> GetByUserIdAsync(int userId);
-        Task<IEnumerable<Appointment>> GetPatientAppointmentsAsync(int patientId);
     }
 }

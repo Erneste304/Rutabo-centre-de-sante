@@ -1,4 +1,4 @@
-﻿namespace HospitalManagementSystem.Console.Dashboard
+﻿namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public interface IDashboard
     {

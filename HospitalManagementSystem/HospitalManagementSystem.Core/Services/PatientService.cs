@@ -1,5 +1,5 @@
 using HospitalManagementSystem.Core.Models;
-using HospitalManagementSystem.Data.Repositories;
+using HospitalManagementSystem.Core.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,7 +35,7 @@ namespace HospitalManagementSystem.Core.Services
             return await _patientRepository.GetPatientAppointmentsAsync(id);
         }
 
-        public async Task<Patient> GetPatientByIdAsync(int id)
+        public async Task<Patient?> GetPatientByIdAsync(int id)
         {
             return await _patientRepository.GetByIdAsync(id);
         }

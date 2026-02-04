@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace HospitalManagementSystem.Console.Dashboard
+namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class DoctorDashboard : IDashboard
     {

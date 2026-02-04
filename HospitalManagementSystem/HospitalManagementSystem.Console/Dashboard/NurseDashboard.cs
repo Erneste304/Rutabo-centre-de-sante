@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HospitalManagementSystem.Console.Services;
+using HospitalManagementSystem.ConsoleApp.Services;
 
-namespace HospitalManagementSystem.Console.Dashboard
+namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class NurseDashboard : IDashboard
     {

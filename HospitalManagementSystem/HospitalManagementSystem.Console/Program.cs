@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HospitalManagementSystem.Console.Dashboard;
-using HospitalManagementSystem.Console.Models;
-using HospitalManagementSystem.Console.Services;
+using HospitalManagementSystem.ConsoleApp.Dashboard;
+using HospitalManagementSystem.ConsoleApp.Models;
+using HospitalManagementSystem.ConsoleApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 class Program
@@ -42,21 +42,24 @@ class Program
             switch (choice)
             {
                 case "1":
-                    await Login(authService, dashboardService);
+                    await Register(authService);
                     break;
                 case "2":
-                    ((MenuService)menuService).ShowEmergencyInfo();
+                    await Login(authService, dashboardService);
                     break;
                 case "3":
-                    ((MenuService)menuService).ShowHospitalDirectory();
+                    ((MenuService)menuService).ShowEmergencyInfo();
                     break;
                 case "4":
-                    await ShowVisitorInformation();
+                    ((MenuService)menuService).ShowHospitalDirectory();
                     break;
                 case "5":
-                    await ShowAbout();
+                    await ShowVisitorInformation();
                     break;
                 case "6":
+                    await ShowAbout();
+                    break;
+                case "7":
                     Console.WriteLine("\nThank you for using Hospital Management System!");
                     return;
                 default:
@@ -96,6 +99,40 @@ class Program
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
+    }
+
+    static async Task Register(IAuthenticationService authService)
+    {
+        Console.Clear();
+        Console.WriteLine("=== REGISTER ===");
+
+        Console.Write("Username: ");
+        var username = Console.ReadLine()?.Trim();
+
+        Console.Write("Email: ");
+        var email = Console.ReadLine()?.Trim();
+
+        Console.Write("Full name: ");
+        var fullName = Console.ReadLine()?.Trim();
+
+        Console.Write("Password: ");
+        var password = Console.ReadLine();
+
+        Console.WriteLine("\nRegistering...");
+
+        var created = await authService.RegisterAsync(username ?? string.Empty, email ?? string.Empty, password ?? string.Empty, fullName ?? string.Empty, "Patient");
+
+        if (created)
+        {
+            Console.WriteLine("\nRegistration successful! You can now login.");
+        }
+        else
+        {
+            Console.WriteLine("\nRegistration failed. Username or email may already be in use, or input was invalid.");
+        }
+
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
     }
     
     static async Task ShowVisitorInformation()
