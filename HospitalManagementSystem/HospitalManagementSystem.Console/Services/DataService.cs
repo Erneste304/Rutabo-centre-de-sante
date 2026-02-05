@@ -27,6 +27,37 @@ namespace HospitalManagementSystem.ConsoleApp.Services
         Task<IReadOnlyList<MedicalRecordRequest>> GetPendingRecordRequestsAsync();
         Task<bool> ApproveRecordRequestAsync(int requestId, int doctorId, string doctorName);
         Task<bool> IsRecordRequestApprovedAsync(int patientId);
+        
+        // User Activities & Audit
+        Task<List<UserActivity>> GetUserActivitiesAsync(int? userId = null);
+        Task<bool> LogUserActivityAsync(int userId, string username, string action, string details);
+        Task<List<AuditLog>> GetAuditLogsAsync(DateTime? fromDate = null, DateTime? toDate = null, string? username = null);
+        Task<bool> LogAuditAsync(int userId, string username, string action, string entityType, int? entityId, string details);
+        
+        // Departments
+        Task<List<Department>> GetDepartmentsAsync();
+        Task<bool> AddDepartmentAsync(Department department);
+        Task<bool> UpdateDepartmentAsync(Department department);
+        
+        // Transactions & Finance
+        Task<List<Transaction>> GetTransactionsAsync(string? status = null);
+        Task<bool> ApproveTransactionAsync(int transactionId, int approvedBy);
+        Task<List<Bill>> GetAllBillsAsync();
+        Task<List<Payment>> GetAllPaymentsAsync();
+        
+        // Doctor Management
+        Task<bool> AddDoctorAsync(Doctor doctor);
+        Task<bool> UpdateDoctorAsync(Doctor doctor);
+        Task<Dictionary<string, object>> GetDoctorPerformanceAsync(int doctorId);
+        
+        // Patient Management
+        Task<Patient?> GetPatientByIdAsync(int patientId);
+        Task<bool> DischargePatientAsync(int patientId);
+        
+        // Room Management
+        Task<bool> AddRoomAsync(Room room);
+        Task<bool> UpdateRoomAsync(Room room);
+        Task<Dictionary<string, object>> GetRoomUtilizationAsync();
     }
     
     public class DataService : IDataService
@@ -38,6 +69,15 @@ namespace HospitalManagementSystem.ConsoleApp.Services
         private int _nextBillId = 1001;
         private int _nextPaymentId = 5001;
         private int _nextRecordRequestId = 1;
+
+        private readonly List<UserActivity> _userActivities = new();
+        private readonly List<AuditLog> _auditLogs = new();
+        private readonly List<Department> _departments = new();
+        private readonly List<Transaction> _transactions = new();
+        private int _nextActivityId = 1;
+        private int _nextLogId = 1;
+        private int _nextDeptId = 1;
+        private int _nextTransactionId = 1;
 
         public DataService()
         {
@@ -336,6 +376,190 @@ namespace HospitalManagementSystem.ConsoleApp.Services
             var approved = _recordRequests.Any(r => r.PatientId == patientId &&
                                                     string.Equals(r.Status, "Approved", StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(approved);
+        }
+
+        // User Activities & Audit
+        public Task<List<UserActivity>> GetUserActivitiesAsync(int? userId = null)
+        {
+            var activities = userId.HasValue
+                ? _userActivities.Where(a => a.UserId == userId.Value).ToList()
+                : _userActivities.ToList();
+            
+            return Task.FromResult(activities.OrderByDescending(a => a.Timestamp).ToList());
+        }
+
+        public Task<bool> LogUserActivityAsync(int userId, string username, string action, string details)
+        {
+            _userActivities.Add(new UserActivity
+            {
+                ActivityId = _nextActivityId++,
+                UserId = userId,
+                Username = username,
+                Action = action,
+                Details = details,
+                Timestamp = DateTime.Now
+            });
+            return Task.FromResult(true);
+        }
+
+        public Task<List<AuditLog>> GetAuditLogsAsync(DateTime? fromDate = null, DateTime? toDate = null, string? username = null)
+        {
+            var logs = _auditLogs.AsEnumerable();
+            
+            if (fromDate.HasValue)
+                logs = logs.Where(l => l.Timestamp >= fromDate.Value);
+            if (toDate.HasValue)
+                logs = logs.Where(l => l.Timestamp <= toDate.Value);
+            if (!string.IsNullOrWhiteSpace(username))
+                logs = logs.Where(l => l.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            
+            return Task.FromResult(logs.OrderByDescending(l => l.Timestamp).ToList());
+        }
+
+        public Task<bool> LogAuditAsync(int userId, string username, string action, string entityType, int? entityId, string details)
+        {
+            _auditLogs.Add(new AuditLog
+            {
+                LogId = _nextLogId++,
+                UserId = userId,
+                Username = username,
+                Action = action,
+                EntityType = entityType,
+                EntityId = entityId,
+                Details = details,
+                Timestamp = DateTime.Now
+            });
+            return Task.FromResult(true);
+        }
+
+        // Departments
+        public Task<List<Department>> GetDepartmentsAsync()
+        {
+            return Task.FromResult(_departments.ToList());
+        }
+
+        public Task<bool> AddDepartmentAsync(Department department)
+        {
+            department.DepartmentId = _nextDeptId++;
+            _departments.Add(department);
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> UpdateDepartmentAsync(Department department)
+        {
+            var existing = _departments.FirstOrDefault(d => d.DepartmentId == department.DepartmentId);
+            if (existing != null)
+            {
+                existing.Name = department.Name;
+                existing.HeadDoctorName = department.HeadDoctorName;
+                existing.HeadDoctorId = department.HeadDoctorId;
+                existing.StaffCount = department.StaffCount;
+                existing.Description = department.Description;
+                existing.IsActive = department.IsActive;
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
+        // Transactions & Finance
+        public Task<List<Transaction>> GetTransactionsAsync(string? status = null)
+        {
+            var transactions = string.IsNullOrWhiteSpace(status)
+                ? _transactions.ToList()
+                : _transactions.Where(t => t.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
+            
+            return Task.FromResult(transactions.OrderByDescending(t => t.Date).ToList());
+        }
+
+        public Task<bool> ApproveTransactionAsync(int transactionId, int approvedBy)
+        {
+            var transaction = _transactions.FirstOrDefault(t => t.TransactionId == transactionId);
+            if (transaction != null)
+            {
+                transaction.Status = "Approved";
+                transaction.ApprovedBy = approvedBy;
+                transaction.ApprovedAt = DateTime.Now;
+                return Task.FromResult(true);
+            }
+            return Task.FromResult(false);
+        }
+
+        public Task<List<Bill>> GetAllBillsAsync()
+        {
+            return Task.FromResult(_bills.OrderByDescending(b => b.Date).ToList());
+        }
+
+        public Task<List<Payment>> GetAllPaymentsAsync()
+        {
+            return Task.FromResult(_payments.OrderByDescending(p => p.Date).ToList());
+        }
+
+        // Doctor Management
+        public Task<bool> AddDoctorAsync(Doctor doctor)
+        {
+            // In real app, this would save to database
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> UpdateDoctorAsync(Doctor doctor)
+        {
+            // In real app, this would update database
+            return Task.FromResult(true);
+        }
+
+        public Task<Dictionary<string, object>> GetDoctorPerformanceAsync(int doctorId)
+        {
+            var performance = new Dictionary<string, object>
+            {
+                { "TotalPatients", 45 },
+                { "MonthlyConsultations", 156 },
+                { "SuccessRate", "94%" },
+                { "AverageRating", 4.7 },
+                { "TotalAppointments", 320 },
+                { "CompletedAppointments", 301 }
+            };
+            return Task.FromResult(performance);
+        }
+
+        // Patient Management
+        public async Task<Patient?> GetPatientByIdAsync(int patientId)
+        {
+            var patients = await GetPatientsAsync();
+            return patients.FirstOrDefault(p => p.PatientId == patientId);
+        }
+
+        public Task<bool> DischargePatientAsync(int patientId)
+        {
+            // In real app, this would update patient status and room
+            return Task.FromResult(true);
+        }
+
+        // Room Management
+        public Task<bool> AddRoomAsync(Room room)
+        {
+            // In real app, this would save to database
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> UpdateRoomAsync(Room room)
+        {
+            // In real app, this would update database
+            return Task.FromResult(true);
+        }
+
+        public Task<Dictionary<string, object>> GetRoomUtilizationAsync()
+        {
+            var utilization = new Dictionary<string, object>
+            {
+                { "TotalRooms", 150 },
+                { "OccupiedRooms", 120 },
+                { "AvailableRooms", 30 },
+                { "UtilizationRate", "80%" },
+                { "GeneralRooms", 100 },
+                { "ICURooms", 20 },
+                { "OperationRooms", 30 }
+            };
+            return Task.FromResult(utilization);
         }
     }
 }

@@ -30,6 +30,8 @@ class Program
         services.AddSingleton<IDataService, DataService>();
         services.AddSingleton<IMenuService, MenuService>();
         services.AddSingleton<IDashboardService, DashboardService>();
+        services.AddSingleton<IDataService, DataService>();
+        services.AddSingleton<IAuthenticationService, AuthenticationService>();
     }
     
     static async Task RunApplication(IMenuService menuService, IAuthenticationService authService, IDashboardService dashboardService)
@@ -123,6 +125,7 @@ class Program
         Console.WriteLine("2. Doctor (admin approval required)");
         Console.WriteLine("3. Nurse (admin approval required)");
         Console.WriteLine("4. Receptionist (admin approval required)");
+        Console.WriteLine("5. Accountant (admin approval required)");
         Console.Write("Role: ");
         var roleChoice = Console.ReadLine();
 
@@ -131,6 +134,7 @@ class Program
             "2" => "Doctor",
             "3" => "Nurse",
             "4" => "Receptionist",
+            "5" => "Accountant",
             _ => "Patient"
         };
         

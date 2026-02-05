@@ -17,6 +17,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 "patient" => new PatientDashboard(session, dataService, authService),
                 "nurse" => new NurseDashboard(session, dataService),
                 "receptionist" => new ReceptionistDashboard(session, dataService),
+                "accountant" => new AccountantDashboard(session, dataService),
                 _ => throw new ArgumentException($"Unknown user type: {session.UserType}")
             };
         }
