@@ -1,19 +1,23 @@
-﻿using System;
+using System;
+using HospitalManagementSystem.ConsoleApp.Models;
+using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public static class DashboardFactory
     {
-        public static IDashboard CreateDashboard(string userType, int userId, string userName, string? additionalInfo = null)
+        public static IDashboard CreateDashboard(UserSession session, IDataService dataService, IAuthenticationService authService)
         {
-            return userType.ToLower() switch
+            var userType = session.UserType.ToLower();
+
+            return userType switch
             {
-                "admin" => new AdminDashboard(),
-                "doctor" => new DoctorDashboard(userId, userName, additionalInfo ?? "General"),
-                "patient" => new PatientDashboard(userId, userName),
-                "nurse" => new NurseDashboard(userId, userName, additionalInfo),
-                "receptionist" => new ReceptionistDashboard(userId, userName),
-                _ => throw new ArgumentException($"Unknown user type: {userType}")
+                "admin" => new AdminDashboard(session, authService, dataService),
+                "doctor" => new DoctorDashboard(session, dataService),
+                "patient" => new PatientDashboard(session, dataService, authService),
+                "nurse" => new NurseDashboard(session, dataService),
+                "receptionist" => new ReceptionistDashboard(session, dataService),
+                _ => throw new ArgumentException($"Unknown user type: {session.UserType}")
             };
         }
     }

@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using HospitalManagementSystem.ConsoleApp.Models;
+using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class DoctorDashboard : IDashboard
     {
-        private readonly int _doctorId;
-        private readonly string _doctorName;
-        private readonly string _specialization;
+        private readonly UserSession _session;
+        private readonly IDataService _dataService;
 
-        public DoctorDashboard(int doctorId, string doctorName, string specialization)
+        public DoctorDashboard(UserSession session, IDataService dataService)
         {
-            _doctorId = doctorId;
-            _doctorName = doctorName;
-            _specialization = specialization;
+            _session = session;
+            _dataService = dataService;
         }
 
         public async Task ShowAsync()
@@ -22,7 +22,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             {
                 Console.Clear();
                 Console.WriteLine($"=== DOCTOR DASHBOARD ===");
-                Console.WriteLine($"Dr. {_doctorName} - {_specialization}");
+                Console.WriteLine($"Dr. {_session.FullName} - {_session.Specialization ?? "General"}");
                 Console.WriteLine("==========================");
                 Console.WriteLine("1. View Today's Schedule");
                 Console.WriteLine("2. View All Appointments");
@@ -32,7 +32,8 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 Console.WriteLine("6. View Patient History");
                 Console.WriteLine("7. Set Availability");
                 Console.WriteLine("8. View Reports");
-                Console.WriteLine("9. Logout");
+                Console.WriteLine("9. Approve Record Requests");
+                Console.WriteLine("10. Logout");
                 Console.Write("\nSelect option: ");
                 
                 var choice = Console.ReadLine();
@@ -64,6 +65,9 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                         await ViewReports();
                         break;
                     case "9":
+                        await ApproveRecordRequests();
+                        break;
+                    case "10":
                         Console.WriteLine("\nLogging out...");
                         await Task.Delay(1000);
                         return;
@@ -226,6 +230,50 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 Console.WriteLine("Average Daily Patients: 12");
             }
             
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+        
+        private async Task ApproveRecordRequests()
+        {
+            Console.Clear();
+            Console.WriteLine("=== MEDICAL RECORD DOWNLOAD REQUESTS ===\n");
+
+            var requests = await _dataService.GetPendingRecordRequestsAsync();
+            if (requests.Count == 0)
+            {
+                Console.WriteLine("No pending medical record download requests.");
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            for (int i = 0; i < requests.Count; i++)
+            {
+                var r = requests[i];
+                Console.WriteLine($"{i + 1}. Request #{r.RequestId} - Patient: {r.PatientName} (ID: {r.PatientId}) - Requested: {r.RequestedAt:g}");
+            }
+
+            Console.Write("\nEnter number to approve (or 0 to cancel): ");
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out var index) && index > 0 && index <= requests.Count)
+            {
+                var selected = requests[index - 1];
+                var approved = await _dataService.ApproveRecordRequestAsync(selected.RequestId, _session.UserId, _session.FullName);
+                if (approved)
+                {
+                    Console.WriteLine($"\nRequest #{selected.RequestId} for patient {selected.PatientName} approved. The patient can now download their medical records.");
+                }
+                else
+                {
+                    Console.WriteLine("\nFailed to approve request. It may have been processed already.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nNo changes made.");
+            }
+
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }

@@ -1,10 +1,24 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using HospitalManagementSystem.ConsoleApp.Models;
+using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class AdminDashboard : IDashboard
     {
+        private readonly UserSession _session;
+        private readonly IAuthenticationService _authService;
+        private readonly IDataService _dataService;
+
+        public AdminDashboard(UserSession session, IAuthenticationService authService, IDataService dataService)
+        {
+            _session = session;
+            _authService = authService;
+            _dataService = dataService;
+        }
+
         public async Task ShowAsync()
         {
             while (true)
@@ -12,6 +26,8 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 Console.Clear();
                 Console.WriteLine("=== ADMINISTRATOR DASHBOARD ===");
                 Console.WriteLine("===============================");
+                Console.WriteLine($"Logged in as: {_session.FullName} ({_session.UserType})");
+                Console.WriteLine("-------------------------------");
                 Console.WriteLine("1. User Management");
                 Console.WriteLine("2. Doctor Management");
                 Console.WriteLine("3. Patient Management");
@@ -77,12 +93,13 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.WriteLine("=== USER MANAGEMENT ===\n");
             
             Console.WriteLine("1. Create New User");
-            Console.WriteLine("2. View All Users");
-            Console.WriteLine("3. Update User Role");
-            Console.WriteLine("4. Deactivate User");
-            Console.WriteLine("5. Reset Password");
-            Console.WriteLine("6. View User Activity");
-            Console.WriteLine("7. Back to Dashboard");
+            Console.WriteLine("2. Approve Pending Users");
+            Console.WriteLine("3. View All Users");
+            Console.WriteLine("4. Update User Role");
+            Console.WriteLine("5. Deactivate User");
+            Console.WriteLine("6. Reset Password");
+            Console.WriteLine("7. View User Activity");
+            Console.WriteLine("8. Back to Dashboard");
             Console.Write("\nSelect: ");
             
             var choice = Console.ReadLine();
@@ -110,9 +127,55 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 
                 Console.WriteLine($"\nUser '{username}' created successfully!");
             }
+
+            if (choice == "2")
+            {
+                await ApprovePendingUsers();
+            }
             
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
+        }
+
+        private async Task ApprovePendingUsers()
+        {
+            Console.Clear();
+            Console.WriteLine("=== APPROVE PENDING USERS ===\n");
+
+            var pending = await _authService.GetPendingUsersAsync();
+
+            if (pending.Count == 0)
+            {
+                Console.WriteLine("There are no users waiting for approval.");
+                return;
+            }
+
+            var list = new List<UserSession>(pending);
+            for (int i = 0; i < list.Count; i++)
+            {
+                var u = list[i];
+                Console.WriteLine($"{i + 1}. {u.Username} - {u.FullName} ({u.UserType})");
+            }
+
+            Console.Write("\nEnter number to approve (or 0 to cancel): ");
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out var index) && index > 0 && index <= list.Count)
+            {
+                var user = list[index - 1];
+                var result = await _authService.ApproveUserAsync(user.Username);
+                if (result)
+                {
+                    Console.WriteLine($"\nUser '{user.Username}' approved successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("\nFailed to approve user. They may have been updated already.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nNo changes made.");
+            }
         }
         
         private async Task ManageDoctors()

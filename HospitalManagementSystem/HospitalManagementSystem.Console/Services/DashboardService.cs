@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using HospitalManagementSystem.ConsoleApp.Dashboard;
 using HospitalManagementSystem.ConsoleApp.Models;
+using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Services
 {
@@ -15,21 +16,17 @@ namespace HospitalManagementSystem.ConsoleApp.Services
     public class DashboardService : IDashboardService
     {
         private readonly IDataService _dataService;
+        private readonly IAuthenticationService _authService;
 
-        public DashboardService(IDataService dataService)
+        public DashboardService(IDataService dataService, IAuthenticationService authService)
         {
             _dataService = dataService;
+            _authService = authService;
         }
 
         public async Task ShowDashboardAsync(UserSession session)
         {
-            var dashboard = DashboardFactory.CreateDashboard(
-                session.UserType, 
-                session.UserId, 
-                session.FullName, 
-                session.Specialization
-            );
-            
+            var dashboard = DashboardFactory.CreateDashboard(session, _dataService, _authService);
             await dashboard.ShowAsync();
         }
 

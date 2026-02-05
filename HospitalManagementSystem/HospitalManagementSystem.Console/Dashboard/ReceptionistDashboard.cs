@@ -1,20 +1,19 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using HospitalManagementSystem.ConsoleApp.Models;
 using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class ReceptionistDashboard : IDashboard
     {
-        private readonly int _receptionistId;
-        private readonly string _receptionistName;
+        private readonly UserSession _session;
         private readonly IDataService _dataService;
 
-        public ReceptionistDashboard(int receptionistId, string receptionistName)
+        public ReceptionistDashboard(UserSession session, IDataService dataService)
         {
-            _receptionistId = receptionistId;
-            _receptionistName = receptionistName;
-            _dataService = new DataService();
+            _session = session;
+            _dataService = dataService;
         }
 
         public async Task ShowAsync()
@@ -23,7 +22,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             {
                 Console.Clear();
                 Console.WriteLine($"=== RECEPTIONIST DASHBOARD ===");
-                Console.WriteLine($"Welcome, {_receptionistName}!");
+                Console.WriteLine($"Welcome, {_session.FullName}!");
                 Console.WriteLine("===============================");
                 Console.WriteLine("1. Patient Registration");
                 Console.WriteLine("2. Appointment Scheduling");

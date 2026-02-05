@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using HospitalManagementSystem.ConsoleApp.Models;
 
@@ -17,10 +19,71 @@ namespace HospitalManagementSystem.ConsoleApp.Services
         Task<bool> ScheduleAppointmentAsync(Appointment appointment);
         Task<bool> UpdateAppointmentAsync(Appointment appointment);
         Task<DashboardStats> GetDashboardStatsAsync(string userType);
+        Task<IReadOnlyList<Bill>> GetBillsForPatientAsync(int patientId);
+        Task<IReadOnlyList<Payment>> GetPaymentsForPatientAsync(int patientId);
+        Task<bool> PayBillAsync(int billId, int patientId, decimal amount, string method, string reference);
+        Task<bool> HasPaidBillAsync(int patientId);
+        Task<MedicalRecordRequest> CreateMedicalRecordRequestAsync(int patientId, string patientName);
+        Task<IReadOnlyList<MedicalRecordRequest>> GetPendingRecordRequestsAsync();
+        Task<bool> ApproveRecordRequestAsync(int requestId, int doctorId, string doctorName);
+        Task<bool> IsRecordRequestApprovedAsync(int patientId);
     }
-
+    
     public class DataService : IDataService
     {
+        // Mock in-memory data. In a real app, this would use a database or API.
+        private readonly List<Bill> _bills = new();
+        private readonly List<Payment> _payments = new();
+        private readonly List<MedicalRecordRequest> _recordRequests = new();
+        private int _nextBillId = 1001;
+        private int _nextPaymentId = 5001;
+        private int _nextRecordRequestId = 1;
+
+        public DataService()
+        {
+            // Seed some example billing data
+            _bills.Add(new Bill
+            {
+                BillId = _nextBillId++,
+                PatientId = 1001,
+                Date = DateTime.Today.AddDays(-5),
+                Amount = 150m,
+                Status = "Paid",
+                Description = "Consultation"
+            });
+
+            _bills.Add(new Bill
+            {
+                BillId = _nextBillId++,
+                PatientId = 1001,
+                Date = DateTime.Today.AddDays(-1),
+                Amount = 200m,
+                Status = "Pending",
+                Description = "Lab Tests"
+            });
+
+            _bills.Add(new Bill
+            {
+                BillId = _nextBillId++,
+                PatientId = 1002,
+                Date = DateTime.Today.AddDays(-2),
+                Amount = 75m,
+                Status = "Pending",
+                Description = "X-Ray"
+            });
+
+            _payments.Add(new Payment
+            {
+                PaymentId = _nextPaymentId++,
+                BillId = 1001,
+                PatientId = 1001,
+                Date = DateTime.Today.AddDays(-4),
+                Amount = 150m,
+                Method = "Cash",
+                Reference = "CASH-1001"
+            });
+        }
+
         // Mock data - In real app, connect to API or database
         public async Task<List<Patient>> GetPatientsAsync()
         {
@@ -161,6 +224,118 @@ namespace HospitalManagementSystem.ConsoleApp.Services
             }
             
             return stats;
+        }
+
+        public Task<IReadOnlyList<Bill>> GetBillsForPatientAsync(int patientId)
+        {
+            var result = _bills
+                .Where(b => b.PatientId == patientId)
+                .OrderByDescending(b => b.Date)
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult((IReadOnlyList<Bill>)result);
+        }
+
+        public Task<IReadOnlyList<Payment>> GetPaymentsForPatientAsync(int patientId)
+        {
+            var result = _payments
+                .Where(p => p.PatientId == patientId)
+                .OrderByDescending(p => p.Date)
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult((IReadOnlyList<Payment>)result);
+        }
+
+        public Task<bool> PayBillAsync(int billId, int patientId, decimal amount, string method, string reference)
+        {
+            var bill = _bills.FirstOrDefault(b => b.BillId == billId && b.PatientId == patientId);
+            if (bill == null)
+            {
+                return Task.FromResult(false);
+            }
+
+            bill.Status = "Paid";
+
+            var payment = new Payment
+            {
+                PaymentId = _nextPaymentId++,
+                BillId = bill.BillId,
+                PatientId = patientId,
+                Date = DateTime.Now,
+                Amount = amount,
+                Method = method,
+                Reference = reference
+            };
+
+            _payments.Add(payment);
+
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> HasPaidBillAsync(int patientId)
+        {
+            var hasPaid = _bills.Any(b => b.PatientId == patientId &&
+                                          string.Equals(b.Status, "Paid", StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(hasPaid);
+        }
+
+        public Task<MedicalRecordRequest> CreateMedicalRecordRequestAsync(int patientId, string patientName)
+        {
+            // Reuse existing approved or pending request if present
+            var existing = _recordRequests
+                .FirstOrDefault(r => r.PatientId == patientId && (r.Status == "Pending" || r.Status == "Approved"));
+            if (existing != null)
+            {
+                return Task.FromResult(existing);
+            }
+
+            var request = new MedicalRecordRequest
+            {
+                RequestId = _nextRecordRequestId++,
+                PatientId = patientId,
+                PatientName = patientName,
+                Status = "Pending",
+                RequestedAt = DateTime.Now
+            };
+
+            _recordRequests.Add(request);
+            return Task.FromResult(request);
+        }
+
+        public Task<IReadOnlyList<MedicalRecordRequest>> GetPendingRecordRequestsAsync()
+        {
+            var result = _recordRequests
+                .Where(r => string.Equals(r.Status, "Pending", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(r => r.RequestedAt)
+                .ToList()
+                .AsReadOnly();
+
+            return Task.FromResult((IReadOnlyList<MedicalRecordRequest>)result);
+        }
+
+        public Task<bool> ApproveRecordRequestAsync(int requestId, int doctorId, string doctorName)
+        {
+            var request = _recordRequests.FirstOrDefault(r => r.RequestId == requestId);
+            if (request == null)
+            {
+                return Task.FromResult(false);
+            }
+
+            request.Status = "Approved";
+            request.DoctorId = doctorId;
+            request.ApprovedBy = doctorName;
+            request.ApprovedAt = DateTime.Now;
+
+            return Task.FromResult(true);
+        }
+
+        public Task<bool> IsRecordRequestApprovedAsync(int patientId)
+        {
+            var approved = _recordRequests.Any(r => r.PatientId == patientId &&
+                                                    string.Equals(r.Status, "Approved", StringComparison.OrdinalIgnoreCase));
+            return Task.FromResult(approved);
         }
     }
 }

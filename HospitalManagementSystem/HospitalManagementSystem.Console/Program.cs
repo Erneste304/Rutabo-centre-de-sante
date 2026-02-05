@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using HospitalManagementSystem.ConsoleApp.Dashboard;
 using HospitalManagementSystem.ConsoleApp.Models;
@@ -83,7 +83,7 @@ class Program
         
         Console.WriteLine("\nAuthenticating...");
         
-        var session = await authService.AuthenticateAsync(username, password);
+        var session = await authService.AuthenticateAsync(username ?? string.Empty, password ?? string.Empty);
         
         if (session != null)
         {
@@ -95,42 +95,70 @@ class Program
         }
         else
         {
-            Console.WriteLine("\nInvalid username or password!");
+            Console.WriteLine("\nLogin failed. Please check your credentials or wait for admin approval if you registered as staff.");
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
     }
-
+    
     static async Task Register(IAuthenticationService authService)
     {
         Console.Clear();
         Console.WriteLine("=== REGISTER ===");
-
+        
         Console.Write("Username: ");
         var username = Console.ReadLine()?.Trim();
-
+        
         Console.Write("Email: ");
         var email = Console.ReadLine()?.Trim();
-
+        
         Console.Write("Full name: ");
         var fullName = Console.ReadLine()?.Trim();
-
+        
         Console.Write("Password: ");
         var password = Console.ReadLine();
 
+        Console.WriteLine("\nSelect your role:");
+        Console.WriteLine("1. Patient (no approval required)");
+        Console.WriteLine("2. Doctor (admin approval required)");
+        Console.WriteLine("3. Nurse (admin approval required)");
+        Console.WriteLine("4. Receptionist (admin approval required)");
+        Console.Write("Role: ");
+        var roleChoice = Console.ReadLine();
+
+        var userType = roleChoice switch
+        {
+            "2" => "Doctor",
+            "3" => "Nurse",
+            "4" => "Receptionist",
+            _ => "Patient"
+        };
+        
         Console.WriteLine("\nRegistering...");
-
-        var created = await authService.RegisterAsync(username ?? string.Empty, email ?? string.Empty, password ?? string.Empty, fullName ?? string.Empty, "Patient");
-
+        
+        var created = await authService.RegisterAsync(
+            username ?? string.Empty, 
+            email ?? string.Empty, 
+            password ?? string.Empty, 
+            fullName ?? string.Empty, 
+            userType);
+        
         if (created)
         {
-            Console.WriteLine("\nRegistration successful! You can now login.");
+            if (string.Equals(userType, "Patient", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("\nRegistration successful! You can now login as a Patient.");
+            }
+            else
+            {
+                Console.WriteLine($"\nRegistration submitted as {userType}. An administrator must approve your account before you can login.");
+            }
         }
         else
         {
             Console.WriteLine("\nRegistration failed. Username or email may already be in use, or input was invalid.");
         }
-
+        
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
     }

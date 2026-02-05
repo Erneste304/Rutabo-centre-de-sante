@@ -1,22 +1,19 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
+using HospitalManagementSystem.ConsoleApp.Models;
 using HospitalManagementSystem.ConsoleApp.Services;
 
 namespace HospitalManagementSystem.ConsoleApp.Dashboard
 {
     public class NurseDashboard : IDashboard
     {
-        private readonly int _nurseId;
-        private readonly string _nurseName;
-        private readonly string? _department;
+        private readonly UserSession _session;
         private readonly IDataService _dataService;
 
-        public NurseDashboard(int nurseId, string nurseName, string? department = null)
+        public NurseDashboard(UserSession session, IDataService dataService)
         {
-            _nurseId = nurseId;
-            _nurseName = nurseName;
-            _department = department;
-            _dataService = new DataService();
+            _session = session;
+            _dataService = dataService;
         }
 
         public async Task ShowAsync()
@@ -25,7 +22,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             {
                 Console.Clear();
                 Console.WriteLine($"=== NURSE DASHBOARD ===");
-                Console.WriteLine($"Nurse: {_nurseName} | Department: {_department ?? "General"}");
+                Console.WriteLine($"Nurse: {_session.FullName} | Department: {_session.Department ?? "General"}");
                 Console.WriteLine("=========================");
                 Console.WriteLine("1. Patient Vital Signs");
                 Console.WriteLine("2. Medication Administration");
