@@ -266,7 +266,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.WriteLine("=== SHIFT REPORT ===\n");
             
             Console.WriteLine("Current Shift: Day Shift (7:00 AM - 7:00 PM)");
-            Console.WriteLine($"Nurse: {_nurseName}");
+            Console.WriteLine($"Nurse: {_session.FullName}");
             Console.WriteLine($"Date: {DateTime.Now:yyyy-MM-dd}");
             
             Console.WriteLine("\nPatients Handled:");
@@ -371,7 +371,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== MY SCHEDULE ===\n");
             
-            Console.WriteLine($"Nurse: {_nurseName}");
+            Console.WriteLine($"Nurse: {_session.FullName}");
             Console.WriteLine($"Week: {DateTime.Now:MMMM dd, yyyy}\n");
             
             Console.WriteLine("Day         | Shift        | Department   | Assignment");
