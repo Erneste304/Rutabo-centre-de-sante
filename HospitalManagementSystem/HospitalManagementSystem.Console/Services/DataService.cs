@@ -77,8 +77,6 @@ namespace HospitalManagementSystem.ConsoleApp.Services
         private int _nextActivityId = 1;
         private int _nextLogId = 1;
         private int _nextDeptId = 1;
-        private int _nextTransactionId = 1;
-
         public DataService()
         {
             // Seed some example billing data
