@@ -61,15 +61,15 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Patient Patient { get; set; } = null!;
         
         [ForeignKey("AppointmentId")]
-        public virtual Appointment? Appointment { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Appointment? Appointment { get; set; }
         
         [ForeignKey("CreatedBy")]
-        public virtual User? CreatedByUser { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.User? CreatedByUser { get; set; }
         
-        public virtual ICollection<BillItem> BillItems { get; set; } = new List<BillItem>();
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.BillItem> BillItems { get; set; } = new List<HospitalManagementSystem.Data.Entities.BillItem>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Payment> Payments { get; set; } = new List<HospitalManagementSystem.Data.Entities.Payment>();
     }
 }

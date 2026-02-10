@@ -51,8 +51,18 @@ namespace HospitalManagementSystem.Data.Entities
         
         [StringLength(20)]
         public string Status { get; set; } = "Active"; // Active, Inactive, Pending, Suspended
+
+        [NotMapped]
+        public bool IsActive 
+        { 
+            get => Status == "Active";
+            set => Status = value ? "Active" : "Inactive";
+        }
+        
+        public bool ResetRequested { get; set; } = false;
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         
         public DateTime? LastLogin { get; set; }
         
@@ -64,13 +74,13 @@ namespace HospitalManagementSystem.Data.Entities
         public bool TwoFactorEnabled { get; set; } = false;
         
         // Navigation properties
-        public virtual Patient? Patient { get; set; }
-        public virtual Doctor? Doctor { get; set; }
-        public virtual ICollection<Appointment> AppointmentsCreated { get; set; } = new List<Appointment>();
-        public virtual ICollection<MedicalRecord> MedicalRecordsCreated { get; set; } = new List<MedicalRecord>();
-        public virtual ICollection<Billing> BillsCreated { get; set; } = new List<Billing>();
-        public virtual ICollection<Payment> PaymentsReceived { get; set; } = new List<Payment>();
-        public virtual ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
-        public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        public virtual HospitalManagementSystem.Data.Entities.Patient? Patient { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Doctor? Doctor { get; set; }
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Appointment> AppointmentsCreated { get; set; } = new List<HospitalManagementSystem.Data.Entities.Appointment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.MedicalRecord> MedicalRecordsCreated { get; set; } = new List<HospitalManagementSystem.Data.Entities.MedicalRecord>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Billing> BillsCreated { get; set; } = new List<HospitalManagementSystem.Data.Entities.Billing>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Payment> PaymentsReceived { get; set; } = new List<HospitalManagementSystem.Data.Entities.Payment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.AuditLog> AuditLogs { get; set; } = new List<HospitalManagementSystem.Data.Entities.AuditLog>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Notification> Notifications { get; set; } = new List<HospitalManagementSystem.Data.Entities.Notification>();
     }
 }

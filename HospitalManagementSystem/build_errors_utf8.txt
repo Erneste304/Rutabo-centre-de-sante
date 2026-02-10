@@ -1,0 +1,7 @@
+﻿C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Console\Services\DataService.cs(653,35): error CS1061: 'BillItem' does not contain a definition for 'ItemName' and no accessible extension method 'ItemName' accepting a first argument of type 'BillItem' could be found (are you missing a using directive or an assembly reference?) [C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.Console\HospitalManagementSystem.Console.csproj]
+
+Build FAILED.
+    3 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:02.14

@@ -43,6 +43,6 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("DepartmentId")]
-        public virtual Department? Department { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Department? Department { get; set; }
     }
 }

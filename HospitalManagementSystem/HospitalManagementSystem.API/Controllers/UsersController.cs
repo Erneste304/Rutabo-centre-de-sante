@@ -96,12 +96,43 @@ namespace HospitalManagementSystem.API.Controllers
             return NoContent();
         }
 
+        // PUT: api/Users/admin/status
+        [HttpPut("{username}/status")]
+        public async Task<IActionResult> UpdateStatus(string username, [FromBody] bool isActive)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.IsActive = isActive;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
         }
 
+        // POST: api/Users/admin/reset-password
+        [HttpPost("{username}/reset-password")]
+        public async Task<IActionResult> ResetPassword(string username, [FromBody] string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null) return NotFound();
+
+            user.PasswordHash = HashPassword(newPassword);
+            user.ResetRequested = false;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         // POST: api/Users/Login
+
         [HttpPost("login")]
         public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
         {

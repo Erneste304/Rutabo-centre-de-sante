@@ -34,6 +34,6 @@ namespace HospitalManagementSystem.Data.Entities
         public string? Notes { get; set; }
         
         [ForeignKey("BillId")]
-        public virtual Billing Billing { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Billing Billing { get; set; } = null!;
     }
 }

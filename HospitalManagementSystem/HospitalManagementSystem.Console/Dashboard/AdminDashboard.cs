@@ -96,10 +96,11 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.WriteLine("2. Approve Pending Users");
             Console.WriteLine("3. View All Users");
             Console.WriteLine("4. Update User Role");
-            Console.WriteLine("5. Deactivate User");
-            Console.WriteLine("6. Reset Password");
-            Console.WriteLine("7. View User Activity");
-            Console.WriteLine("8. Back to Dashboard");
+            Console.WriteLine("5. Change User Status (Active/Stopped)");
+            Console.WriteLine("6. Reset User Password");
+            Console.WriteLine("7. Deactivate User");
+            Console.WriteLine("8. View User Activity");
+            Console.WriteLine("9. Back to Dashboard");
             Console.Write("\nSelect: ");
             
             var choice = Console.ReadLine();
@@ -108,29 +109,64 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             {
                 Console.WriteLine("\n=== CREATE NEW USER ===");
                 Console.Write("Username: ");
-                var username = Console.ReadLine();
+                var username = Console.ReadLine()?.Trim();
                 
                 Console.Write("Email: ");
-                var email = Console.ReadLine();
+                var email = Console.ReadLine()?.Trim();
+                
+                Console.Write("Full name: ");
+                var fullName = Console.ReadLine()?.Trim();
                 
                 Console.Write("Password: ");
-                var password = Console.ReadLine();
+                var password = Console.ReadLine()?.Trim();
                 
-                Console.WriteLine("Select Role:");
+                Console.WriteLine("\nSelect Role:");
                 Console.WriteLine("1. Admin");
                 Console.WriteLine("2. Doctor");
                 Console.WriteLine("3. Nurse");
-                Console.WriteLine("4. Patient");
-                Console.WriteLine("5. Receptionist");
+                Console.WriteLine("4. Receptionist");
+                Console.WriteLine("5. Accountant");
+                Console.WriteLine("6. Patient");
                 Console.Write("Role: ");
-                var role = Console.ReadLine();
+                var roleChoice = Console.ReadLine()?.Trim();
                 
-                Console.WriteLine($"\nUser '{username}' created successfully!");
+                var role = roleChoice switch
+                {
+                    "1" => "Admin",
+                    "2" => "Doctor",
+                    "3" => "Nurse",
+                    "4" => "Receptionist",
+                    "5" => "Accountant",
+                    _ => "Patient"
+                };
+                
+                var success = await _authService.RegisterAsync(username ?? "", email ?? "", password ?? "", fullName ?? "", role);
+                
+                if (success)
+                {
+                    // Admin-created users are auto-approved
+                    await _authService.ApproveUserAsync(username ?? "");
+                    Console.WriteLine($"\nUser '{username}' created and approved successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("\nFailed to create user. Username or email may already be in use.");
+                }
             }
 
             if (choice == "2")
             {
                 await ApprovePendingUsers();
+            }
+
+            if (choice == "5")
+            {
+                await ChangeUserStatus();
+            }
+
+            if (choice == "6")
+            {
+                await ResetUserPassword();
             }
             
             Console.WriteLine("\nPress any key to continue...");
@@ -175,6 +211,52 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             else
             {
                 Console.WriteLine("\nNo changes made.");
+            }
+        }
+
+        private async Task ChangeUserStatus()
+        {
+            Console.Clear();
+            Console.WriteLine("=== CHANGE USER STATUS ===\n");
+            var users = await _authService.GetAllUsersAsync();
+            for (int i = 0; i < users.Count; i++)
+            {
+                var u = users[i];
+                var status = u.IsActive ? "ACTIVE" : "STOPPED";
+                Console.WriteLine($"{i + 1}. {u.Username} - {u.FullName} [{status}]");
+            }
+
+            Console.Write("\nSelect user number to toggle status (or 0 to cancel): ");
+            if (int.TryParse(Console.ReadLine(), out var index) && index > 0 && index <= users.Count)
+            {
+                var user = users[index - 1];
+                var newStatus = !user.IsActive;
+                await _authService.UpdateUserStatusAsync(user.Username, newStatus);
+                Console.WriteLine($"\nUser '{user.Username}' status changed to {(newStatus ? "ACTIVE" : "STOPPED")}.");
+            }
+        }
+
+        private async Task ResetUserPassword()
+        {
+            Console.Clear();
+            Console.WriteLine("=== RESET USER PASSWORD ===\n");
+            var users = await _authService.GetAllUsersAsync();
+            for (int i = 0; i < users.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {users[i].Username} - {users[i].FullName}");
+            }
+
+            Console.Write("\nSelect user number (or 0 to cancel): ");
+            if (int.TryParse(Console.ReadLine(), out var index) && index > 0 && index <= users.Count)
+            {
+                var user = users[index - 1];
+                Console.Write($"Enter new password for {user.Username}: ");
+                var newPassword = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(newPassword))
+                {
+                    await _authService.ResetPasswordAsync(user.Username, newPassword);
+                    Console.WriteLine("\nPassword reset successfully!");
+                }
             }
         }
         
@@ -262,7 +344,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== BILLING & FINANCE ===\n");
             
-            Console.WriteLine("1. Generate Invoice");
+            Console.WriteLine("1. Process Pending Transactions");
             Console.WriteLine("2. View All Bills");
             Console.WriteLine("3. Process Insurance Claims");
             Console.WriteLine("4. Financial Reports");
@@ -275,20 +357,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             
             if (choice == "1")
             {
-                Console.WriteLine("\n=== GENERATE INVOICE ===");
-                Console.Write("Patient ID: ");
-                var patientId = Console.ReadLine();
-                
-                Console.WriteLine("Services:");
-                Console.WriteLine("1. Consultation - $50");
-                Console.WriteLine("2. Lab Test - $100");
-                Console.WriteLine("3. X-Ray - $75");
-                Console.WriteLine("4. Medication - $30");
-                Console.Write("Select services (comma separated): ");
-                var services = Console.ReadLine();
-                
-                Console.WriteLine("\nInvoice generated successfully!");
-                Console.WriteLine("Total Amount: $255.00");
+                await ProcessPendingTransactions();
             }
             
             Console.WriteLine("\nPress any key to continue...");
@@ -311,20 +380,124 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Write("\nSelect: ");
             
             var choice = Console.ReadLine();
-            
-            if (choice == "1")
+
+            switch (choice)
             {
-                Console.WriteLine("\n=== HOSPITAL STATISTICS ===");
-                Console.WriteLine($"Date: {DateTime.Now:yyyy-MM-dd}");
-                Console.WriteLine("Total Patients: 1,245");
-                Console.WriteLine("Active Doctors: 45");
-                Console.WriteLine("Total Appointments Today: 156");
-                Console.WriteLine("Occupied Beds: 120/150 (80%)");
-                Console.WriteLine("Monthly Revenue: $250,000");
+                case "1":
+                    Console.WriteLine("\n=== HOSPITAL STATISTICS ===");
+                    var stats = await _dataService.GetDashboardStatsAsync("Admin");
+                    Console.WriteLine($"Date: {DateTime.Now:yyyy-MM-dd}");
+                    Console.WriteLine($"Total Patients: {stats.TotalPatients:N0}");
+                    Console.WriteLine($"Total Appointments Today: {stats.TodayAppointments}");
+                    Console.WriteLine($"Occupied Beds: {stats.Stat2Value}");
+                    Console.WriteLine($"Staff Count: {stats.Stat1Value}");
+                    break;
+                case "2":
+                    await ShowPatientDemographics();
+                    break;
+                case "3":
+                    await ShowDoctorPerformanceReport();
+                    break;
+                case "4":
+                    await ShowFinancialSummary();
+                    break;
+                case "5":
+                    await ShowInventoryReport();
+                    break;
             }
             
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
+        }
+
+        private async Task ProcessPendingTransactions()
+        {
+            Console.Clear();
+            Console.WriteLine("=== PROCESS PENDING TRANSACTIONS ===\n");
+            var pending = await _dataService.GetTransactionsAsync("Pending");
+            if (pending.Count == 0)
+            {
+                Console.WriteLine("No pending transactions.");
+                return;
+            }
+
+            for (int i = 0; i < pending.Count; i++)
+            {
+                var t = pending[i];
+                Console.WriteLine($"{i + 1}. ID:{t.TransactionId} | Type:{t.Type} | Amt:${t.Amount:N2} | Date:{t.Date:MM-dd HH:mm}");
+                Console.WriteLine($"   Notes: {t.Notes}");
+                Console.WriteLine("----------------------------------------------------------");
+            }
+
+            Console.Write("\nEnter number to handle (or 0 to cancel): ");
+            if (int.TryParse(Console.ReadLine(), out var index) && index > 0 && index <= pending.Count)
+            {
+                var transaction = pending[index - 1];
+                Console.Write("Approve or Reject? (a/r): ");
+                var action = Console.ReadLine()?.ToLower();
+                if (action == "a")
+                {
+                    await _dataService.ApproveTransactionAsync(transaction.TransactionId, _session.UserId);
+                    Console.WriteLine("\nTransaction APPROVED.");
+                }
+                else if (action == "r")
+                {
+                    await _dataService.RejectTransactionAsync(transaction.TransactionId, _session.UserId);
+                    Console.WriteLine("\nTransaction REJECTED.");
+                }
+            }
+        }
+
+        private async Task ShowPatientDemographics()
+        {
+            Console.Clear();
+            Console.WriteLine("=== PATIENT DEMOGRAPHICS ===\n");
+            var patients = await _dataService.GetPatientsAsync();
+            var byGender = patients.GroupBy(p => p.Gender).ToDictionary(g => g.Key, g => g.Count());
+            
+            Console.WriteLine("By Gender:");
+            foreach (var kvp in byGender) Console.WriteLine($"  {kvp.Key}: {kvp.Value}");
+            
+            Console.WriteLine("\nBy Age Group:");
+            Console.WriteLine($"  0-18:  {patients.Count(p => p.Age <= 18)}");
+            Console.WriteLine($"  19-60: {patients.Count(p => p.Age > 18 && p.Age <= 60)}");
+            Console.WriteLine($"  60+:   {patients.Count(p => p.Age > 60)}");
+        }
+
+        private async Task ShowDoctorPerformanceReport()
+        {
+            Console.Clear();
+            Console.WriteLine("=== DOCTOR PERFORMANCE ===\n");
+            var doctors = await _dataService.GetDoctorsAsync();
+            foreach (var d in doctors)
+            {
+                var perf = await _dataService.GetDoctorPerformanceAsync(d.DoctorId);
+                Console.WriteLine($"{d.Name,-20} | Success: {perf["SuccessRate"]} | Consultations: {perf["MonthlyConsultations"]}");
+            }
+        }
+
+        private async Task ShowFinancialSummary()
+        {
+            Console.Clear();
+            Console.WriteLine("=== FINANCIAL SUMMARY ===\n");
+            var bills = await _dataService.GetAllBillsAsync();
+            var payments = await _dataService.GetAllPaymentsAsync();
+            Console.WriteLine($"Total Billed:  ${bills.Sum(b => b.Amount):N2}");
+            Console.WriteLine($"Total Paid:    ${payments.Sum(p => p.Amount):N2}");
+            Console.WriteLine($"Outstanding:   ${bills.Where(b => b.Status != "Paid").Sum(b => b.Amount):N2}");
+        }
+
+        private async Task ShowInventoryReport()
+        {
+            Console.Clear();
+            Console.WriteLine("=== INVENTORY REPORT ===\n");
+            var items = await _dataService.GetMedicationsAsync();
+            Console.WriteLine($"{"Item Name",-20} | {"Stock",-10} | {"Unit"}");
+            Console.WriteLine(new string('-', 40));
+            foreach (var item in items)
+            {
+                Console.WriteLine($"{item.Name,-20} | {item.Stock,-10} | {item.Unit}");
+            }
         }
         
         private async Task SystemConfiguration()

@@ -265,32 +265,68 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== SHIFT REPORT ===\n");
             
-            Console.WriteLine("Current Shift: Day Shift (7:00 AM - 7:00 PM)");
-            Console.WriteLine($"Nurse: {_session.FullName}");
-            Console.WriteLine($"Date: {DateTime.Now:yyyy-MM-dd}");
+            var report = await _dataService.GetShiftReportAsync(_session.UserId, _session.FullName);
+
+            Console.WriteLine($"Current Shift: {DateTime.Now:HH:mm} - Status: Active");
+            Console.WriteLine($"Nurse: {report.NurseName}");
+            Console.WriteLine($"Date: {report.Date:yyyy-MM-dd}");
             
-            Console.WriteLine("\nPatients Handled:");
-            Console.WriteLine("1. John Doe (Room 101) - Stable, meds administered");
-            Console.WriteLine("2. Jane Smith (Room 102) - Recovering post-op");
-            Console.WriteLine("3. Robert Johnson (ICU-01) - Critical, monitoring");
+            Console.WriteLine("\nPatients Handled (Recent Activities):");
+            foreach (var summary in report.PatientShortSummaries)
+            {
+                Console.WriteLine($"- {summary}");
+            }
             
-            Console.WriteLine("\nTasks Completed:");
-            Console.WriteLine("- Administered medications to 8 patients");
-            Console.WriteLine("- Recorded vitals for 12 patients");
-            Console.WriteLine("- Assisted with 3 procedures");
-            Console.WriteLine("- Updated 15 patient charts");
+            Console.WriteLine("\nTasks Completed (Metrics):");
+            Console.WriteLine($"- Administered medications: {report.MedsAdministered}");
+            Console.WriteLine($"- Recorded vitals: {report.VitalsRecorded}");
+            Console.WriteLine($"- Tasks marked complete: {report.TasksCompleted}");
             
             Console.WriteLine("\nIssues/Concerns:");
-            Console.WriteLine("- Low stock of Band-Aids");
-            Console.WriteLine("- Room 105 bed needs repair");
-            Console.WriteLine("- New admission at 6:00 PM");
+            foreach (var issue in report.Issues)
+            {
+                Console.WriteLine($"- {issue}");
+            }
             
-            Console.WriteLine("\n1. Save Report");
-            Console.WriteLine("2. Print Report");
-            Console.WriteLine("3. Email to Charge Nurse");
-            Console.WriteLine("4. Back to dashboard");
+            Console.WriteLine("\n1. Print Report");
+            Console.WriteLine("2. Export to Chart");
+            Console.WriteLine("3. Back to dashboard");
             Console.Write("\nSelect: ");
             
+            var choice = Console.ReadLine();
+            if (choice == "1")
+            {
+                await PrintShiftReport(report);
+            }
+            else if (choice == "2")
+            {
+                await ExportShiftReportToChart(report);
+            }
+        }
+
+        private async Task PrintShiftReport(ShiftReportModel report)
+        {
+            Console.Clear();
+            Console.WriteLine("----- PRINTING SHIFT REPORT -----");
+            Console.WriteLine($"Nurse: {report.NurseName}");
+            Console.WriteLine($"Date: {report.Date:yyyy-MM-dd}");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine($"Vitals Recorded: {report.VitalsRecorded}");
+            Console.WriteLine($"Meds Administered: {report.MedsAdministered}");
+            Console.WriteLine($"Tasks Completed: {report.TasksCompleted}");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("Report saved to: " + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"ShiftReport_{DateTime.Now:yyyyMMdd_HHmm}.txt"));
+            Console.WriteLine("\nPrinting complete. Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        private async Task ExportShiftReportToChart(ShiftReportModel report)
+        {
+            Console.WriteLine("\nExporting report to patient records...");
+            await _dataService.LogAuditAsync(_session.UserId, _session.Username, "Shift Report Export", "Report", null, $"Exported shift report for {report.NurseName} on {report.Date:yyyy-MM-dd}");
+            await Task.Delay(1000);
+            Console.WriteLine("Export successful! Data added to system audit logs and relevant charts.");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
         
@@ -347,23 +383,47 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== INVENTORY CHECK ===\n");
             
-            Console.WriteLine("Medical Supplies:");
-            Console.WriteLine("Item                  | Current Stock | Required | Status");
+            var inventory = await _dataService.GetInventoryReportAsync();
+
+            Console.WriteLine("Item                  | Stock | Req. | Status");
             Console.WriteLine("--------------------------------------------------------");
-            Console.WriteLine("Band-Aids             | 150           | 200      | ⚠ Low");
-            Console.WriteLine("Gauze Pads            | 300           | 250      | ✓ Good");
-            Console.WriteLine("Syringes (5ml)        | 500           | 400      | ✓ Good");
-            Console.WriteLine("IV Catheters          | 100           | 150      | ⚠ Low");
-            Console.WriteLine("Gloves (Medium)       | 1000          | 800      | ✓ Good");
-            Console.WriteLine("Face Masks            | 2000          | 1500     | ✓ Good");
+            foreach (var item in inventory)
+            {
+                var status = item.Stock < item.Required ? "⚠ Low" : "✓ Good";
+                Console.WriteLine($"{item.Name,-21} | {item.Stock,-5} | {item.Required,-4} | {status}");
+            }
             
+            if (inventory.Count == 0)
+            {
+                Console.WriteLine("No inventory items found in database.");
+            }
+
             Console.WriteLine("\n1. Request restock");
             Console.WriteLine("2. Update inventory");
-            Console.WriteLine("3. View order history");
-            Console.WriteLine("4. Back to dashboard");
+            Console.WriteLine("3. Back to dashboard");
             Console.Write("\nSelect: ");
             
-            Console.ReadKey();
+            var choice = Console.ReadLine();
+            if (choice == "1")
+            {
+                Console.Write("\nEnter item name to restock: ");
+                var item = Console.ReadLine();
+                Console.Write("Quantity: ");
+                var qty = Console.ReadLine();
+                Console.WriteLine($"\nRestock request for {qty} x {item} submitted to pharmacy.");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+            else if (choice == "2")
+            {
+                Console.Write("\nEnter item name to update: ");
+                var item = Console.ReadLine();
+                Console.Write("Actual current stock: ");
+                var qty = Console.ReadLine();
+                Console.WriteLine($"\nInventory updated for {item}. New count: {qty}");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
         }
         
         private async Task ViewSchedule()

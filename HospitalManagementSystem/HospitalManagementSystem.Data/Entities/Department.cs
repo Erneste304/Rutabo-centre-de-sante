@@ -44,9 +44,9 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("HeadDoctorId")]
-        public virtual Doctor? HeadDoctor { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Doctor? HeadDoctor { get; set; }
         
-        public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
-        public virtual ICollection<Doctor> Doctors { get; set; } = new List<Doctor>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Room> Rooms { get; set; } = new List<HospitalManagementSystem.Data.Entities.Room>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Doctor> Doctors { get; set; } = new List<HospitalManagementSystem.Data.Entities.Doctor>();
     }
 }

@@ -40,6 +40,6 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("UserId")]
-        public virtual User? User { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.User? User { get; set; }
     }
 }

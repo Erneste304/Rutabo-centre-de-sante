@@ -60,19 +60,19 @@ namespace HospitalManagementSystem.Data.Entities
         
        
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Patient Patient { get; set; } = null!;
         
         [ForeignKey("DoctorId")]
-        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Doctor Doctor { get; set; } = null!;
         
         [ForeignKey("DepartmentId")]
-        public virtual Department? Department { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Department? Department { get; set; }
         
         [ForeignKey("CreatedBy")]
-        public virtual User? CreatedByUser { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.User? CreatedByUser { get; set; }
         
-        public virtual Billing? Billing { get; set; }
-        public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
-        public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+        public virtual HospitalManagementSystem.Data.Entities.Billing? Billing { get; set; }
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.MedicalRecord> MedicalRecords { get; set; } = new List<HospitalManagementSystem.Data.Entities.MedicalRecord>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Prescription> Prescriptions { get; set; } = new List<HospitalManagementSystem.Data.Entities.Prescription>();
     }
 }

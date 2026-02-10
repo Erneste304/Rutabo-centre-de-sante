@@ -18,7 +18,7 @@ namespace HospitalManagementSystem.Core.Services
         {
             var user = await _userRepository.GetByUsernameAsync(username);
             
-            if (user == null || !VerifyPasswordHash(password, user.PasswordHash))
+            if (user == null || !VerifyPasswordHash(password, user.PasswordHash) || !user.IsActive)
                 return null;
 
             return user;
@@ -27,9 +27,13 @@ namespace HospitalManagementSystem.Core.Services
         public async Task<User> RegisterAsync(User user, string password)
         {
             user.PasswordHash = HashPassword(password);
+            // Non-patient users require admin approval
+            user.IsActive = user.UserType == UserType.Patient;
             await _userRepository.AddAsync(user);
             return user;
         }
+
+
 
         private string HashPassword(string password)
         {
@@ -55,7 +59,13 @@ namespace HospitalManagementSystem.Core.Services
             await _userRepository.UpdateAsync(user);
         }
 
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            return await _userRepository.GetByUsernameAsync(username);
+        }
+
         public async Task<bool> UserExistsAsync(string username, string email)
+
         {
             return await _userRepository.ExistsByUsernameOrEmailAsync(username, email);
         }

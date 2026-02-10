@@ -29,8 +29,9 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                 Console.WriteLine("2. View All Payments");
                 Console.WriteLine("3. View All Transactions");
                 Console.WriteLine("4. Approve Pending Transactions");
-                Console.WriteLine("5. Generate Financial Reports");
-                Console.WriteLine("6. Logout");
+                Console.WriteLine("5. Send Money (Transfer)");
+                Console.WriteLine("6. Generate Financial Reports");
+                Console.WriteLine("7. Logout");
                 Console.Write("\nSelect option: ");
 
                 var choice = Console.ReadLine();
@@ -50,9 +51,12 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
                         await ApprovePendingTransactions();
                         break;
                     case "5":
-                        await GenerateFinancialReports();
+                        await SendMoneyAsync();
                         break;
                     case "6":
+                        await GenerateFinancialReports();
+                        break;
+                    case "7":
                         Console.WriteLine("\nLogging out...");
                         await Task.Delay(1000);
                         return;
@@ -201,7 +205,7 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.WriteLine($"Total Billed: ${totalBilled:N2}");
             Console.WriteLine($"Total Paid: ${totalPaid:N2}");
             Console.WriteLine($"Pending Amount: ${pendingAmount:N2}");
-            Console.WriteLine($"Collection Rate: {(totalPaid * 100.0m / totalBilled):F1}%");
+            Console.WriteLine($"Collection Rate: {(totalBilled > 0 ? (totalPaid * 100.0m / totalBilled) : 0):F1}%");
 
             Console.WriteLine("\nBy Payment Method:");
             var byMethod = payments.GroupBy(p => p.Method).ToDictionary(g => g.Key, g => g.Sum(p => p.Amount));
@@ -213,6 +217,59 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.WriteLine($"\nTotal Transactions: {transactions.Count}");
             Console.WriteLine($"Approved Transactions: {transactions.Count(t => t.Status == "Approved")}");
             Console.WriteLine($"Pending Transactions: {transactions.Count(t => t.Status == "Pending")}");
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        private async Task SendMoneyAsync()
+        {
+            Console.Clear();
+            Console.WriteLine("=== SEND MONEY (TRANSFER) ===\n");
+            Console.WriteLine("This transaction will be sent to the administrator for approval.");
+            Console.WriteLine("-----------------------------------------------------------\n");
+
+            Console.Write("Enter recipient name/account: ");
+            var recipient = Console.ReadLine()?.Trim();
+            if (string.IsNullOrEmpty(recipient)) return;
+
+            Console.Write("Enter amount: ");
+            if (!decimal.TryParse(Console.ReadLine(), out var amount) || amount <= 0)
+            {
+                Console.WriteLine("Invalid amount.");
+                await Task.Delay(1500);
+                return;
+            }
+
+            Console.Write("Enter description/reason: ");
+            var description = Console.ReadLine()?.Trim();
+
+            Console.WriteLine("\nReview Transaction:");
+            Console.WriteLine($"Recipient: {recipient}");
+            Console.WriteLine($"Amount:    ${amount:N2}");
+            Console.WriteLine($"Reason:    {description}");
+            Console.Write("\nSend for approval? (y/n): ");
+            
+            if (Console.ReadLine()?.ToLower() == "y")
+            {
+                var transaction = new Transaction
+                {
+                    Amount = amount,
+                    Type = "Transfer",
+                    Status = "Pending",
+                    Date = DateTime.Now,
+                    Notes = $"To: {recipient} | Reason: {description}",
+                    PatientId = 0 // Not associated with a patient
+                };
+
+                await _dataService.AddTransactionAsync(transaction, _session.UserId, _session.Username);
+
+                Console.WriteLine("\nTransaction sent to admin! Status: PENDING");
+            }
+            else
+            {
+                Console.WriteLine("\nTransaction cancelled.");
+            }
 
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();

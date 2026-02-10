@@ -65,12 +65,12 @@ namespace HospitalManagementSystem.Data.Entities
         
         // Navigation properties
         [ForeignKey("UserId")]
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
-        public virtual ICollection<Billing> Bills { get; set; } = new List<Billing>();
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
-        public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
-        public virtual ICollection<LabTest> LabTests { get; set; } = new List<LabTest>();
+        public virtual HospitalManagementSystem.Data.Entities.User User { get; set; } = null!;
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Appointment> Appointments { get; set; } = new List<HospitalManagementSystem.Data.Entities.Appointment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.MedicalRecord> MedicalRecords { get; set; } = new List<HospitalManagementSystem.Data.Entities.MedicalRecord>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Billing> Bills { get; set; } = new List<HospitalManagementSystem.Data.Entities.Billing>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Payment> Payments { get; set; } = new List<HospitalManagementSystem.Data.Entities.Payment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Prescription> Prescriptions { get; set; } = new List<HospitalManagementSystem.Data.Entities.Prescription>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.LabTest> LabTests { get; set; } = new List<HospitalManagementSystem.Data.Entities.LabTest>();
     }
 }

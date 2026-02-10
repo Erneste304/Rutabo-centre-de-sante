@@ -36,14 +36,14 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Patient Patient { get; set; } = null!;
         
         [ForeignKey("DoctorId")]
-        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Doctor Doctor { get; set; } = null!;
         
         [ForeignKey("AppointmentId")]
-        public virtual Appointment? Appointment { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.Appointment? Appointment { get; set; }
         
-        public virtual ICollection<PrescriptionItem> PrescriptionItems { get; set; } = new List<PrescriptionItem>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.PrescriptionItem> PrescriptionItems { get; set; } = new List<HospitalManagementSystem.Data.Entities.PrescriptionItem>();
     }
 }

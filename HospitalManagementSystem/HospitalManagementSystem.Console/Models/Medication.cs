@@ -7,5 +7,6 @@
         public string Type { get; set; } = string.Empty;
         public int Stock { get; set; }
         public string Unit { get; set; } = string.Empty;
+        public int Required { get; set; }
     }
 }

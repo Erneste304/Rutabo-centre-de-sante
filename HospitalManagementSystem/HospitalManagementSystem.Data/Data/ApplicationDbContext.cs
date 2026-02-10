@@ -11,87 +11,99 @@ namespace HospitalManagementSystem.Data
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Patient> Patients { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<Room> Rooms { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<MedicalRecord> MedicalRecords { get; set; }
-        public DbSet<Billing> Billings { get; set; }
-        public DbSet<BillItem> BillItems { get; set; }
-        public DbSet<Payment> Payments { get; set; }
-        public DbSet<Inventory> Inventory { get; set; }
-        public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Prescription> Prescriptions { get; set; }
-        public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
-        public DbSet<LabTest> LabTests { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Entities.User> Users { get; set; }
+        public DbSet<Entities.Patient> Patients { get; set; }
+        public DbSet<Entities.Doctor> Doctors { get; set; }
+        public DbSet<Entities.Department> Departments { get; set; }
+        public DbSet<Entities.Room> Rooms { get; set; }
+        public DbSet<Entities.Appointment> Appointments { get; set; }
+        public DbSet<Entities.MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<Entities.Billing> Billings { get; set; }
+        public DbSet<Entities.BillItem> BillItems { get; set; }
+        public DbSet<Entities.Payment> Payments { get; set; }
+        public DbSet<Entities.Inventory> Inventory { get; set; }
+        public DbSet<Entities.AuditLog> AuditLogs { get; set; }
+        public DbSet<Entities.Notification> Notifications { get; set; }
+        public DbSet<Entities.Prescription> Prescriptions { get; set; }
+        public DbSet<Entities.PrescriptionItem> PrescriptionItems { get; set; }
+        public DbSet<Entities.LabTest> LabTests { get; set; }
+        public DbSet<Entities.Schedule> Schedules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             // Configure relationships
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Entities.User>()
                 .HasOne(u => u.Patient)
                 .WithOne(p => p.User)
-                .HasForeignKey<Patient>(p => p.UserId)
+                .HasForeignKey<Entities.Patient>(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Entities.User>()
                 .HasOne(u => u.Doctor)
                 .WithOne(d => d.User)
-                .HasForeignKey<Doctor>(d => d.UserId)
+                .HasForeignKey<Entities.Doctor>(d => d.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Appointment>()
+            modelBuilder.Entity<Entities.Appointment>()
                 .HasOne(a => a.Patient)
                 .WithMany(p => p.Appointments)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Appointment>()
+            modelBuilder.Entity<Entities.Appointment>()
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Billing>()
+            modelBuilder.Entity<Entities.Billing>()
                 .HasMany(b => b.BillItems)
                 .WithOne(i => i.Billing)
                 .HasForeignKey(i => i.BillId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Prescription>()
+            modelBuilder.Entity<Entities.Prescription>()
                 .HasMany(p => p.PrescriptionItems)
                 .WithOne(pi => pi.Prescription)
                 .HasForeignKey(pi => pi.PrescriptionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Entities.Department>()
+                .HasMany(d => d.Doctors)
+                .WithOne(dr => dr.Department)
+                .HasForeignKey("DepartmentId")
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Entities.Department>()
+                .HasMany(d => d.Rooms)
+                .WithOne(r => r.Department)
+                .HasForeignKey(r => r.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // Configure decimal precision for SQLite
-            modelBuilder.Entity<Billing>()
+            modelBuilder.Entity<Entities.Billing>()
                 .Property(b => b.TotalAmount)
                 .HasConversion<double>();
 
-            modelBuilder.Entity<Billing>()
+            modelBuilder.Entity<Entities.Billing>()
                 .Property(b => b.PaidAmount)
                 .HasConversion<double>();
 
-            modelBuilder.Entity<Billing>()
+            modelBuilder.Entity<Entities.Billing>()
                 .Property(b => b.BalanceDue)
                 .HasConversion<double>();
 
-            modelBuilder.Entity<Payment>()
+            modelBuilder.Entity<Entities.Payment>()
                 .Property(p => p.Amount)
                 .HasConversion<double>();
 
-            modelBuilder.Entity<Doctor>()
+            modelBuilder.Entity<Entities.Doctor>()
                 .Property(d => d.ConsultationFee)
                 .HasConversion<double>();
 
-            modelBuilder.Entity<Doctor>()
+            modelBuilder.Entity<Entities.Doctor>()
                 .Property(d => d.Rating)
                 .HasConversion<double>();
 

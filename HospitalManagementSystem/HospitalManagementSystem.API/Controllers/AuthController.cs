@@ -41,6 +41,7 @@ namespace HospitalManagementSystem.API.Controllers
             var user = new User
             {
                 Username = request.Username,
+                FullName = request.FullName,
                 Email = request.Email,
                 UserType = request.UserType
             };
@@ -49,9 +50,27 @@ namespace HospitalManagementSystem.API.Controllers
             
             return Ok(new { message = "Registration successful" });
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var user = await _userService.GetByUsernameAsync(request.Username);
+            if (user != null)
+            {
+                user.ResetRequested = true;
+                await _userService.UpdateUserAsync(user);
+            }
+            
+            return Ok(new { message = "If the account exists, a reset request has been sent to the administrator." });
+        }
+    }
+
+    public class ForgotPasswordRequest
+    {
+        public string Username { get; set; } = string.Empty;
     }
 
     public class LoginRequest
+
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
@@ -60,6 +79,8 @@ namespace HospitalManagementSystem.API.Controllers
     public class RegisterRequest
     {
         public string Username { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public UserType UserType { get; set; }

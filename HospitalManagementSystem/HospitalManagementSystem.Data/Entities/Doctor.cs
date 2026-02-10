@@ -46,11 +46,11 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("UserId")]
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-        public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
-        public virtual Department? Department { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
-        public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+        public virtual HospitalManagementSystem.Data.Entities.User User { get; set; } = null!;
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Appointment> Appointments { get; set; } = new List<HospitalManagementSystem.Data.Entities.Appointment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.MedicalRecord> MedicalRecords { get; set; } = new List<HospitalManagementSystem.Data.Entities.MedicalRecord>();
+        public virtual HospitalManagementSystem.Data.Entities.Department? Department { get; set; }
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Schedule> Schedules { get; set; } = new List<HospitalManagementSystem.Data.Entities.Schedule>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Prescription> Prescriptions { get; set; } = new List<HospitalManagementSystem.Data.Entities.Prescription>();
     }
 }

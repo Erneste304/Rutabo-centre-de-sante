@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using HospitalManagementSystem.ConsoleApp.Dashboard;
 using HospitalManagementSystem.ConsoleApp.Models;
 using HospitalManagementSystem.ConsoleApp.Services;
+using HospitalManagementSystem.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 class Program
@@ -21,17 +23,25 @@ class Program
         var authService = serviceProvider.GetRequiredService<IAuthenticationService>();
         var dashboardService = serviceProvider.GetRequiredService<IDashboardService>();
         
+        // Ensure database is created
+        using (var scope = serviceProvider.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            db.Database.EnsureCreated();
+        }
+
         await RunApplication(menuService, authService, dashboardService);
     }
     
     static void ConfigureServices(ServiceCollection services)
     {
-        services.AddSingleton<IAuthenticationService, AuthenticationService>();
-        services.AddSingleton<IDataService, DataService>();
-        services.AddSingleton<IMenuService, MenuService>();
-        services.AddSingleton<IDashboardService, DashboardService>();
-        services.AddSingleton<IDataService, DataService>();
-        services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlite("Data Source=hospital.db"));
+
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IDataService, DataService>();
+        services.AddScoped<IMenuService, MenuService>();
+        services.AddScoped<IDashboardService, DashboardService>();
     }
     
     static async Task RunApplication(IMenuService menuService, IAuthenticationService authService, IDashboardService dashboardService)
@@ -78,10 +88,10 @@ class Program
         Console.WriteLine("=== LOGIN ===");
         
         Console.Write("Username: ");
-        var username = Console.ReadLine();
+        var username = Console.ReadLine()?.Trim();
         
         Console.Write("Password: ");
-        var password = Console.ReadLine();
+        var password = Console.ReadLine()?.Trim();
         
         Console.WriteLine("\nAuthenticating...");
         
@@ -97,8 +107,11 @@ class Program
         }
         else
         {
-            Console.WriteLine("\nLogin failed. Please check your credentials or wait for admin approval if you registered as staff.");
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine("\nLogin failed. Possible reasons:");
+            Console.WriteLine("1. Incorrect username or password.");
+            Console.WriteLine("2. Your account is pending admin approval (required once for staff).");
+            Console.WriteLine("3. Your account has been stopped or deactivated by admin.");
+            Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
     }
@@ -118,7 +131,7 @@ class Program
         var fullName = Console.ReadLine()?.Trim();
         
         Console.Write("Password: ");
-        var password = Console.ReadLine();
+        var password = Console.ReadLine()?.Trim();
 
         Console.WriteLine("\nSelect your role:");
         Console.WriteLine("1. Patient (no approval required)");
@@ -127,7 +140,7 @@ class Program
         Console.WriteLine("4. Receptionist (admin approval required)");
         Console.WriteLine("5. Accountant (admin approval required)");
         Console.Write("Role: ");
-        var roleChoice = Console.ReadLine();
+        var roleChoice = Console.ReadLine()?.Trim();
 
         var userType = roleChoice switch
         {

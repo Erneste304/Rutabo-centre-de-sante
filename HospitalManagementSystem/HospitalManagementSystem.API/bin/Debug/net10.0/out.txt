@@ -1,0 +1,1 @@
+WARNING: Static file directory not found: C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\bin\Debug\net10.0\..\HospitalManagementSystem.Web\wwwroot

@@ -4,14 +4,18 @@ using HospitalManagementSystem.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HospitalManagementSystem.Data.Repositories;
+using HospitalManagementSystem.Core.Repositories;
+using HospitalManagementSystem.Data.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddOpenApi();
+// builder.Services.AddSwaggerGen();
+// builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
@@ -43,25 +47,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
 // Add Services
     // builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IPatientService, PatientService>();
-    // builder.Services.AddScoped<IDoctorService, DoctorService>();
-    // builder.Services.AddScoped<IAppointmentService, AppointmentService>();
-    // builder.Services.AddScoped<IBillingService, BillingService>();
+    builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
+
 
 // Add AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
+// builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.MapOpenApi();
+    // app.UseSwagger();
+    // app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 
@@ -71,10 +78,41 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-app.UseStaticFiles();
+var webRootPath = Path.Combine(builder.Environment.ContentRootPath, "..", "HospitalManagementSystem.Web", "wwwroot");
+if (Directory.Exists(webRootPath))
+{
+    app.UseFileServer(new FileServerOptions
+    {
+        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webRootPath),
+        RequestPath = "",
+        EnableDirectoryBrowsing = false
+    });
+    Console.WriteLine($"Serving static files from: {webRootPath}");
+}
+else
+{
+    Console.WriteLine($"WARNING: Static file directory not found: {webRootPath}");
+}
 
 app.MapControllers();
-app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.EnsureCreated();
+        var seeder = services.GetRequiredService<IDatabaseSeeder>();
+        await seeder.SeedAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
+
 app.Run();
 
 var summaries = new[]

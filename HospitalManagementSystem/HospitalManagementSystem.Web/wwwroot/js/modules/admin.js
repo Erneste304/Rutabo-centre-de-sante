@@ -12,18 +12,23 @@ class AdminModule {
             payments: []
         };
     }
-    
+
     init(container) {
         this.container = container || this.container;
         this.renderSidebar();
         this.loadDashboard();
         this.loadData();
+
+        setTimeout(() => {
+            this.addNotification('Welcome to Admin Dashboard. System status: Healthy.', 'success');
+        }, 1000);
     }
-    
+
+
     renderSidebar() {
         const sidebarMenu = document.getElementById('sidebarMenu');
         if (!sidebarMenu) return;
-        
+
         sidebarMenu.innerHTML = `
             <div class="menu-group">
                 <div class="menu-group-title">Main</div>
@@ -136,23 +141,23 @@ class AdminModule {
                 </a>
             </div>
         `;
-        
+
         // Add click events
         sidebarMenu.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 // Update active item
                 sidebarMenu.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
                 item.classList.add('active');
-                
+
                 // Load view
                 const view = item.dataset.view;
                 this.loadView(view);
             });
         });
     }
-    
+
     async loadData() {
         try {
             // Mock API calls
@@ -164,41 +169,94 @@ class AdminModule {
                 bills: await this.fetchBills(),
                 payments: await this.fetchPayments()
             };
-            
-            
+
+
             this.renderSidebar();
-            
+
         } catch (error) {
             console.error('Error loading data:', error);
             Utils.showToast('Failed to load data', 'error');
         }
     }
-    
+
+    loadAddDoctorView() { this.container.innerHTML = '<h2>Add Doctor</h2><p>Form coming soon...</p>'; }
+    loadDoctorScheduleView() { this.container.innerHTML = '<h2>Doctor Schedule</h2><p>Schedule view coming soon...</p>'; }
+    loadAddPatientView() { this.container.innerHTML = '<h2>Register Patient</h2><p>Form coming soon...</p>'; }
+    loadPatientRecordsView() { this.container.innerHTML = '<h2>Medical Records</h2><p>Patient records coming soon...</p>'; }
+    loadInventoryView() { this.container.innerHTML = '<h2>Inventory Management</h2><p>Inventory list coming soon...</p>'; }
+    loadFinancialReportsView() { this.container.innerHTML = '<h2>Financial Reports</h2><p>Reports coming soon...</p>'; }
+    loadBackupView() { this.container.innerHTML = '<h2>Backup & Restore</h2><p>System backup tools coming soon...</p>'; }
+
     async fetchUsers() {
-        // Mock data
-        return [
-            { id: 1, username: 'admin', fullName: 'System Admin', role: 'Admin', status: 'Active', email: 'admin@hospital.com', createdAt: '2024-01-01' },
-            { id: 2, username: 'dr.smith', fullName: 'Dr. John Smith', role: 'Doctor', status: 'Active', email: 'smith@hospital.com', createdAt: '2024-01-02' },
-            { id: 3, username: 'nurse.jane', fullName: 'Jane Williams', role: 'Nurse', status: 'Active', email: 'jane@hospital.com', createdAt: '2024-01-03' },
-            { id: 4, username: 'reception', fullName: 'Sarah Johnson', role: 'Receptionist', status: 'Active', email: 'sarah@hospital.com', createdAt: '2024-01-04' },
-            { id: 5, username: 'accountant', fullName: 'Mike Johnson', role: 'Accountant', status: 'Pending', email: 'mike@hospital.com', createdAt: '2024-01-05' }
-        ];
+        try {
+            const response = await fetch(`${CONFIG.API_URL}/Users`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hms_token')}` }
+            });
+            if (!response.ok) throw new Error('Failed to fetch users');
+            const data = await response.json();
+            return data.map(u => ({
+                id: u.userId,
+                username: u.username,
+                fullName: u.fullName || u.username,
+                role: u.userType,
+                status: u.isActive ? 'Active' : 'Pending',
+                resetRequested: u.resetRequested,
+                email: u.email,
+                createdAt: u.createdAt
+            }));
+
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
     }
-    
+
+    async toggleUserStatus(username, currentStatus) {
+        try {
+            const isActive = currentStatus !== 'Active';
+            const response = await fetch(`${CONFIG.API_URL}/Users/${username}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('hms_token')}`
+                },
+                body: JSON.stringify(isActive)
+            });
+            if (response.ok) {
+                Utils.showToast(`User ${username} status updated`, 'success');
+                this.loadData();
+            } else {
+                throw new Error('Failed to update status');
+            }
+        } catch (error) {
+            Utils.showToast(error.message, 'error');
+        }
+    }
     async fetchPatients() {
-        return [
-            { id: 1, fullName: 'John Doe', age: 45, gender: 'Male', bloodType: 'O+', room: '101', status: 'Active' },
-            { id: 2, fullName: 'Jane Smith', age: 32, gender: 'Female', bloodType: 'A-', room: '102', status: 'Active' },
-            { id: 3, fullName: 'Robert Johnson', age: 58, gender: 'Male', bloodType: 'B+', room: 'ICU-01', status: 'Critical' }
-        ];
+        try {
+            const response = await fetch(`${CONFIG.API_URL}/Patients`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hms_token')}` }
+            });
+            return response.ok ? await response.json() : [];
+        } catch (err) { return []; }
     }
-    
-    // Similar methods for other data...
-    
+
+    async fetchDoctors() {
+        try {
+            const response = await fetch(`${CONFIG.API_URL}/Doctors`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hms_token')}` }
+            });
+            return response.ok ? await response.json() : [];
+        } catch (err) { return []; }
+    }
+    async fetchDepartments() { return []; }
+    async fetchBills() { return []; }
+    async fetchPayments() { return []; }
+
     loadView(view) {
         this.currentView = view;
-        
-        switch(view) {
+
+        switch (view) {
             case 'dashboard':
                 this.loadDashboard();
                 break;
@@ -211,8 +269,20 @@ class AdminModule {
             case 'doctors':
                 this.loadDoctorsView();
                 break;
+            case 'addDoctor':
+                this.loadAddDoctorView();
+                break;
+            case 'doctorSchedule':
+                this.loadDoctorScheduleView();
+                break;
             case 'patients':
                 this.loadPatientsView();
+                break;
+            case 'addPatient':
+                this.loadAddPatientView();
+                break;
+            case 'patientRecords':
+                this.loadPatientRecordsView();
                 break;
             case 'departments':
                 this.loadDepartmentsView();
@@ -220,11 +290,17 @@ class AdminModule {
             case 'rooms':
                 this.loadRoomsView();
                 break;
+            case 'inventory':
+                this.loadInventoryView();
+                break;
             case 'billing':
                 this.loadBillingView();
                 break;
             case 'payments':
                 this.loadPaymentsView();
+                break;
+            case 'financialReports':
+                this.loadFinancialReportsView();
                 break;
             case 'reports':
                 this.loadReportsView();
@@ -232,21 +308,25 @@ class AdminModule {
             case 'auditLogs':
                 this.loadAuditLogsView();
                 break;
+            case 'backup':
+                this.loadBackupView();
+                break;
             case 'settings':
                 this.loadSettingsView();
                 break;
             default:
                 this.loadDashboard();
         }
+
     }
-    
+
     loadDashboard() {
         this.container.innerHTML = `
             <div class="dashboard-header">
                 <h2>Admin Dashboard</h2>
                 <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
+                    <div class="stat-card clickable-card" onclick="AdminModule.showQuickInfo('users')">
+                        <div class="stat-icon icon-users">
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="stat-content">
@@ -254,8 +334,8 @@ class AdminModule {
                             <p>Total Users</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
+                    <div class="stat-card clickable-card" onclick="AdminModule.showQuickInfo('patients')">
+                        <div class="stat-icon icon-patients">
                             <i class="fas fa-user-injured"></i>
                         </div>
                         <div class="stat-content">
@@ -263,8 +343,8 @@ class AdminModule {
                             <p>Active Patients</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
+                    <div class="stat-card clickable-card" onclick="AdminModule.showQuickInfo('doctors')">
+                        <div class="stat-icon icon-doctors">
                             <i class="fas fa-user-md"></i>
                         </div>
                         <div class="stat-content">
@@ -272,8 +352,8 @@ class AdminModule {
                             <p>Doctors</p>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
+                    <div class="stat-card clickable-card" onclick="AdminModule.showQuickInfo('departments')">
+                        <div class="stat-icon icon-departments">
                             <i class="fas fa-hospital-alt"></i>
                         </div>
                         <div class="stat-content">
@@ -283,6 +363,19 @@ class AdminModule {
                     </div>
                 </div>
             </div>
+
+            <div id="dashboardQuickDetail" class="card mb-4" style="display: none; border-left: 5px solid var(--primary-color);">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 id="quickDetailTitle" class="mb-0"></h4>
+                        <button class="btn-icon" onclick="document.getElementById('dashboardQuickDetail').style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="quickDetailContent" class="mt-3"></div>
+                </div>
+            </div>
+
             
             <div class="dashboard-content">
                 <div class="row">
@@ -386,6 +479,7 @@ class AdminModule {
                                         <span class="status-value online">Active</span>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -393,7 +487,7 @@ class AdminModule {
             </div>
         `;
     }
-    
+
     loadUsersView() {
         this.container.innerHTML = `
             <div class="view-header">
@@ -451,6 +545,7 @@ class AdminModule {
                                         <span class="status-badge status-${user.status.toLowerCase()}">
                                             ${user.status}
                                         </span>
+                                        ${user.resetRequested ? '<span class="badge badge-warning ml-1" title="Password Reset Requested"><i class="fas fa-exclamation-triangle"></i></span>' : ''}
                                     </td>
                                     <td>${Utils.formatDate(user.createdAt)}</td>
                                     <td>
@@ -461,7 +556,7 @@ class AdminModule {
                                             <button class="btn-icon" title="View Details" onclick="AdminModule.viewUser(${user.id})">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <button class="btn-icon" title="Reset Password" onclick="AdminModule.resetPassword('${user.username}')">
+                                            <button class="btn-icon ${user.resetRequested ? 'btn-pulse' : ''}" title="Reset Password" onclick="AdminModule.resetPassword('${user.username}')">
                                                 <i class="fas fa-key"></i>
                                             </button>
                                             <button class="btn-icon btn-danger" title="Deactivate" onclick="AdminModule.toggleUserStatus('${user.username}', '${user.status}')">
@@ -469,6 +564,7 @@ class AdminModule {
                                             </button>
                                         </div>
                                     </td>
+
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -544,14 +640,14 @@ class AdminModule {
                 </div>
             </div>
         `;
-        
+
         // Add search functionality
         const searchInput = document.getElementById('userSearch');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 const rows = document.querySelectorAll('tbody tr');
-                
+
                 rows.forEach(row => {
                     const text = row.textContent.toLowerCase();
                     row.style.display = text.includes(searchTerm) ? '' : 'none';
@@ -559,7 +655,7 @@ class AdminModule {
             });
         }
     }
-    
+
     loadAddUserView() {
         this.container.innerHTML = `
             <div class="view-header">
@@ -680,23 +776,23 @@ class AdminModule {
                 </div>
             </div>
         `;
-        
+
 
         document.getElementById('userType').addEventListener('change', (e) => {
             this.updateDynamicFields(e.target.value);
         });
-    
+
         document.getElementById('addUserForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.submitUserForm();
         });
     }
-    
+
     updateDynamicFields(userType) {
         const container = document.getElementById('dynamicFields');
         let html = '';
-        
-        switch(userType) {
+
+        switch (userType) {
             case 'Doctor':
                 html = `
                     <div class="form-row">
@@ -704,9 +800,9 @@ class AdminModule {
                             <label for="specialization">Specialization *</label>
                             <select id="specialization" class="form-control" required>
                                 <option value="">Select Specialization</option>
-                                ${CONFIG.SPECIALIZATIONS.map(spec => 
-                                    `<option value="${spec}">${spec}</option>`
-                                ).join('')}
+                                ${CONFIG.SPECIALIZATIONS.map(spec =>
+                    `<option value="${spec}">${spec}</option>`
+                ).join('')}
                             </select>
                         </div>
                         
@@ -714,9 +810,9 @@ class AdminModule {
                             <label for="department">Department *</label>
                             <select id="department" class="form-control" required>
                                 <option value="">Select Department</option>
-                                ${CONFIG.DEPARTMENTS.map(dept => 
-                                    `<option value="${dept}">${dept}</option>`
-                                ).join('')}
+                                ${CONFIG.DEPARTMENTS.map(dept =>
+                    `<option value="${dept}">${dept}</option>`
+                ).join('')}
                             </select>
                         </div>
                     </div>
@@ -736,7 +832,7 @@ class AdminModule {
                     </div>
                 `;
                 break;
-                
+
             case 'Nurse':
                 html = `
                     <div class="form-row">
@@ -744,9 +840,9 @@ class AdminModule {
                             <label for="nurseDepartment">Department *</label>
                             <select id="nurseDepartment" class="form-control" required>
                                 <option value="">Select Department</option>
-                                ${CONFIG.DEPARTMENTS.map(dept => 
-                                    `<option value="${dept}">${dept}</option>`
-                                ).join('')}
+                                ${CONFIG.DEPARTMENTS.map(dept =>
+                    `<option value="${dept}">${dept}</option>`
+                ).join('')}
                             </select>
                         </div>
                         
@@ -761,7 +857,7 @@ class AdminModule {
                     </div>
                 `;
                 break;
-                
+
             case 'Patient':
                 html = `
                     <div class="form-row">
@@ -789,29 +885,29 @@ class AdminModule {
                 `;
                 break;
         }
-        
+
         container.innerHTML = html;
     }
-    
+
     async submitUserForm() {
         const form = document.getElementById('addUserForm');
         const formData = new FormData(form);
-        
+
         // Validate passwords match
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
-        
+
         if (password !== confirmPassword) {
             Utils.showToast('Passwords do not match', 'error');
             return;
         }
-        
+
         try {
             Utils.showLoading();
-            
+
             // Mock API call
             await new Promise(resolve => setTimeout(resolve, 1500));
-            
+
             // Simulate successful creation
             const newUser = {
                 id: this.data.users.length + 1,
@@ -822,53 +918,53 @@ class AdminModule {
                 status: document.getElementById('status').value,
                 createdAt: new Date().toISOString().split('T')[0]
             };
-            
+
             this.data.users.push(newUser);
-            
+
             Utils.showToast(`User ${newUser.username} created successfully!`, 'success');
-            
+
             // Update UI
             this.renderSidebar();
-            
+
             // Go back to users list
             setTimeout(() => {
                 this.loadUsersView();
             }, 1000);
-            
+
         } catch (error) {
             Utils.showToast('Failed to create user: ' + error.message, 'error');
         } finally {
             Utils.hideLoading();
         }
     }
-    
+
     // Add other view methods similarly...
-    
+
     async editUser(userId) {
         // Implementation for editing user
         Utils.showToast('Edit user feature coming soon', 'info');
     }
-    
+
     async viewUser(userId) {
         // Implementation for viewing user details
         Utils.showToast('View user feature coming soon', 'info');
     }
-    
+
     async resetPassword(username) {
         const confirmed = await Utils.confirm(`Reset password for user "${username}"?`);
         if (!confirmed) return;
-        
+
         try {
             Utils.showLoading();
-            
+
             // Mock API call
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             // Generate temporary password
             const tempPassword = 'Temp@' + Math.random().toString(36).slice(2, 8);
-            
+
             Utils.showToast(`Password reset successful! Temporary password: ${tempPassword}`, 'success');
-            
+
             // Show password in modal
             const modal = document.createElement('div');
             modal.className = 'modal-overlay active';
@@ -912,99 +1008,172 @@ class AdminModule {
                     </div>
                 </div>
             `;
-            
+
             document.body.appendChild(modal);
-            
+
             modal.querySelector('.modal-close').addEventListener('click', () => {
                 modal.remove();
             });
-            
+
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     modal.remove();
                 }
             });
-            
+
         } catch (error) {
             Utils.showToast('Failed to reset password', 'error');
         } finally {
             Utils.hideLoading();
         }
     }
-    
+
     async toggleUserStatus(username, currentStatus) {
         const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
         const action = currentStatus === 'Active' ? 'deactivate' : 'activate';
-        
+
         const confirmed = await Utils.confirm(
             `Are you sure you want to ${action} user "${username}"?`
         );
-        
+
         if (!confirmed) return;
-        
+
         try {
             Utils.showLoading();
-            
+
             // Mock API call
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             // Update user in data
             const user = this.data.users.find(u => u.username === username);
             if (user) {
                 user.status = newStatus;
             }
-            
+
             Utils.showToast(`User ${username} ${action}d successfully!`, 'success');
-            
+
             // Refresh the view
             this.loadUsersView();
-            
+
         } catch (error) {
             Utils.showToast('Failed to update user status', 'error');
         } finally {
             Utils.hideLoading();
         }
     }
-    
+
     getRecentActivity() {
         return `
             <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
+                <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
                 <div class="activity-content">
                     <p>New user registered: <strong>accountant.mike</strong></p>
                     <span class="activity-time">10 minutes ago</span>
                 </div>
             </div>
             <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-file-invoice"></i>
-                </div>
+                <div class="activity-icon"><i class="fas fa-file-invoice"></i></div>
                 <div class="activity-content">
                     <p>Bill #B2024001 created for John Doe</p>
                     <span class="activity-time">1 hour ago</span>
                 </div>
             </div>
             <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-user-check"></i>
-                </div>
+                <div class="activity-icon"><i class="fas fa-user-check"></i></div>
                 <div class="activity-content">
                     <p>Doctor account activated: Dr. Sarah Jones</p>
                     <span class="activity-time">2 hours ago</span>
                 </div>
             </div>
             <div class="activity-item">
-                <div class="activity-icon">
-                    <i class="fas fa-database"></i>
-                </div>
+                <div class="activity-icon"><i class="fas fa-database"></i></div>
                 <div class="activity-content">
                     <p>System backup completed successfully</p>
                     <span class="activity-time">Yesterday, 3:45 PM</span>
                 </div>
             </div>
         `;
+
+    }
+
+    showQuickInfo(type) {
+        const detailDiv = document.getElementById('dashboardQuickDetail');
+        const titleEl = document.getElementById('quickDetailTitle');
+        const contentEl = document.getElementById('quickDetailContent');
+
+        detailDiv.style.display = 'block';
+
+        let title = '';
+        let content = '';
+
+        switch (type) {
+            case 'users':
+                title = 'User Statistics';
+                content = `Total: ${this.data.users.length} | Active: ${this.data.users.filter(u => u.status === 'Active').length} | Pending: ${this.data.users.filter(u => u.status === 'Pending').length}`;
+                break;
+            case 'patients':
+                title = 'Patient Overview';
+                content = `Active Patients: ${this.data.patients.length} | Recently Admitted: ${this.data.patients.slice(0, 3).map(p => p.fullName).join(', ') || 'None'}`;
+                break;
+            case 'doctors':
+                title = 'Doctor Availability';
+                content = `On Duty Check: ${this.data.doctors.length} doctors currently registered in system. Check schedule for details.`;
+                break;
+            case 'departments':
+                title = 'Hospital Departments';
+                content = `Active Units: ${this.data.departments.map(d => d.name).join(', ') || 'General, Emergency, OPD'}`;
+                break;
+        }
+
+        titleEl.textContent = title;
+        contentEl.innerHTML = `<p class="mb-0">${content}</p>`;
+        detailDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    addNotification(message, type = 'info') {
+        const container = document.getElementById('hms-notifications');
+        if (!container) return;
+
+        const id = 'notif-' + Date.now();
+        const div = document.createElement('div');
+        div.className = `notification-item border-${type}`;
+        div.id = id;
+        div.innerHTML = `
+            <span>${message}</span>
+            <button class="btn-close" onclick="document.getElementById('${id}').remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        container.appendChild(div);
+        setTimeout(() => { if (document.getElementById(id)) document.getElementById(id).remove(); }, 5000);
+    }
+
+    editUser(id) { Utils.showToast('Edit User ' + id + ' coming soon...', 'info'); }
+
+    viewUser(id) { Utils.showToast('View User ' + id + ' coming soon...', 'info'); }
+
+    async resetPassword(username) {
+        const newPassword = prompt('Enter new password for ' + username);
+        if (!newPassword) return;
+
+        try {
+            const response = await fetch(`${CONFIG.API_URL}/Users/${username}/reset-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('hms_token')}`
+                },
+                body: JSON.stringify(newPassword)
+            });
+            if (response.ok) {
+                Utils.showToast('Password reset successful', 'success');
+                this.loadData();
+            } else {
+                throw new Error('Failed to reset password');
+            }
+        } catch (error) {
+            Utils.showToast(error.message, 'error');
+        }
     }
 }
 

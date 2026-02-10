@@ -399,23 +399,19 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== DOCTOR SCHEDULE ===\n");
             
-            var doctors = await _dataService.GetDoctorsAsync();
+            var schedules = await _dataService.GetDoctorSchedulesAsync();
             
-            Console.WriteLine("Doctor           | Monday         | Tuesday        | Wednesday");
-            Console.WriteLine("---------------------------------------------------------------");
-            Console.WriteLine("Dr. John Smith   | 9-5 (Cardio)   | 9-5 (Cardio)   | Surgery");
-            Console.WriteLine("Dr. Sarah Jones  | Research       | 10-4 (Neuro)   | 10-4 (Neuro)");
-            Console.WriteLine("Dr. Mike Brown   | 8-3 (Ortho)    | Surgery        | 8-3 (Ortho)");
-            Console.WriteLine("Dr. Lisa Wang    | 9-6 (Peds)     | 9-6 (Peds)     | Admin");
+            Console.WriteLine("Doctor           | Monday         | Tuesday        | Wednesday      | Thursday       | Friday         ");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            foreach (var s in schedules)
+            {
+                Console.WriteLine($"{s.DoctorName,-16} | {s.Monday,-14} | {s.Tuesday,-14} | {s.Wednesday,-14} | {s.Thursday,-14} | {s.Friday,-14}");
+            }
             
-            Console.WriteLine("\nOn-Call Schedule:");
-            Console.WriteLine("Today (Night): Dr. John Smith");
-            Console.WriteLine("Tomorrow: Dr. Sarah Jones");
-            Console.WriteLine("Weekend: Dr. Mike Brown");
+            Console.WriteLine("\nOn-Call Summary: Contact Department Head for emergency changes.");
             
-            Console.WriteLine("\n1. View Detailed Schedule");
-            Console.WriteLine("2. Print Schedule");
-            Console.WriteLine("3. Back to dashboard");
+            Console.WriteLine("\n1. Print Schedule");
+            Console.WriteLine("2. Back to dashboard");
             Console.Write("\nSelect: ");
             
             Console.ReadKey();
@@ -426,26 +422,32 @@ namespace HospitalManagementSystem.ConsoleApp.Dashboard
             Console.Clear();
             Console.WriteLine("=== REPORTS & ANALYTICS ===\n");
             
+            var analytics = await _dataService.GetReceptionistAnalyticsAsync();
+
             Console.WriteLine("Daily Report - " + DateTime.Now.ToString("yyyy-MM-dd"));
             Console.WriteLine("----------------------------------------");
-            Console.WriteLine("New Registrations: 12");
-            Console.WriteLine("Appointments: 45");
-            Console.WriteLine("Walk-ins: 8");
-            Console.WriteLine("Emergency Cases: 5");
-            Console.WriteLine("Revenue: $8,450");
-            Console.WriteLine("Patient Satisfaction: 92%");
+            Console.WriteLine($"New Registrations: {analytics.NewRegistrationsToday}");
+            Console.WriteLine($"Appointments:      {analytics.AppointmentsToday}");
+            Console.WriteLine($"Walk-ins:          {analytics.WalkInsToday}");
+            Console.WriteLine($"Emergency Cases:   {analytics.EmergencyCasesToday}");
+            Console.WriteLine($"Revenue:           ${analytics.RevenueToday:N2}");
+            Console.WriteLine($"Pat. Satisfaction: {analytics.PatientSatisfaction}%");
             
-            Console.WriteLine("\nTop Services:");
-            Console.WriteLine("1. General Consultation: 25");
-            Console.WriteLine("2. Lab Tests: 18");
-            Console.WriteLine("3. X-Ray: 12");
-            Console.WriteLine("4. Pharmacy: 35");
+            Console.WriteLine("\nTop Services Provided:");
+            foreach (var service in analytics.TopServices)
+            {
+                Console.WriteLine($"- {service.Key}: {service.Value} uses");
+            }
+            
+            if (analytics.TopServices.Count == 0)
+            {
+                Console.WriteLine("No billable services recorded today.");
+            }
             
             Console.WriteLine("\n1. Generate Daily Report");
             Console.WriteLine("2. Monthly Analytics");
-            Console.WriteLine("3. Patient Demographics");
-            Console.WriteLine("4. Export to Excel");
-            Console.WriteLine("5. Back to dashboard");
+            Console.WriteLine("3. Export to Excel");
+            Console.WriteLine("4. Back to dashboard");
             Console.Write("\nSelect: ");
             
             Console.ReadKey();

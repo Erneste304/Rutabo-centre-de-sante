@@ -49,12 +49,12 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("BillId")]
-        public virtual Billing Billing { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Billing Billing { get; set; } = null!;
         
         [ForeignKey("PatientId")]
-        public virtual Patient Patient { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Patient Patient { get; set; } = null!;
         
         [ForeignKey("ReceivedBy")]
-        public virtual User? ReceivedByUser { get; set; }
+        public virtual HospitalManagementSystem.Data.Entities.User? ReceivedByUser { get; set; }
     }
 }

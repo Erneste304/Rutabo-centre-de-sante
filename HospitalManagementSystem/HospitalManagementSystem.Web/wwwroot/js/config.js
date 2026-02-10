@@ -1,6 +1,6 @@
 // Application Configuration
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:5000/api',
+    API_BASE_URL: '/api',
     APP_VERSION: '2.0.0',
     APP_NAME: 'Hospital Management System',
     

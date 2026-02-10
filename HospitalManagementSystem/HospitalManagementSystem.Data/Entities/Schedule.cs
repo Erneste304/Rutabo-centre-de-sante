@@ -33,6 +33,6 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("DoctorId")]
-        public virtual Doctor Doctor { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Doctor Doctor { get; set; } = null!;
     }
 }

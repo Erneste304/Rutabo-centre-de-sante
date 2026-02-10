@@ -35,6 +35,6 @@ namespace HospitalManagementSystem.Data.Entities
         
         
         [ForeignKey("PrescriptionId")]
-        public virtual Prescription Prescription { get; set; } = null!;
+        public virtual HospitalManagementSystem.Data.Entities.Prescription Prescription { get; set; } = null!;
     }
 }

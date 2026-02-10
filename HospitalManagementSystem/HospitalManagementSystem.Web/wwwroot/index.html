@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Management System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- Loading Screen -->
     <div id="loading" class="loading-screen">
@@ -31,7 +34,7 @@
                 </div>
                 <p>Secure Login Portal</p>
             </div>
-            
+
             <div class="login-form">
                 <div class="form-group">
                     <label for="username">
@@ -39,7 +42,7 @@
                     </label>
                     <input type="text" id="username" placeholder="Enter your username">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">
                         <i class="fas fa-lock"></i> Password
@@ -51,7 +54,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="form-options">
                     <label class="checkbox">
                         <input type="checkbox" id="rememberMe">
@@ -59,11 +62,18 @@
                     </label>
                     <a href="#" class="forgot-password">Forgot Password?</a>
                 </div>
-                
+
                 <button id="loginBtn" class="btn-login">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>
-                
+
+                <div class="login-footer mt-3">
+                    <p>Don't have an account? <a href="register.html">Register</a></p>
+                    <p><a href="#" id="forgotPasswordLink">Forgot Password?</a></p>
+                </div>
+
+
+
                 <div class="login-footer">
                     <p>Select User Type:</p>
                     <div class="user-type-buttons">
@@ -88,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="login-footer-info">
                 <p><i class="fas fa-shield-alt"></i> Secure System v2.0</p>
                 <p><i class="fas fa-phone"></i> Emergency: 911 | Support: 1-800-HOSPITAL</p>
@@ -108,7 +118,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
-            
+
             <div class="user-profile">
                 <div class="profile-image">
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=4A90E2&color=fff" alt="Admin">
@@ -119,11 +129,11 @@
                     <span id="userDepartment" class="user-department">System Administration</span>
                 </div>
             </div>
-            
+
             <!-- Navigation Menu -->
             <nav class="sidebar-menu" id="sidebarMenu">
             </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="system-status">
                     <div class="status-indicator active"></div>
@@ -134,10 +144,10 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Main Content -->
         <div class="main-content">
-            
+
             <header class="top-header">
                 <div class="header-left">
                     <h1 id="dashboardTitle">Admin Dashboard</h1>
@@ -145,7 +155,7 @@
                         <span id="breadcrumb">Dashboard</span>
                     </div>
                 </div>
-                
+
                 <div class="header-right">
                     <div class="header-actions">
                         <button class="header-btn" id="notificationsBtn">
@@ -160,7 +170,7 @@
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
-                    
+
                     <div class="quick-stats">
                         <div class="stat-item">
                             <i class="fas fa-user-injured"></i>
@@ -184,21 +194,21 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="datetime-display">
                         <span id="currentDate">Monday, January 15, 2024</span>
                         <span id="currentTime">10:30:45 AM</span>
                     </div>
                 </div>
             </header>
-            
+
             <div class="content-area" id="contentArea">
                 <div class="welcome-message">
                     <h2>Welcome to Hospital Management System</h2>
                     <p>Select an option from the sidebar to get started.</p>
                 </div>
             </div>
-            
+
             <div class="notifications-panel" id="notificationsPanel">
                 <div class="panel-header">
                     <h3>Notifications</h3>
@@ -225,4 +235,5 @@
     <script src="js/modules/accountant.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>
