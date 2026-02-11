@@ -38,6 +38,11 @@ namespace HospitalManagementSystem.Data.Entities
         [StringLength(500)]
         public string? Features { get; set; }
         
+        [StringLength(100)]
+        public string? PatientName { get; set; }
+        
+        public DateTime? OccupiedSince { get; set; }
+        
         [StringLength(500)]
         public string? Notes { get; set; }
         

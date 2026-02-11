@@ -28,6 +28,8 @@ namespace HospitalManagementSystem.Data
         public DbSet<Entities.PrescriptionItem> PrescriptionItems { get; set; }
         public DbSet<Entities.LabTest> LabTests { get; set; }
         public DbSet<Entities.Schedule> Schedules { get; set; }
+        public DbSet<Entities.ShiftReport> ShiftReports { get; set; }
+        public DbSet<Entities.EmployeeShift> EmployeeShifts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

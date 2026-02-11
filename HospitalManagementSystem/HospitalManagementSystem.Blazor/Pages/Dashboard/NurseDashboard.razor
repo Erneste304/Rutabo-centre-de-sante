@@ -1,0 +1,112 @@
+@page "/dashboard/nurse"
+@using HospitalManagementSystem.Blazor.Services
+@using HospitalManagementSystem.Blazor.Components.NurseComponents
+@inject NurseService NurseService
+
+<div class="nurse-dashboard">
+    <div class="view-header mb-4">
+        <h2><i class="fas fa-user-nurse"></i> Nurse Dashboard</h2>
+        <div class="user-info">
+            <span class="badge bg-primary">@Department Department</span>
+        </div>
+    </div>
+
+    <div class="welcome-message mb-4">
+        <h3>Welcome, Nurse @FullName</h3>
+        <p>Your shift: <strong>@CurrentShift</strong></p>
+    </div>
+
+    <div class="quick-stats row mb-4">
+        <div class="col-md-3">
+            <div class="stat-card card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon me-3">
+                            <i class="fas fa-user-injured fa-2x text-primary"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>@PatientCount</h3>
+                            <p class="mb-0 text-muted">My Patients</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- More stat cards can be added here -->
+    </div>
+
+    <div class="dashboard-actions mb-4">
+        <button class="btn btn-outline-danger me-2 mb-2" @onclick="ShowVitalSigns">
+            <i class="fas fa-heartbeat"></i>
+            <span>Record Vital Signs</span>
+        </button>
+        <button class="btn btn-outline-primary me-2 mb-2" @onclick="ShowMedicationAdmin">
+            <i class="fas fa-pills"></i>
+            <span>Medication Administration</span>
+        </button>
+        <button class="btn btn-outline-success me-2 mb-2" @onclick="() => ShowComponent<ShiftReport>()">
+            <i class="fas fa-clipboard"></i>
+            <span>Shift Report</span>
+        </button>
+        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="ShowRoomManagement">
+            <i class="fas fa-bed"></i>
+            <span>Room Management</span>
+        </button>
+    </div>
+
+    @if (_activeComponent != null)
+    {
+        <div class="component-container card p-3">
+            @_activeComponent
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string FullName { get; set; } = "";
+    [Parameter] public string Department { get; set; } = "General";
+    
+    private int PatientCount = 12;
+    private string CurrentShift = "Morning (7:00 AM - 3:00 PM)";
+    private RenderFragment? _activeComponent;
+
+    private void ShowComponent<T>() where T : IComponent
+    {
+        _activeComponent = builder =>
+        {
+            builder.OpenComponent(0, typeof(T));
+            if (typeof(T) == typeof(ShiftReport))
+            {
+                builder.AddAttribute(1, "OnCancel", EventCallback.Factory.Create(this, () => _activeComponent = null));
+            }
+            builder.CloseComponent();
+        };
+    }
+
+    private void ShowVitalSigns() { 
+        // Placeholder
+        _activeComponent = builder => {
+            builder.OpenElement(0, "div");
+            builder.AddContent(1, "Vital Signs Component Placeholder");
+            builder.CloseElement();
+        };
+    }
+    
+    private void ShowMedicationAdmin() { 
+        // Placeholder
+        _activeComponent = builder => {
+            builder.OpenElement(0, "div");
+            builder.AddContent(1, "Medication Admin Component Placeholder");
+            builder.CloseElement();
+        };
+    }
+    
+    private void ShowRoomManagement() { 
+        // Placeholder
+        _activeComponent = builder => {
+            builder.OpenElement(0, "div");
+            builder.AddContent(1, "Room Management Component Placeholder");
+            builder.CloseElement();
+        };
+    }
+}

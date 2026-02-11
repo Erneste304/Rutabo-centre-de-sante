@@ -1,0 +1,119 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = HospitalManagementSystem
+build_property.RootNamespace = HospitalManagementSystem
+build_property.ProjectDir = C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/App.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/BillingComponents/BillList.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXEJpbGxpbmdDb21wb25lbnRzXEJpbGxMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/BillingComponents/InvoiceGenerator.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXEJpbGxpbmdDb21wb25lbnRzXEludm9pY2VHZW5lcmF0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/BillingComponents/PaymentProcessor.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXEJpbGxpbmdDb21wb25lbnRzXFBheW1lbnRQcm9jZXNzb3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/NurseComponents/RoomManagement.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXE51cnNlQ29tcG9uZW50c1xSb29tTWFuYWdlbWVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/NurseComponents/ShiftReport.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXE51cnNlQ29tcG9uZW50c1xTaGlmdFJlcG9ydC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/NurseComponents/VitalSigns.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxDb21wb25lbnRzXE51cnNlQ29tcG9uZW50c1xWaXRhbFNpZ25zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Layout/LoginLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxMYXlvdXRcTG9naW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/AccountantDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xEYXNoYm9hcmRcQWNjb3VudGFudERhc2hib2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/AdminDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xEYXNoYm9hcmRcQWRtaW5EYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/DoctorDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xEYXNoYm9hcmRcRG9jdG9yRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/NurseDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xEYXNoYm9hcmRcTnVyc2VEYXNoYm9hcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/PatientDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xEYXNoYm9hcmRcUGF0aWVudERhc2hib2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/NotFound.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xOb3RGb3VuZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxQYWdlc1xXZWF0aGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Shared/DashboardContainer.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxTaGFyZWRcRGFzaGJvYXJkQ29udGFpbmVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Shared/LoadingScreen.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxTaGFyZWRcTG9hZGluZ1NjcmVlbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-xctup0gado
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = SG9zcGl0YWxNYW5hZ2VtZW50U3lzdGVtLkJsYXpvclxMYXlvdXRcTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-8u6qfs9d2g

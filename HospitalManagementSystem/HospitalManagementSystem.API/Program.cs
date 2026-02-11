@@ -55,6 +55,7 @@ builder.Services.AddScoped<IPatientRepository, PatientRepository>();
     // builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IPatientService, PatientService>();
+    builder.Services.AddScoped<INurseService, NurseService>();
     builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
 
@@ -78,21 +79,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-var webRootPath = Path.Combine(builder.Environment.ContentRootPath, "..", "HospitalManagementSystem.Web", "wwwroot");
-if (Directory.Exists(webRootPath))
-{
-    app.UseFileServer(new FileServerOptions
-    {
-        FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webRootPath),
-        RequestPath = "",
-        EnableDirectoryBrowsing = false
-    });
-    Console.WriteLine($"Serving static files from: {webRootPath}");
-}
-else
-{
-    Console.WriteLine($"WARNING: Static file directory not found: {webRootPath}");
-}
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 
@@ -114,29 +102,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -1,0 +1,43 @@
+@page "/"
+@using HospitalManagementSystem.Blazor.Services
+@using HospitalManagementSystem.Blazor.Shared
+@inject AuthService AuthService
+
+<PageTitle>Hospital Management System</PageTitle>
+
+@if (_isLoading)
+{
+    <LoadingScreen />
+}
+else if (!_isAuthenticated)
+{
+    <Login OnLoginSuccess="@HandleLoginSuccess" />
+}
+else
+{
+    <DashboardContainer User="@_currentUser" />
+}
+
+@code {
+    private bool _isLoading = true;
+    private bool _isAuthenticated = false;
+    private UserModel? _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _isAuthenticated = await AuthService.CheckAuthenticationAsync();
+        if (_isAuthenticated)
+        {
+            _currentUser = await AuthService.GetCurrentUserAsync();
+        }
+        _isLoading = false;
+    }
+
+    private void HandleLoginSuccess(UserModel user)
+    {
+        _currentUser = user;
+        _isAuthenticated = true;
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,118 @@
+@page "/login"
+@layout LoginLayout
+@using HospitalManagementSystem.Blazor.Services
+@inject AuthService AuthService
+
+<div class="login-screen">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="hospital-logo">
+                <i class="fas fa-hospital-alt"></i>
+                <h2>Hospital Management System</h2>
+            </div>
+            <p>Secure Login Portal</p>
+        </div>
+        
+        <div class="login-form">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Username</label>
+                <input @bind="_username" @bind:event="oninput" 
+                       type="text" placeholder="Enter your username" class="form-control" />
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <div class="password-container input-group">
+                    <input @bind="_password" @bind:event="oninput" 
+                           type="@(_showPassword ? "text" : "password")" 
+                           placeholder="Enter your password" class="form-control" />
+                    <button class="btn btn-outline-secondary" type="button" @onclick="() => _showPassword = !_showPassword">
+                        <i class="fas fa-eye@(_showPassword ? "-slash" : "")"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-options">
+                <label class="checkbox">
+                    <input @bind="_rememberMe" type="checkbox" />
+                    <span>Remember me</span>
+                </label>
+                <a href="#">Forgot Password?</a>
+            </div>
+            
+            <button class="btn btn-primary btn-block btn-login" @onclick="HandleLogin" disabled="@_isLoggingIn">
+                @if (_isLoggingIn)
+                {
+                    <span class="spinner-border spinner-border-sm"></span>
+                    <span>Logging in...</span>
+                }
+                else
+                {
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login</span>
+                }
+            </button>
+            
+            <div class="login-footer">
+                <p>Select User Type:</p>
+                <div class="user-type-buttons">
+                    @foreach (var userType in _userTypes)
+                    {
+                        <button type="button" 
+                                class="btn btn-sm @(userType == _selectedUserType ? "btn-primary" : "btn-outline-secondary")"
+                                @onclick="() => _selectedUserType = userType">
+                            <i class="@GetUserTypeIcon(userType)"></i>
+                            <span>@userType</span>
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<UserModel> OnLoginSuccess { get; set; }
+
+    private string _username = "";
+    private string _password = "";
+    private bool _rememberMe = false;
+    private bool _showPassword = false;
+    private bool _isLoggingIn = false;
+    private string _selectedUserType = "Admin";
+    
+    private readonly List<string> _userTypes = new() { "Admin", "Doctor", "Nurse", "Reception", "Patient", "Accountant" };
+
+    private string GetUserTypeIcon(string userType) => userType switch
+    {
+        "Admin" => "fas fa-user-shield",
+        "Doctor" => "fas fa-user-md",
+        "Nurse" => "fas fa-user-nurse",
+        "Reception" => "fas fa-headset",
+        "Patient" => "fas fa-user-injured",
+        "Accountant" => "fas fa-calculator",
+        _ => "fas fa-user"
+    };
+
+    private async Task HandleLogin()
+    {
+        _isLoggingIn = true;
+        try
+        {
+            var user = await AuthService.LoginAsync(_username, _password, _selectedUserType);
+            if (user != null)
+            {
+                await OnLoginSuccess.InvokeAsync(user);
+            }
+            else
+            {
+                // Show error (would typically use a toast service here)
+                Console.WriteLine("Login failed");
+            }
+        }
+        finally
+        {
+            _isLoggingIn = false;
+        }
+    }
+}

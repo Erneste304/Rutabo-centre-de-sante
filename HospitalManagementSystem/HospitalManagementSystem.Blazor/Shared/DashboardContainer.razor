@@ -1,0 +1,32 @@
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Pages.Dashboard
+
+@if (User == null)
+{
+    <p>Loading user data...</p>
+}
+else
+{
+    @switch (User.UserType)
+    {
+        case "Nurse":
+            <NurseDashboard FullName="@User.FullName" Department="@(User.Department ?? "General")" />
+            break;
+        case "Doctor":
+            <p>Doctor Dashboard (Not Implemented)</p>
+            break;
+        case "Admin":
+            <p>Admin Dashboard (Not Implemented)</p>
+            break;
+        case "Accountant":
+            <p>Accountant Dashboard (Not Implemented)</p>
+            break;
+        default:
+            <p>Unknown User Type: @User.UserType</p>
+            break;
+    }
+}
+
+@code {
+    [Parameter] public UserModel? User { get; set; }
+}

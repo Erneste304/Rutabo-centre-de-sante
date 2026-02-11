@@ -1,0 +1,11 @@
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\EmbeddedAttribute.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\ValidatableTypeAttribute.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.AssemblyInfoInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.AssemblyInfo.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.csproj.CoreCompileInputs.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.RazorAssemblyInfo.cache
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.RazorAssemblyInfo.cs
+C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\HospitalManagementSystem.sourcelink.json

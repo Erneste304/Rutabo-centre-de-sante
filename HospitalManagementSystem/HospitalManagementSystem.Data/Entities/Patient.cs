@@ -60,6 +60,9 @@ namespace HospitalManagementSystem.Data.Entities
         
         public bool IsActive { get; set; } = true;
         
+        [StringLength(20)]
+        public string? RoomNumber { get; set; }
+        
         [StringLength(1000)]
         public string? Notes { get; set; }
         
