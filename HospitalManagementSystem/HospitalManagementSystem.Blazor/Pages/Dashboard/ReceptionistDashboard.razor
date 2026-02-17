@@ -1,0 +1,66 @@
+@namespace HospitalManagementSystem.Blazor.Pages.Dashboard
+
+<div class="receptionist-dashboard theme-analytics animate-in">
+    <div class="header-top mb-4">
+        <div class="header-content">
+            <h1>Front Desk Analytics</h1>
+            <p class="text-muted">Appointment scheduling, check-ins, and patient flow.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-primary btn-lg rounded-pill px-4">New Appointment</button>
+        </div>
+    </div>
+
+    <div class="stat-grid">
+        <div class="premium-card">
+            <div class="card-value">42</div>
+            <div class="card-label">Total Bookings Today</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-value">12</div>
+            <div class="card-label">Patients Checked In</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-value">5.2m</div>
+            <div class="card-label">Avg. Waiting Time</div>
+        </div>
+    </div>
+
+    <div class="premium-card mt-4 glass">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Interactive Analytics</h3>
+            <div class="filter-btns">
+                <button class="btn btn-sm btn-outline-primary">Daily</button>
+                <button class="btn btn-sm btn-primary">Weekly</button>
+            </div>
+        </div>
+        <div class="analytics-visual p-5 text-center text-muted" style="border: 2px dashed var(--border); border-radius: 20px;">
+            <i class="fas fa-project-diagram fa-4x mb-3 text-primary"></i>
+            <h4>Patient Flow Visualization</h4>
+            <p>Live tracking of hospital movement and queue status.</p>
+        </div>
+    </div>
+
+    <div class="dashboard-actions mt-4">
+        <div class="action-btn">
+            <i class="fas fa-address-book"></i>
+            <span>Register Patient</span>
+        </div>
+        <div class="action-btn">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Calendar View</span>
+        </div>
+        <div class="action-btn">
+            <i class="fas fa-door-open"></i>
+            <span>Room Availability</span>
+        </div>
+        <div class="action-btn">
+            <i class="fas fa-bullhorn"></i>
+            <span>Announcements</span>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string FullName { get; set; } = "";
+}

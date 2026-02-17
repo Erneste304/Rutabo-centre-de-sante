@@ -3,20 +3,285 @@
 @using HospitalManagementSystem.Blazor.Shared
 @inject AuthService AuthService
 
-<PageTitle>Hospital Management System</PageTitle>
+<PageTitle>Global Data 365 | Hospital Management Dashboard</PageTitle>
 
 @if (_isLoading)
 {
-    <LoadingScreen />
+    <div class="loading-overlay">
+        <div class="innovative-spinner"></div>
+    </div>
 }
 else if (!_isAuthenticated)
 {
-    <Login OnLoginSuccess="@HandleLoginSuccess" />
+    <div class="global-data-landing">
+        <div class="landing-container">
+            <header class="landing-header">
+                <div class="header-logo">
+                    <i class="fas fa-hospital-alt"></i>
+                    <div class="logo-text">
+                        <span class="logo-main">Rutabo Clinic</span>
+                        <span class="logo-sub">ADVANCED HEALTHCARE SOLUTIONS</span>
+                    </div>
+                </div>
+                <nav class="header-nav">
+                    <button class="btn btn-link">Login</button>
+                    <button class="btn btn-primary btn-round">Register</button>
+                </nav>
+            </header>
+
+            <main class="landing-main">
+                <div class="content-left">
+                    <h1 class="main-title">Hospital<br/>Dashboard</h1>
+                    
+                    <div class="action-pills">
+                        <div class="pill">
+                            <i class="fas fa-heartbeat"></i> <span>Hospital Overview</span>
+                        </div>
+                        <div class="pill">
+                            <i class="fas fa-user"></i> <span>Patient Insights</span>
+                        </div>
+                        <div class="pill">
+                            <i class="fas fa-users"></i> <span>Staff Performance</span>
+                        </div>
+                        <div class="pill">
+                            <i class="fas fa-coins"></i> <span>Finance Evaluation</span>
+                        </div>
+                        <div class="pill">
+                            <i class="fas fa-plus-circle"></i> <span>Medical Efficiency</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons-group">
+                        <button class="btn btn-primary btn-lg btn-round">
+                            <i class="fas fa-play-circle"></i> Explore Full Demo
+                        </button>
+                    </div>
+
+                    <div class="login-auth-section">
+                        <Login OnLoginSuccess="@HandleLoginSuccess" />
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
 }
 else
 {
     <DashboardContainer User="@_currentUser" />
 }
+
+<style>
+    :root {
+        --gd-primary: #ffffff;
+        --gd-text: #ffffff;
+        --gd-accent: #f0f0f0;
+    }
+
+    .global-data-landing {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #798bff 0%, #8c7cf0 100%);
+    }
+
+    .landing-container {
+        position: relative;
+        z-index: 10;
+        height: 100%;
+        padding: 40px 80px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .landing-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+    }
+
+    .header-nav {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .header-logo i {
+        font-size: 2.2rem;
+    }
+
+    .logo-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo-main {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .logo-sub {
+        font-size: 0.6rem;
+        font-weight: 500;
+        opacity: 0.8;
+        letter-spacing: 1px;
+    }
+
+    /* Refined Buttons for Landing */
+    .btn-round {
+        border-radius: 100px !important;
+        padding: 10px 30px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem !important;
+    }
+
+    .btn-link {
+        background: transparent !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        padding: 0 !important;
+    }
+
+    .btn-lg {
+        padding: 18px 45px !important;
+        font-size: 1rem !important;
+    }
+
+    .action-buttons-group {
+        margin-bottom: 3rem;
+    }
+
+    .landing-main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .content-left {
+        max-width: 600px;
+    }
+
+    .main-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 3rem;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .action-pills {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        gap: 15px;
+        justify-content: start;
+        margin-bottom: 2rem;
+    }
+
+    .pill {
+        background: white;
+        padding: 12px 24px;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #457b9d;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .pill:hover {
+        transform: translateY(-2px);
+    }
+
+    .pill i {
+        background: #457b9d;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    .pill:nth-child(5) {
+        grid-column: span 2;
+        justify-self: center;
+        margin-left: -50%;
+    }
+
+    .login-auth-section {
+        margin-top: 2rem;
+        max-width: 400px;
+    }
+
+    /* Hide redundant header elements in login component */
+    ::deep .login-header {
+        display: none !important;
+    }
+
+    /* Override Login Styles to be transparent and compact */
+    ::deep .login-container {
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
+        padding: 25px !important;
+        color: white !important;
+    }
+
+    ::deep .login-header h2, 
+    ::deep .login-header p,
+    ::deep .login-form label,
+    ::deep .login-footer p,
+    ::deep .login-form .checkbox span,
+    ::deep .login-form a {
+        color: white !important;
+    }
+
+    ::deep .form-control {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        color: white !important;
+    }
+
+    ::deep .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @@media (max-width: 900px) {
+        .landing-container { padding: 20px; }
+        .main-title { font-size: 2.5rem; }
+        .action-pills { grid-template-columns: 1fr; }
+        .pill:nth-child(5) { grid-column: auto; margin-left: 0; justify-self: start; }
+    }
+</style>
 
 @code {
     private bool _isLoading = true;

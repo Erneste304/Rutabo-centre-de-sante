@@ -1,0 +1,366 @@
+@page "/settings"
+
+<div class="settings-page">
+    <div class="page-header">
+        <h2 class="page-title">Settings</h2>
+        <p>Manage your account settings and preferences.</p>
+    </div>
+
+    <div class="card">
+        <div class="settings-tabs">
+            <div class="tab-link @(activeTab == "profile" ? "active" : "")" @onclick='() => SetActiveTab("profile")'>
+                <i class="fas fa-user-circle"></i> Profile Setting
+            </div>
+            <div class="tab-link @(activeTab == "notifications" ? "active" : "")" @onclick='() => SetActiveTab("notifications")'>
+                <i class="fas fa-bell"></i> Notifications
+            </div>
+            <div class="tab-link @(activeTab == "security" ? "active" : "")" @onclick='() => SetActiveTab("security")'>
+                <i class="fas fa-shield-alt"></i> Security
+            </div>
+            <div class="tab-link @(activeTab == "clinic" ? "active" : "")" @onclick='() => SetActiveTab("clinic")'>
+                <i class="fas fa-clinic-medical"></i> Clinic Details
+            </div>
+        </div>
+
+        <div class="tab-content">
+            @if (activeTab == "profile")
+            {
+                <div class="profile-settings">
+                    <div class="section-head">
+                        <h5>Basic Information</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" value="Dr. Erneste Mutabaruka" />
+                                <span class="form-help">Enter your legal full name.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Display Name</label>
+                                <input type="text" class="form-control" value="Dr. Erneste" />
+                                <span class="form-help">This name will be visible to other staff members.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" value="1985-05-20" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Gender</label>
+                                <select class="form-control">
+                                    <option value="Male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Bio / Specialty</label>
+                                <textarea class="form-control" rows="3">Senior Doctor and Administrator at Rutabo Clinic. Specializing in General Surgery.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row-sep"></div>
+
+                    <div class="section-head">
+                        <h5>Contact Information</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" value="erneste@rutaboclinic.com" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" value="+250 788 123 456" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Primary Address</label>
+                                <input type="text" class="form-control" value="Kigali City Tower, Floor 5, Kigali" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button class="btn btn-primary">Save Changes</button>
+                        <button class="btn btn-light" @onclick='() => SetActiveTab("profile")'>Reset</button>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "notifications")
+            {
+                <div class="notification-settings">
+                    <div class="section-head">
+                        <h5>Notification Preferences</h5>
+                        <p class="form-help">Manage how you want to be notified by the system.</p>
+                    </div>
+                    <div class="form-list">
+                        <div class="form-item">
+                            <div class="item-info">
+                                <h5>Email Notifications</h5>
+                                <p>Receive daily reports, appointment reminders, and urgent alerts via email.</p>
+                            </div>
+                            <div class="item-action">
+                                <div class="switch">
+                                    <input type="checkbox" id="email-notify" checked />
+                                    <label for="email-notify" class="switch-ui"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="item-info">
+                                <h5>SMS Alerts</h5>
+                                <p>Receive critical system alerts and emergency notifications via SMS.</p>
+                            </div>
+                            <div class="item-action">
+                                <div class="switch">
+                                    <input type="checkbox" id="sms-notify" />
+                                    <label for="sms-notify" class="switch-ui"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="item-info">
+                                <h5>Browser Notifications</h5>
+                                <p>Allow the browser to show desktop notifications for real-time updates.</p>
+                            </div>
+                            <div class="item-action">
+                                <div class="switch">
+                                    <input type="checkbox" id="browser-notify" checked />
+                                    <label for="browser-notify" class="switch-ui"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "security")
+            {
+                <div class="security-settings">
+                    <div class="section-head">
+                        <h5>Update Password</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="btn btn-primary">Change Password</button>
+                    </div>
+
+                    <div class="row-sep"></div>
+
+                    <div class="section-head">
+                        <h5>Two-Factor Authentication (2FA)</h5>
+                        <div class="status-badge status-stable">Recommended</div>
+                    </div>
+                    <div class="form-list">
+                        <div class="form-item">
+                            <div class="item-info">
+                                <h5>Google Authenticator</h5>
+                                <p>Secure your account with multi-factor authentication using the Google Authenticator app.</p>
+                            </div>
+                            <div class="item-action">
+                                <button class="btn btn-primary btn-sm">Enable 2FA</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (activeTab == "clinic")
+            {
+                <div class="clinic-settings">
+                    <div class="section-head">
+                        <h5>Clinic Information</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Clinic Name</label>
+                                <input type="text" class="form-control" value="Rutabo Clinic" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">License Number</label>
+                                <input type="text" class="form-control" value="RW-MD-2024-889" readonly />
+                                <span class="form-help">Contact admin to update registration license.</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label">Clinic Address</label>
+                                <input type="text" class="form-control" value="Rugando-Kimihurura, Kigali, Rwanda" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="btn btn-primary">Save Clinic Profile</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string activeTab = "profile";
+
+    private void SetActiveTab(string tab)
+    {
+        activeTab = tab;
+    }
+}
+
+<style>
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        margin: 0;
+        color: var(--dark-color);
+        font-weight: 700;
+    }
+
+    .page-header p {
+        color: var(--gray-color);
+        margin: 5px 0 0;
+    }
+
+    .tab-link i {
+        margin-right: 10px;
+    }
+
+    .form-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-info h5 {
+        margin: 0;
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .item-info p {
+        margin: 5px 0 0;
+        font-size: 0.85rem;
+        color: var(--gray-color);
+    }
+
+    /* Improved Switch Style */
+    .switch input { display: none; }
+    .switch {
+        display: inline-block;
+        position: relative;
+    }
+    .switch-ui {
+        width: 44px;
+        height: 22px;
+        background: #dbdfea;
+        border-radius: 20px;
+        display: block;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .switch-ui::after {
+        content: '';
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+    .switch input:checked + .switch-ui {
+        background: var(--primary-color);
+    }
+    .switch input:checked + .switch-ui::after {
+        transform: translateX(22px);
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -15px;
+    }
+
+    .col-md-4 {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+        padding: 0 15px;
+    }
+
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 0 15px;
+    }
+
+    .col-md-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0 15px;
+    }
+
+    .status-badge {
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    @@media (max-width: 768px) {
+        .col-md-6, .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>

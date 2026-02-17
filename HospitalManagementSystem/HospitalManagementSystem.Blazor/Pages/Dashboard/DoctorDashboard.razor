@@ -1,0 +1,141 @@
+@namespace HospitalManagementSystem.Blazor.Pages.Dashboard
+@using HospitalManagementSystem.Blazor.Services
+@inject NurseService NurseService
+
+<div class="doctor-dashboard theme-blue animate-in">
+    <div class="header-top mb-4">
+        <div class="header-content">
+            <h1>Patient Management</h1>
+            <p class="text-muted">Manage your appointments and specialized medical tasks.</p>
+        </div>
+        <div class="header-actions">
+            <div class="date-display text-muted mr-4">
+                <i class="fas fa-calendar-alt"></i> @DateTime.Now.ToString("dd MMM yyyy")
+            </div>
+            <button class="btn btn-primary"><i class="fas fa-plus"></i> Patient Record</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="doctor-profile-card premium-card text-center mb-4">
+                <div class="avatar-lg mx-auto mb-3">DR</div>
+                <h3>Dr. @FullName</h3>
+                <p class="text-primary font-weight-bold">Cardiology Specialist</p>
+                <div class="d-flex justify-content-around mt-4">
+                    <div>
+                        <div class="font-weight-bold">12</div>
+                        <div class="small text-muted">Apt. Today</div>
+                    </div>
+                    <div>
+                        <div class="font-weight-bold">4</div>
+                        <div class="small text-muted">Surgeries</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="premium-card">
+                <h3>Schedule</h3>
+                <div class="schedule-list mt-3">
+                    <div class="schedule-item active">09:00 - Consult John Doe</div>
+                    <div class="schedule-item">10:30 - Heart Surgery (OR-2)</div>
+                    <div class="schedule-item">14:00 - Staff Meet</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="stat-grid">
+                <div class="premium-card">
+                    <div class="card-icon-wrapper blue bg-theme-light">
+                        <i class="fas fa-procedures"></i>
+                    </div>
+                    <div class="card-value">8</div>
+                    <div class="card-label">In-Patients</div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-icon-wrapper purple bg-theme-light">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="card-value">124</div>
+                    <div class="card-label">Yearly Patients</div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-icon-wrapper cyan bg-theme-light">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <div class="card-value">14</div>
+                    <div class="card-label">Lab Reports</div>
+                </div>
+            </div>
+
+            <div class="premium-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>Patient Waiting Room</h3>
+                    <div class="badge bg-primary">4 Patients Waiting</div>
+                </div>
+                <table class="table premium-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Visit Reason</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Alice Johnson</td>
+                            <td>Routine Check</td>
+                            <td>10:15 AM</td>
+                            <td><span class="badge bg-success">Ready</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Call</button></td>
+                        </tr>
+                        <tr>
+                            <td>Mark Smith</td>
+                            <td>Chest Pain</td>
+                            <td>10:45 AM</td>
+                            <td><span class="badge bg-warning">Waiting</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Call</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="action-grid">
+                <div class="innovative-btn">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Records</span>
+                </div>
+                <div class="innovative-btn">
+                    <i class="fas fa-prescription"></i>
+                    <span>E-Rx</span>
+                </div>
+                <div class="innovative-btn">
+                    <i class="fas fa-flask"></i>
+                    <span>Labs</span>
+                </div>
+                <div class="innovative-btn">
+                    <i class="fas fa-video"></i>
+                    <span>Telemed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-lg { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+    .schedule-item { padding: 12px; border-radius: 12px; margin-bottom: 8px; font-size: 0.9rem; background: var(--bg-main); border-left: 4px solid var(--border); }
+    .schedule-item.active { background: var(--primary-light); border-left-color: var(--primary); color: var(--primary); font-weight: 600; }
+    .premium-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+    .premium-table th { border: none; font-weight: 600; color: var(--text-muted); }
+    .premium-table td { background: var(--bg-main); border: none; padding: 12px; }
+    .premium-table td:first-child { border-radius: 12px 0 0 12px; }
+    .premium-table td:last-child { border-radius: 0 12px 12px 0; }
+</style>
+
+@code {
+    [Parameter] public string FullName { get; set; } = "";
+}

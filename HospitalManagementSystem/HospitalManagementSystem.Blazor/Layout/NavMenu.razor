@@ -1,39 +1,60 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Hospital Management System</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="brand">
+    <div class="brand-icon">
+        <i class="fas fa-hospital-alt"></i>
     </div>
+    <span class="brand-name">Rutabo Clinic</span>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
+<div class="nav-content">
+    <ul class="nav-menu">
+        <li class="nav-heading">Main Navigation</li>
+        <li>
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                <i class="fas fa-th-large"></i> <span>Dashboard</span>
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+        </li>
+        <li>
+            <NavLink class="nav-link" href="patients">
+                <i class="fas fa-user-injured"></i> <span>Patients</span>
             </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+        </li>
+        <li>
+            <NavLink class="nav-link" href="appointments">
+                <i class="fas fa-calendar-check"></i> <span>Appointments</span>
             </NavLink>
-        </div>
-    </nav>
+        </li>
+
+        <li class="nav-heading">Applications</li>
+        <li>
+            <NavLink class="nav-link" href="inventory">
+                <i class="fas fa-pills"></i> <span>Pharmacy</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="nav-link" href="billing">
+                <i class="fas fa-file-invoice-dollar"></i> <span>Billing</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="nav-link" href="staff">
+                <i class="fas fa-user-md"></i> <span>Staff List</span>
+            </NavLink>
+        </li>
+
+        <li class="nav-heading">Support & Settings</li>
+        <li>
+            <NavLink class="nav-link" href="monitoring">
+                <i class="fas fa-heartbeat"></i> <span>Monitoring</span>
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="nav-link" href="settings">
+                <i class="fas fa-cog"></i> <span>Settings</span>
+            </NavLink>
+        </li>
+    </ul>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
+    // NavMenu logic if needed
 }

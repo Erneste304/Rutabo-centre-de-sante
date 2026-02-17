@@ -1,34 +1,139 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
-<div class="page">
-    <div class="sidebar">
+@inject NavigationManager NavigationManager
+
+<div class="dashboard-container">
+    <aside class="sidebar">
         <NavMenu />
-    </div>
+    </aside>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+    <main class="main-content">
+        <header class="header-top">
+            <div class="header-breadcrumb">
+                <h3>Rutabo Clinic Dashboard</h3>
+            </div>
+            
+            <div class="header-actions">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search everything..." />
+                </div>
+                
+                <div class="header-tools">
+                    <div class="tool-item">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-info d-none d-md-block">
+                            <span class="user-name">Dr. Erneste</span>
+                            <span class="user-role">Administrator</span>
+                        </div>
+                        <div class="avatar">ER</div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-        <article class="content px-4">
+        <section class="content">
             @Body
-        </article>
+        </section>
     </main>
 </div>
 
 @code {
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try 
-            {
-                await JSRuntime.InvokeVoidAsync("initializeDashboard");
-            }
-            catch (JSException)
-            {
-                // Ignore JS errors during initialization if functions aren't ready
-            }
-        }
-    }
+    // Layout logic if needed
 }
+
+<style>
+    .header-breadcrumb h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        color: var(--dark-color);
+        font-weight: 700;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .search-bar {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: var(--light-color);
+        border-radius: 5px;
+        padding: 5px 15px;
+        width: 300px;
+    }
+
+    .search-bar i {
+        color: var(--gray-color);
+        margin-right: 10px;
+    }
+
+    .search-bar input {
+        border: none;
+        background: transparent;
+        outline: none;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .header-tools {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .tool-item {
+        position: relative;
+        font-size: 1.2rem;
+        color: var(--gray-color);
+        cursor: pointer;
+    }
+
+    .tool-item .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--danger-color);
+        color: white;
+        font-size: 0.65rem;
+        padding: 2px 5px;
+        border-radius: 10px;
+        min-width: 18px;
+        text-align: center;
+    }
+
+    .user-info {
+        text-align: right;
+    }
+
+    .user-name {
+        display: block;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--dark-color);
+        line-height: 1.2;
+    }
+
+    .user-role {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--gray-color);
+        font-weight: 500;
+    }
+
+    .header-top .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+    }
+
+    .d-none { display: none; }
+    @@media (min-width: 768px) { .d-md-block { display: block; } }
+</style>

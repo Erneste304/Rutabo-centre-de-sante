@@ -1,63 +1,91 @@
-@page "/dashboard/nurse"
+@namespace HospitalManagementSystem.Blazor.Pages.Dashboard
 @using HospitalManagementSystem.Blazor.Services
 @using HospitalManagementSystem.Blazor.Components.NurseComponents
 @inject NurseService NurseService
 
-<div class="nurse-dashboard">
-    <div class="view-header mb-4">
-        <h2><i class="fas fa-user-nurse"></i> Nurse Dashboard</h2>
-        <div class="user-info">
-            <span class="badge bg-primary">@Department Department</span>
+<div class="nurse-dashboard theme-blue animate-in">
+    <div class="header-top mb-4">
+        <div class="header-content">
+            <h1>Clinical Care</h1>
+            <p class="text-muted">Monitoring, medication, and shift reporting.</p>
+        </div>
+        <div class="header-actions">
+            <span class="badge bg-primary-light p-2 text-primary">@Department Department</span>
         </div>
     </div>
 
-    <div class="welcome-message mb-4">
-        <h3>Welcome, Nurse @FullName</h3>
-        <p>Your shift: <strong>@CurrentShift</strong></p>
-    </div>
-
-    <div class="quick-stats row mb-4">
-        <div class="col-md-3">
-            <div class="stat-card card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon me-3">
-                            <i class="fas fa-user-injured fa-2x text-primary"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h3>@PatientCount</h3>
-                            <p class="mb-0 text-muted">My Patients</p>
-                        </div>
-                    </div>
-                </div>
+    <div class="hero-card-welcome mb-5 p-4 text-white rounded-lg glass" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 20px 40px rgba(67, 97, 238, 0.2);">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2>Welcome, Nurse @FullName</h2>
+                <p class="mb-0">Your current shift is <strong>@CurrentShift</strong>. You have 4 vital sign updates due in the next hour.</p>
+            </div>
+            <div class="col-md-4 text-right">
+                <button class="btn btn-light btn-lg" @onclick="() => ShowComponent<ShiftReport>()">Start Shift Report</button>
             </div>
         </div>
-        <!-- More stat cards can be added here -->
+    </div>
+
+    <div class="stat-grid">
+        <div class="premium-card">
+            <div class="card-icon-wrapper blue bg-theme-light">
+                <i class="fas fa-user-injured"></i>
+            </div>
+            <div class="card-value">@PatientCount</div>
+            <div class="card-label">Assigned Patients</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper purple bg-theme-light">
+                <i class="fas fa-heartbeat"></i>
+            </div>
+            <div class="card-value">98</div>
+            <div class="card-label">Avg. BPM Today</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper pink bg-theme-light">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="card-value">2h 15m</div>
+            <div class="card-label">Shift Remaining</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper cyan bg-theme-light">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="card-value">14/20</div>
+            <div class="card-label">Tasks Completed</div>
+        </div>
     </div>
 
     <div class="dashboard-actions mb-4">
-        <button class="btn btn-outline-danger me-2 mb-2" @onclick="ShowVitalSigns">
-            <i class="fas fa-heartbeat"></i>
-            <span>Record Vital Signs</span>
-        </button>
-        <button class="btn btn-outline-primary me-2 mb-2" @onclick="ShowMedicationAdmin">
-            <i class="fas fa-pills"></i>
-            <span>Medication Administration</span>
-        </button>
-        <button class="btn btn-outline-success me-2 mb-2" @onclick="() => ShowComponent<ShiftReport>()">
-            <i class="fas fa-clipboard"></i>
-            <span>Shift Report</span>
-        </button>
-        <button class="btn btn-outline-secondary me-2 mb-2" @onclick="ShowRoomManagement">
-            <i class="fas fa-bed"></i>
-            <span>Room Management</span>
-        </button>
+        <div class="action-btn" @onclick="ShowVitalSigns">
+            <i class="fas fa-heartbeat text-danger"></i>
+            <span>Vital Signs</span>
+        </div>
+        <div class="action-btn" @onclick="ShowMedicationAdmin">
+            <i class="fas fa-pills text-primary"></i>
+            <span>Medication</span>
+        </div>
+        <div class="action-btn" @onclick="ShowRoomManagement">
+            <i class="fas fa-bed text-info"></i>
+            <span>Room Mgmt</span>
+        </div>
+        <div class="action-btn">
+            <i class="fas fa-notes-medical text-success"></i>
+            <span>Care Plan</span>
+        </div>
     </div>
 
     @if (_activeComponent != null)
     {
-        <div class="component-container card p-3">
-            @_activeComponent
+        <div class="component-container animate-in mt-4">
+            <div class="premium-card">
+                <div class="d-flex justify-content-between mb-3">
+                    <h3>Task Details</h3>
+                    <button class="btn btn-sm btn-link" @onclick="() => _activeComponent = null"><i class="fas fa-times"></i> Close</button>
+                </div>
+                @_activeComponent
+            </div>
         </div>
     }
 </div>
@@ -84,28 +112,28 @@
     }
 
     private void ShowVitalSigns() { 
-        // Placeholder
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddContent(1, "Vital Signs Component Placeholder");
+            builder.AddAttribute(1, "class", "text-center p-4");
+            builder.AddContent(2, "Vital Signs Recording Module Active");
             builder.CloseElement();
         };
     }
     
     private void ShowMedicationAdmin() { 
-        // Placeholder
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddContent(1, "Medication Admin Component Placeholder");
+            builder.AddAttribute(1, "class", "text-center p-4");
+            builder.AddContent(2, "Medication Administration System Active");
             builder.CloseElement();
         };
     }
     
     private void ShowRoomManagement() { 
-        // Placeholder
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddContent(1, "Room Management Component Placeholder");
+            builder.AddAttribute(1, "class", "text-center p-4");
+            builder.AddContent(2, "Room & Bed Allocation System Active");
             builder.CloseElement();
         };
     }

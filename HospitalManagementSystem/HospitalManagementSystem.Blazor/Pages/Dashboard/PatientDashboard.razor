@@ -1,0 +1,93 @@
+@namespace HospitalManagementSystem.Blazor.Pages.Dashboard
+
+<div class="patient-dashboard theme-cyan animate-in">
+    <div class="header-top mb-4">
+        <div class="header-content">
+            <h1>Patient Portal</h1>
+            <p class="text-muted">Your health history and upcoming medical services.</p>
+        </div>
+        <div class="header-actions">
+            <div class="status-indicator">
+                <span class="pulse-dot"></span> Active Patient
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="premium-card welcome-card-patient mb-4 bg-primary text-white">
+                <h2>Hello, @FullName</h2>
+                <p>Welcome back! You have 3 notifications regarding your last lab result.</p>
+                <button class="btn btn-light mt-3">View Results</button>
+            </div>
+
+            <div class="premium-card mb-4">
+                <h3>Vitals Summary</h3>
+                <div class="vitals-row mt-3">
+                    <div class="v-item d-flex justify-content-between mb-2">
+                        <span>Weight</span> <strong>72 kg</strong>
+                    </div>
+                    <div class="v-item d-flex justify-content-between mb-2">
+                        <span>Blood Pressure</span> <strong>120/80</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="stat-grid">
+                <div class="premium-card">
+                    <div class="card-icon-wrapper blue bg-theme-light">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="card-value">Feb 18</div>
+                    <div class="card-label">Next Visit</div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-icon-wrapper purple bg-theme-light">
+                        <i class="fas fa-tablets"></i>
+                    </div>
+                    <div class="card-value">4</div>
+                    <div class="card-label">Daily Prescriptions</div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-icon-wrapper pink bg-theme-light">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="card-value">12</div>
+                    <div class="card-label">Total Visits</div>
+                </div>
+            </div>
+
+            <div class="dashboard-actions mb-4">
+                <div class="action-btn">
+                    <i class="fas fa-calendar-plus text-primary"></i>
+                    <span>Book Appt.</span>
+                </div>
+                <div class="action-btn">
+                    <i class="fas fa-comment-medical text-success"></i>
+                    <span>Chat Doctor</span>
+                </div>
+                <div class="action-btn">
+                    <i class="fas fa-file-invoice-dollar text-warning"></i>
+                    <span>Payments</span>
+                </div>
+                <div class="action-btn">
+                    <i class="fas fa-heart text-danger"></i>
+                    <span>Health Log</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .welcome-card-patient { padding: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; }
+    .status-indicator { background: var(--bg-main); padding: 8px 16px; border-radius: 100px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; }
+    .pulse-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 0 rgba(34, 197, 94, 0.4); animation: pulse 2s infinite; }
+    @@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+</style>
+
+@code {
+    [Parameter] public string FullName { get; set; } = "";
+}

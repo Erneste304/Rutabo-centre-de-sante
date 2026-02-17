@@ -1,0 +1,87 @@
+@namespace HospitalManagementSystem.Blazor.Pages.Dashboard
+
+<div class="accountant-dashboard theme-pink animate-in">
+    <div class="header-top mb-4">
+        <div class="header-content">
+            <h1>Financial Management</h1>
+            <p class="text-muted">Revenue tracking, billing cycles, and expenses.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-outline-primary"><i class="fas fa-cloud-download-alt"></i> Export Data</button>
+        </div>
+    </div>
+
+    <div class="stat-grid">
+        <div class="premium-card">
+            <div class="card-icon-wrapper pink bg-theme-light">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="card-label">Total Revenue</div>
+            <div class="card-value">$248.5k</div>
+            <div class="text-success small mt-2"><i class="fas fa-level-up-alt"></i> 14.2% growth</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper purple bg-theme-light">
+                <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="card-label">Pending Invoices</div>
+            <div class="card-value">124</div>
+            <div class="text-warning small mt-2"><i class="fas fa-exclamation-triangle"></i> 8 overdue</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper blue bg-theme-light">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <div class="card-label">Operating Expenses</div>
+            <div class="card-value">$82.1k</div>
+            <div class="text-muted small mt-2">Stable month-on-month</div>
+        </div>
+        <div class="premium-card">
+            <div class="card-icon-wrapper cyan bg-theme-light">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="card-label">Profit Margin</div>
+            <div class="card-value">34.5%</div>
+            <div class="text-success small mt-2"><i class="fas fa-caret-up"></i> Improved 2%</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="premium-card">
+                <h3>Revenue Trend</h3>
+                <div class="chart-box p-5 text-center text-muted" style="background: var(--bg-main); border-radius: 16px; margin-top: 20px;">
+                    <i class="fas fa-chart-area fa-3x mb-3"></i>
+                    <p>Financial Chart Visualization Data...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="premium-card sticky-top" style="top: 100px;">
+                <h3>Financial Actions</h3>
+                <div class="action-grid mt-3">
+                    <div class="innovative-btn">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>New Invoice</span>
+                    </div>
+                    <div class="innovative-btn">
+                        <i class="fas fa-receipt"></i>
+                        <span>Expenses</span>
+                    </div>
+                    <div class="innovative-btn">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Payroll</span>
+                    </div>
+                    <div class="innovative-btn">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Equity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string FullName { get; set; } = "";
+}

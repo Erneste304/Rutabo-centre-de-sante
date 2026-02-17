@@ -84,8 +84,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkXFBhdGllbnREYXNoYm9hcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Dashboard/ReceptionistDashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkXFJlY2VwdGlvbmlzdERhc2hib2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Index.razor]
@@ -98,6 +98,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTm90Rm91bmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Settings.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2V0dGluZ3MucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Weather.razor]

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="HospitalDB.sqlproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>

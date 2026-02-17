@@ -11,6 +11,78 @@
         "buildMultiTargeting": {
           "buildMultiTargeting/Microsoft.AspNetCore.App.Internal.Assets.targets": {}
         }
+      },
+      "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.JSInterop.WebAssembly": "10.0.2"
+        },
+        "compile": {
+          "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/net10.0/_._": {}
+        }
+      },
+      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.102": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {}
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {}
+        },
+        "build": {
+          "buildTransitive/Microsoft.DotNet.HotReload.WebAssembly.Browser.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Microsoft.DotNet.HotReload.WebAssembly.Browser.props": {}
+        }
+      },
+      "Microsoft.JSInterop.WebAssembly/10.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "HospitalManagementSystem.Blazor/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "HospitalManagementSystem.Core": "1.0.0",
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2",
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.102"
+        },
+        "compile": {
+          "bin/placeholder/HospitalManagementSystem.Blazor.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HospitalManagementSystem.Blazor.dll": {}
+        }
+      },
+      "HospitalManagementSystem.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "compile": {
+          "bin/placeholder/HospitalManagementSystem.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/HospitalManagementSystem.Core.dll": {}
+        }
       }
     }
   },
@@ -37,10 +109,73 @@
         "microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512",
         "microsoft.aspnetcore.app.internal.assets.nuspec"
       ]
+    },
+    "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+      "sha512": "xJ0Qi75jnR75IhZhEwIdH04WH03wbJEAbilFND4SKYH0xgG/4oNAarb4Duvb0/5ko6/qcn4rCmzRuNJ1hF4dRw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components.webassembly/10.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.txt",
+        "build/net10.0/Microsoft.AspNetCore.Components.WebAssembly.props",
+        "build/net10.0/blazor.webassembly.js",
+        "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll",
+        "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.xml",
+        "microsoft.aspnetcore.components.webassembly.10.0.2.nupkg.sha512",
+        "microsoft.aspnetcore.components.webassembly.nuspec"
+      ]
+    },
+    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.102": {
+      "sha512": "Y8Xq5gLe6l3bW82uGJODzom5Z7pn+Y71BHObnmWF0LqbKFqfOOVDg76a2vyJnRLHn0X1LmsXSec/QdCWFOPl4A==",
+      "type": "package",
+      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.102",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "build/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
+        "buildMultiTargeting/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
+        "buildTransitive/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
+        "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll",
+        "microsoft.dotnet.hotreload.webassembly.browser.10.0.102.nupkg.sha512",
+        "microsoft.dotnet.hotreload.webassembly.browser.nuspec",
+        "staticwebassets/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js"
+      ]
+    },
+    "Microsoft.JSInterop.WebAssembly/10.0.2": {
+      "sha512": "XeNFL2ozbjbPe32be7OVC3peMbS+vM1hu6Cp0RZfF1HepDRTmohQ+p3LF7BVhEKETxCh1/dd5sUwYuB7I/iApw==",
+      "type": "package",
+      "path": "microsoft.jsinterop.webassembly/10.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll",
+        "lib/net10.0/Microsoft.JSInterop.WebAssembly.xml",
+        "microsoft.jsinterop.webassembly.10.0.2.nupkg.sha512",
+        "microsoft.jsinterop.webassembly.nuspec"
+      ]
+    },
+    "HospitalManagementSystem.Blazor/1.0.0": {
+      "type": "project",
+      "path": "HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj",
+      "msbuildProject": "HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj"
+    },
+    "HospitalManagementSystem.Core/1.0.0": {
+      "type": "project",
+      "path": "HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
+      "msbuildProject": "HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "HospitalManagementSystem.Blazor >= 1.0.0",
       "Microsoft.AspNetCore.App.Internal.Assets >= 10.0.2"
     ]
   },
@@ -76,7 +211,11 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\user\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.Blazor\\HospitalManagementSystem.Blazor.csproj": {
+              "projectPath": "C:\\Users\\user\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.Blazor\\HospitalManagementSystem.Blazor.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

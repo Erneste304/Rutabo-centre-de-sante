@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="BlazorApp/BlazorApp.csproj" />
   <Project Path="HospitalManagementSystem.API/HospitalManagementSystem.API.csproj" />
   <Project Path="HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj" />
   <Project Path="HospitalManagementSystem.Console/HospitalManagementSystem.Console.csproj" />

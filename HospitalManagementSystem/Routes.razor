@@ -1,0 +1,11 @@
+@namespace HospitalManagementSystem
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using HospitalManagementSystem.Blazor.Layout
+
+<Router AppAssembly="@typeof(HospitalManagementSystem.Blazor._Imports).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>

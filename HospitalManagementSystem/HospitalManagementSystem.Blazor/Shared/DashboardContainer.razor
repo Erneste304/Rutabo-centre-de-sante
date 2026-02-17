@@ -13,13 +13,19 @@ else
             <NurseDashboard FullName="@User.FullName" Department="@(User.Department ?? "General")" />
             break;
         case "Doctor":
-            <p>Doctor Dashboard (Not Implemented)</p>
+            <DoctorDashboard FullName="@User.FullName" />
+            break;
+        case "Patient":
+            <PatientDashboard FullName="@User.FullName" />
             break;
         case "Admin":
-            <p>Admin Dashboard (Not Implemented)</p>
+            <AdminDashboard FullName="@User.FullName" />
             break;
         case "Accountant":
-            <p>Accountant Dashboard (Not Implemented)</p>
+            <AccountantDashboard FullName="@User.FullName" />
+            break;
+        case "Reception":
+            <ReceptionistDashboard FullName="@User.FullName" />
             break;
         default:
             <p>Unknown User Type: @User.UserType</p>
