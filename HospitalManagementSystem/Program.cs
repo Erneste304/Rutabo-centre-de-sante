@@ -8,7 +8,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 // Register HttpClient for the API
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5051/") });
+var apiBaseAddress = builder.Configuration["ApiBaseAddress"] ?? "http://localhost:5051/";
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseAddress) });
 
 // Register Blazor Services
 builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.ApiService>();

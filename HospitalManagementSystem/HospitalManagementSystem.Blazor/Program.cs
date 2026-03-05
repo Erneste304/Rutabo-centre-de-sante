@@ -8,8 +8,8 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Register HttpClient
-// Register HttpClient
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5051/") });
+var apiBaseAddress = builder.Configuration["ApiBaseAddress"] ?? "http://localhost:5051/";
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseAddress) });
 
 // Register Services
 builder.Services.AddScoped<ApiService>();

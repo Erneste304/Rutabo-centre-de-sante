@@ -1,25 +1,25 @@
 @namespace HospitalManagementSystem.Blazor.Pages.Dashboard
 
 <div class="admin-dashboard theme-purple animate-in">
-    <div class="header-top mb-4">
+    <div class="header-top mb-5">
         <div class="header-content">
-            <h1>Healthcare Analytics</h1>
-            <p class="text-muted">Welcome back, @FullName. Here's what's happening in Rutabo Clinic today.</p>
+            <h1 class="display-4 font-weight-bold">Healthcare Analytics</h1>
+            <p class="text-secondary lead">Welcome back, <span class="text-primary font-weight-bold">@FullName</span>. Here's your clinic's performance at a glance.</p>
         </div>
         <div class="header-actions">
-            <button class="btn btn-outline-primary"><i class="fas fa-file-export"></i> Export Report</button>
-            <button class="btn btn-primary ml-3"><i class="fas fa-plus"></i> Add New Record</button>
+            <button class="btn btn-outline-primary btn-round mr-2 px-4"><i class="fas fa-file-export mr-2"></i> Export Report</button>
+            <button class="btn btn-primary btn-round px-4 shadow-sm"><i class="fas fa-plus mr-2"></i> Add New Record</button>
         </div>
     </div>
 
-    <div class="stat-grid">
+    <div class="stat-grid mb-5">
         <div class="premium-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <div class="card-label">Total Patients</div>
-                    <div class="card-value">2,450</div>
+                    <div class="card-value mt-1">2,450</div>
                 </div>
-                <div class="card-icon-wrapper purple bg-theme-light">
+                <div class="card-icon-wrapper purple shadow-lg">
                     <i class="fas fa-user-injured"></i>
                 </div>
             </div>
@@ -31,15 +31,18 @@
                 <div class="sparkline-bar" style="height: 70%"></div>
                 <div class="sparkline-bar" style="height: 90%"></div>
             </div>
-            <div class="card-footer text-success mt-2"><i class="fas fa-arrow-up"></i> 15% <span class="text-muted small">vs last week</span></div>
+            <div class="card-footer-custom text-success mt-3 d-flex align-items-center">
+                <i class="fas fa-arrow-up mr-2"></i> <span>15%</span> 
+                <span class="text-muted small ml-2">vs last week</span>
+            </div>
         </div>
         <div class="premium-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <div class="card-label">Staff on Duty</div>
-                    <div class="card-value">86</div>
+                    <div class="card-value mt-1">86</div>
                 </div>
-                <div class="card-icon-wrapper blue bg-theme-light">
+                <div class="card-icon-wrapper blue shadow-lg">
                     <i class="fas fa-user-md"></i>
                 </div>
             </div>
@@ -51,15 +54,17 @@
                 <div class="sparkline-bar" style="height: 55%"></div>
                 <div class="sparkline-bar" style="height: 65%"></div>
             </div>
-            <div class="card-footer text-muted mt-2">Currently Active</div>
+            <div class="card-footer-custom text-muted mt-3">
+                <span class="badge badge-pill badge-light p-2 px-3">Currently Active</span>
+            </div>
         </div>
         <div class="premium-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <div class="card-label">Avg. Wait Time</div>
-                    <div class="card-value">18m</div>
+                    <div class="card-value mt-1">18m</div>
                 </div>
-                <div class="card-icon-wrapper pink bg-theme-light">
+                <div class="card-icon-wrapper pink shadow-lg">
                     <i class="fas fa-clock"></i>
                 </div>
             </div>
@@ -71,15 +76,18 @@
                 <div class="sparkline-bar" style="height: 25%"></div>
                 <div class="sparkline-bar" style="height: 15%"></div>
             </div>
-            <div class="card-footer text-success mt-2"><i class="fas fa-arrow-down"></i> 12% <span class="text-muted small">improvement</span></div>
+            <div class="card-footer-custom text-success mt-3 d-flex align-items-center">
+                <i class="fas fa-arrow-down mr-2"></i> <span>12%</span> 
+                <span class="text-muted small ml-2">improvement</span>
+            </div>
         </div>
         <div class="premium-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <div class="card-label">Clinic Revenue</div>
-                    <div class="card-value">$42.8k</div>
+                    <div class="card-value mt-1">$42.8k</div>
                 </div>
-                <div class="card-icon-wrapper cyan bg-theme-light">
+                <div class="card-icon-wrapper cyan shadow-lg">
                     <i class="fas fa-wallet"></i>
                 </div>
             </div>
@@ -91,68 +99,63 @@
                 <div class="sparkline-bar" style="height: 85%"></div>
                 <div class="sparkline-bar" style="height: 95%"></div>
             </div>
-            <div class="card-footer text-success mt-2"><i class="fas fa-arrow-up"></i> 8% <span class="text-muted small">this month</span></div>
+            <div class="card-footer-custom text-success mt-3 d-flex align-items-center">
+                <i class="fas fa-arrow-up mr-2"></i> <span>8%</span> 
+                <span class="text-muted small ml-2">this month</span>
+            </div>
         </div>
     </div>
 
-    <div class="row mt-4">
+    <div class="row mt-5">
         <div class="col-lg-8">
-            <div class="premium-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Patient Visit Trends</h3>
+            <div class="premium-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                    <h3 class="font-weight-bold">Patient Visit Trends</h3>
                     <div class="chart-filter">
-                        <select class="form-control form-control-sm">
+                        <select class="form-control form-control-sm border-round shadow-sm">
                             <option>Last 30 Days</option>
                             <option>Last 6 Months</option>
                         </select>
                     </div>
                 </div>
-                <div class="chart-placeholder">
+                <div class="chart-placeholder mt-4">
                     <div class="chart-line-mock"></div>
-                    <div class="chart-label-group">
+                    <div class="chart-label-group px-3">
                         <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="premium-card">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Recent Notifications</h3>
-                    <a href="#" class="text-primary small">View All</a>
+            <div class="premium-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                    <h3 class="font-weight-bold">Notifications</h3>
+                    <a href="#" class="text-primary font-weight-bold small">View All</a>
                 </div>
-                <ul class="data-list">
-                    <li class="data-item">
-                        <div class="badge-dot bg-success"></div>
+                <ul class="data-list mt-3">
+                    <li class="data-item border-0">
+                        <div class="badge-dot bg-success shadow-success"></div>
                         <div class="data-info">
                             <div class="data-title">New Appointment</div>
                             <div class="data-sub">Patient John Doe for General Checkup.</div>
                         </div>
-                        <div class="text-muted small">5m ago</div>
+                        <div class="text-muted extra-small">5m ago</div>
                     </li>
-                    <li class="data-item">
-                        <div class="badge-dot bg-danger"></div>
+                    <li class="data-item border-0">
+                        <div class="badge-dot bg-danger shadow-danger"></div>
                         <div class="data-info">
                             <div class="data-title">Critical Lab Result</div>
                             <div class="data-sub">Urgent review needed for Ward 3.</div>
                         </div>
-                        <div class="text-muted small">15m ago</div>
+                        <div class="text-muted extra-small">15m ago</div>
                     </li>
-                    <li class="data-item">
-                        <div class="badge-dot bg-info"></div>
+                    <li class="data-item border-0">
+                        <div class="badge-dot bg-info shadow-info"></div>
                         <div class="data-info">
                             <div class="data-title">Inventory Update</div>
                             <div class="data-sub">Medicine stock replenished.</div>
                         </div>
-                        <div class="text-muted small">1h ago</div>
-                    </li>
-                    <li class="data-item">
-                        <div class="badge-dot bg-warning"></div>
-                        <div class="data-info">
-                            <div class="data-title">Staff Shift Change</div>
-                            <div class="data-sub">Next shift starts in 30 minutes.</div>
-                        </div>
-                        <div class="text-muted small">2h ago</div>
+                        <div class="text-muted extra-small">1h ago</div>
                     </li>
                 </ul>
             </div>

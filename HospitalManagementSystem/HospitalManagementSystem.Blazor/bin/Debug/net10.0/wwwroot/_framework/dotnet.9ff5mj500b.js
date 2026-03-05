@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "HospitalManagementSystem.Blazor",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-ZF8PQoRkAaNwYI+nAZ5knb9n6jNKYycKVi5pkR78290=",
+    "hash": "sha256-VRYctj1p6sFsKZ9GmySpyR51SCdKdqFlkjNbhJUYyjs=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.87vtjjdetb.js"
@@ -1242,28 +1242,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "HospitalManagementSystem.Core.wasm",
-        "name": "HospitalManagementSystem.Core.gf3dqj11u1.wasm",
-        "integrity": "sha256-nCjtMM/mP7ZQp+LM0wl7w3kDLDs/lDamU+i7aIJ0p3c=",
+        "name": "HospitalManagementSystem.Core.5p2lq50z1c.wasm",
+        "integrity": "sha256-6U7ymE63d6ZENX4MCpmACGgBx8rrRUyjzeZyfgJGKuM=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.wasm",
-        "name": "HospitalManagementSystem.Blazor.cnz1xklxw4.wasm",
-        "integrity": "sha256-SHQZnhwLTMzT5dMibExZOOeREgMr2f/IvpcT8VOP2j8=",
+        "name": "HospitalManagementSystem.Blazor.1r0odpfqrd.wasm",
+        "integrity": "sha256-M0U0pQ8FFh/Kv1o4lHzgTColzpbJVbEg4hs2HHmZ8A0=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "HospitalManagementSystem.Core.pdb",
-        "name": "HospitalManagementSystem.Core.ee5gjpqygl.pdb",
-        "integrity": "sha256-VpYcTQHqKw8omczafNvMmGtdSmx+7UH8/08XmAoVihw=",
+        "name": "HospitalManagementSystem.Core.knkwubjrzr.pdb",
+        "integrity": "sha256-cPWEbXRvMsauWOLk24J5pK1Cj75FOUvxsrzy50hJIoM=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.pdb",
-        "name": "HospitalManagementSystem.Blazor.ko9v0vp6xu.pdb",
-        "integrity": "sha256-PNEIcsC5NW+QfRhp6fJIGWZT/NnCR/hU50o2FSaO8ls=",
+        "name": "HospitalManagementSystem.Blazor.x3vpcga18p.pdb",
+        "integrity": "sha256-Q+pe/ewpIRr08N25l2L+qeKxbZf9r7l2JuqkVx0ERP0=",
         "cache": "force-cache"
       }
     ],
@@ -1279,6 +1279,9 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
     ]
   },
   "debugLevel": -1,
+  "appsettings": [
+    "../appsettings.json"
+  ],
   "globalizationMode": "sharded",
   "extensions": {
     "blazor": {}
