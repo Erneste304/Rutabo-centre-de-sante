@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HospitalManagementSystem.Blazor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+499cee5e2e568bc99ccd5ab06b9586afbeed6d72")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d6ba3f9d6ff9202a015f119c348e3bfce64168b")]
 [assembly: System.Reflection.AssemblyProductAttribute("HospitalManagementSystem.Blazor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HospitalManagementSystem.Blazor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

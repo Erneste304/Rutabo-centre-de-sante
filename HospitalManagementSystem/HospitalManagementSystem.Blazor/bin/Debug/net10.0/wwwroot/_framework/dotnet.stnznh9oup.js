@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "HospitalManagementSystem.Blazor",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-VRYctj1p6sFsKZ9GmySpyR51SCdKdqFlkjNbhJUYyjs=",
+    "hash": "sha256-WejWCMBhhy+piCNaA9Kmd0/HYAkEPQ1im19HWi+maWY=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.87vtjjdetb.js"
@@ -1242,28 +1242,28 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "HospitalManagementSystem.Core.wasm",
-        "name": "HospitalManagementSystem.Core.5p2lq50z1c.wasm",
-        "integrity": "sha256-6U7ymE63d6ZENX4MCpmACGgBx8rrRUyjzeZyfgJGKuM=",
+        "name": "HospitalManagementSystem.Core.tj29frhtva.wasm",
+        "integrity": "sha256-139FaG9cgcfMT+DstligoyyyE82cKfVPDaCScHI/pm8=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.wasm",
-        "name": "HospitalManagementSystem.Blazor.1r0odpfqrd.wasm",
-        "integrity": "sha256-M0U0pQ8FFh/Kv1o4lHzgTColzpbJVbEg4hs2HHmZ8A0=",
+        "name": "HospitalManagementSystem.Blazor.um9thx3n1p.wasm",
+        "integrity": "sha256-BpsBmrDXUvlF53y3lAuKQyEZDjv9wQHKTxyxYqjyHQs=",
         "cache": "force-cache"
       }
     ],
     "pdb": [
       {
         "virtualPath": "HospitalManagementSystem.Core.pdb",
-        "name": "HospitalManagementSystem.Core.knkwubjrzr.pdb",
-        "integrity": "sha256-cPWEbXRvMsauWOLk24J5pK1Cj75FOUvxsrzy50hJIoM=",
+        "name": "HospitalManagementSystem.Core.2wlk0jnp6d.pdb",
+        "integrity": "sha256-0odhGFSHzYQS9HofKMPeE+e5iln46DRZVyKf5hJ4D2Y=",
         "cache": "force-cache"
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.pdb",
-        "name": "HospitalManagementSystem.Blazor.x3vpcga18p.pdb",
-        "integrity": "sha256-Q+pe/ewpIRr08N25l2L+qeKxbZf9r7l2JuqkVx0ERP0=",
+        "name": "HospitalManagementSystem.Blazor.nh9ou25k3m.pdb",
+        "integrity": "sha256-9UMFOaAzbXaiom9s/Tn98G/AmtzB8AKmLFfoPPrsHDo=",
         "cache": "force-cache"
       }
     ],
