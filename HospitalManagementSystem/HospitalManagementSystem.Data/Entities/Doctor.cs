@@ -52,5 +52,6 @@ namespace HospitalManagementSystem.Data.Entities
         public virtual HospitalManagementSystem.Data.Entities.Department? Department { get; set; }
         public virtual ICollection<HospitalManagementSystem.Data.Entities.Schedule> Schedules { get; set; } = new List<HospitalManagementSystem.Data.Entities.Schedule>();
         public virtual ICollection<HospitalManagementSystem.Data.Entities.Prescription> Prescriptions { get; set; } = new List<HospitalManagementSystem.Data.Entities.Prescription>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.DoctorDepartment> DoctorDepartments { get; set; } = new List<HospitalManagementSystem.Data.Entities.DoctorDepartment>();
     }
 }

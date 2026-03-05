@@ -31,6 +31,18 @@ namespace HospitalManagementSystem.Data
         public DbSet<Entities.ShiftReport> ShiftReports { get; set; }
         public DbSet<Entities.EmployeeShift> EmployeeShifts { get; set; }
 
+        // New entities matching ER diagram schema
+        public DbSet<Entities.Ambulance> Ambulances { get; set; }
+        public DbSet<Entities.AmbulanceLog> AmbulanceLogs { get; set; }
+        public DbSet<Entities.BloodBank> BloodBanks { get; set; }
+        public DbSet<Entities.Medicine> Medicines { get; set; }
+        public DbSet<Entities.Pharmacy> Pharmacies { get; set; }
+        public DbSet<Entities.RoomType> RoomTypes { get; set; }
+        public DbSet<Entities.RoomAssignment> RoomAssignments { get; set; }
+        public DbSet<Entities.CleaningService> CleaningServices { get; set; }
+        public DbSet<Entities.DoctorDepartment> DoctorDepartments { get; set; }
+        public DbSet<Entities.MedicalRecordMedicine> MedicalRecordMedicines { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -83,6 +95,81 @@ namespace HospitalManagementSystem.Data
                 .WithOne(r => r.Department)
                 .HasForeignKey(r => r.DepartmentId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            // RoomType -> Room (one-to-many)
+            modelBuilder.Entity<Entities.RoomType>()
+                .HasMany(rt => rt.Rooms)
+                .WithOne(r => r.RoomType)
+                .HasForeignKey(r => r.RoomTypeId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Ambulance -> AmbulanceLog
+            modelBuilder.Entity<Entities.AmbulanceLog>()
+                .HasOne(al => al.Ambulance)
+                .WithMany(a => a.AmbulanceLogs)
+                .HasForeignKey(al => al.AmbulanceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Patient -> AmbulanceLog
+            modelBuilder.Entity<Entities.AmbulanceLog>()
+                .HasOne(al => al.Patient)
+                .WithMany(p => p.AmbulanceLogs)
+                .HasForeignKey(al => al.PatientId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Medicine -> Pharmacy
+            modelBuilder.Entity<Entities.Pharmacy>()
+                .HasOne(ph => ph.Medicine)
+                .WithMany(m => m.PharmacyEntries)
+                .HasForeignKey(ph => ph.MedicineId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Patient -> Pharmacy
+            modelBuilder.Entity<Entities.Pharmacy>()
+                .HasOne(ph => ph.Patient)
+                .WithMany(p => p.PharmacyEntries)
+                .HasForeignKey(ph => ph.PatientId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Room -> RoomAssignment
+            modelBuilder.Entity<Entities.RoomAssignment>()
+                .HasOne(ra => ra.Room)
+                .WithMany(r => r.RoomAssignments)
+                .HasForeignKey(ra => ra.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Room -> CleaningService
+            modelBuilder.Entity<Entities.CleaningService>()
+                .HasOne(cs => cs.Room)
+                .WithMany(r => r.CleaningServices)
+                .HasForeignKey(cs => cs.RoomId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // DoctorDepartment join table
+            modelBuilder.Entity<Entities.DoctorDepartment>()
+                .HasOne(dd => dd.Doctor)
+                .WithMany(d => d.DoctorDepartments)
+                .HasForeignKey(dd => dd.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Entities.DoctorDepartment>()
+                .HasOne(dd => dd.Department)
+                .WithMany()
+                .HasForeignKey(dd => dd.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // MedicalRecordMedicine join table
+            modelBuilder.Entity<Entities.MedicalRecordMedicine>()
+                .HasOne(mrm => mrm.MedicalRecord)
+                .WithMany(mr => mr.MedicalRecordMedicines)
+                .HasForeignKey(mrm => mrm.RecordId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Entities.MedicalRecordMedicine>()
+                .HasOne(mrm => mrm.Medicine)
+                .WithMany(m => m.MedicalRecordMedicines)
+                .HasForeignKey(mrm => mrm.MedicineId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure decimal precision for SQLite
             modelBuilder.Entity<Entities.Billing>()
@@ -213,13 +300,34 @@ namespace HospitalManagementSystem.Data
                 }
             );
 
+            // Seed room types
+            modelBuilder.Entity<RoomType>().HasData(
+                new RoomType { RoomTypeId = 1, RoomTypeName = "General", Description = "Standard general ward" },
+                new RoomType { RoomTypeId = 2, RoomTypeName = "ICU", Description = "Intensive Care Unit" },
+                new RoomType { RoomTypeId = 3, RoomTypeName = "Emergency", Description = "Emergency ward" },
+                new RoomType { RoomTypeId = 4, RoomTypeName = "Private", Description = "Private room" },
+                new RoomType { RoomTypeId = 5, RoomTypeName = "Maternity", Description = "Maternity ward" }
+            );
+
+            // Seed blood bank
+            modelBuilder.Entity<BloodBank>().HasData(
+                new BloodBank { BloodId = 1, BloodType = "A+", StockQuantity = 20, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 2, BloodType = "A-", StockQuantity = 10, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 3, BloodType = "B+", StockQuantity = 15, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 4, BloodType = "B-", StockQuantity = 8,  LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 5, BloodType = "O+", StockQuantity = 30, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 6, BloodType = "O-", StockQuantity = 12, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 7, BloodType = "AB+", StockQuantity = 9, LastUpdated = new DateTime(2026, 3, 1) },
+                new BloodBank { BloodId = 8, BloodType = "AB-", StockQuantity = 5, LastUpdated = new DateTime(2026, 3, 1) }
+            );
+
             // Seed rooms
             modelBuilder.Entity<Room>().HasData(
                 new Room
                 {
                     RoomId = 1,
                     RoomNumber = "101",
-                    RoomType = "General",
+                    RoomTypeId = 1,
                     DepartmentId = 1,
                     FloorNumber = 3,
                     BedCount = 2,
@@ -231,7 +339,7 @@ namespace HospitalManagementSystem.Data
                 {
                     RoomId = 2,
                     RoomNumber = "102",
-                    RoomType = "General",
+                    RoomTypeId = 1,
                     DepartmentId = 1,
                     FloorNumber = 3,
                     BedCount = 2,
@@ -243,7 +351,7 @@ namespace HospitalManagementSystem.Data
                 {
                     RoomId = 3,
                     RoomNumber = "ICU-01",
-                    RoomType = "ICU",
+                    RoomTypeId = 2,
                     DepartmentId = 3,
                     FloorNumber = 1,
                     BedCount = 1,

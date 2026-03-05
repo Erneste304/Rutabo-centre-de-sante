@@ -75,5 +75,8 @@ namespace HospitalManagementSystem.Data.Entities
         public virtual ICollection<HospitalManagementSystem.Data.Entities.Payment> Payments { get; set; } = new List<HospitalManagementSystem.Data.Entities.Payment>();
         public virtual ICollection<HospitalManagementSystem.Data.Entities.Prescription> Prescriptions { get; set; } = new List<HospitalManagementSystem.Data.Entities.Prescription>();
         public virtual ICollection<HospitalManagementSystem.Data.Entities.LabTest> LabTests { get; set; } = new List<HospitalManagementSystem.Data.Entities.LabTest>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.Pharmacy> PharmacyEntries { get; set; } = new List<HospitalManagementSystem.Data.Entities.Pharmacy>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.RoomAssignment> RoomAssignments { get; set; } = new List<HospitalManagementSystem.Data.Entities.RoomAssignment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.AmbulanceLog> AmbulanceLogs { get; set; } = new List<HospitalManagementSystem.Data.Entities.AmbulanceLog>();
     }
 }

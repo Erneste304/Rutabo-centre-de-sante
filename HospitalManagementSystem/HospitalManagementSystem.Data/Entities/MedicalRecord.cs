@@ -15,6 +15,8 @@ namespace HospitalManagementSystem.Data.Entities
         
         [Required]
         public int DoctorId { get; set; }
+
+        public int? AppointmentId { get; set; }
         
         public DateTime VisitDate { get; set; } = DateTime.UtcNow;
         
@@ -63,7 +65,12 @@ namespace HospitalManagementSystem.Data.Entities
         [ForeignKey("DoctorId")]
         public virtual HospitalManagementSystem.Data.Entities.Doctor Doctor { get; set; } = null!;
         
+        [ForeignKey("AppointmentId")]
+        public virtual HospitalManagementSystem.Data.Entities.Appointment? Appointment { get; set; }
+
         [ForeignKey("CreatedBy")]
         public virtual HospitalManagementSystem.Data.Entities.User? CreatedByUser { get; set; }
+
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.MedicalRecordMedicine> MedicalRecordMedicines { get; set; } = new List<HospitalManagementSystem.Data.Entities.MedicalRecordMedicine>();
     }
 }

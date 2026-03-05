@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,9 +15,8 @@ namespace HospitalManagementSystem.Data.Entities
         [StringLength(20)]
         public string RoomNumber { get; set; } = string.Empty;
         
-        [Required]
-        [StringLength(50)]
-        public string RoomType { get; set; } = "General"; // General, ICU, Emergency, Operation, Private, Semi-Private, Pediatric, Maternity
+        /// <summary>FK to RoomType table (replaces plain string RoomType)</summary>
+        public int? RoomTypeId { get; set; }
         
         public int? DepartmentId { get; set; }
         
@@ -49,5 +49,11 @@ namespace HospitalManagementSystem.Data.Entities
         
         [ForeignKey("DepartmentId")]
         public virtual HospitalManagementSystem.Data.Entities.Department? Department { get; set; }
+
+        [ForeignKey("RoomTypeId")]
+        public virtual HospitalManagementSystem.Data.Entities.RoomType? RoomType { get; set; }
+
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.RoomAssignment> RoomAssignments { get; set; } = new List<HospitalManagementSystem.Data.Entities.RoomAssignment>();
+        public virtual ICollection<HospitalManagementSystem.Data.Entities.CleaningService> CleaningServices { get; set; } = new List<HospitalManagementSystem.Data.Entities.CleaningService>();
     }
 }
