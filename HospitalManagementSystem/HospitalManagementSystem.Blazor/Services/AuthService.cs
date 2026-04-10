@@ -53,7 +53,7 @@ namespace HospitalManagementSystem.Blazor.Services
                     Email = email,
                     Password = password,
                     PasswordHash = "hashed",
-                    UserType = userType switch { "Admin" => 0, "Doctor" => 1, "Nurse" => 2, "Patient" => 3, "Receptionist" => 4, "Accountant" => 5, _ => 3 }
+                    UserType = userType switch { "Admin" => 0, "Doctor" => 1, "Nurse" => 2, "Patient" => 3, "Reception" => 4, "Accountant" => 5, _ => 3 }
                 };
                 
                 await _api.RegisterAsync(registerModel);

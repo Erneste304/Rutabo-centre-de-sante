@@ -34,7 +34,7 @@ namespace HospitalManagementSystem.API.Controllers
             }
         }
 
-        [HttpGet("shift-reports/{id}")]
+        [HttpGet("shift-reports/report/{id}")]
         public async Task<ActionResult<ShiftReport>> GetShiftReport(int id)
         {
             try

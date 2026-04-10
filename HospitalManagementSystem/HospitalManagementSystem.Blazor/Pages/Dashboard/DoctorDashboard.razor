@@ -1,6 +1,10 @@
 @namespace HospitalManagementSystem.Blazor.Pages.Dashboard
 @using HospitalManagementSystem.Blazor.Services
+@inject DashboardService DashboardService
 @inject NurseService NurseService
+@inject AppointmentService AppointmentService
+@inject AuthService AuthService
+@inject NavigationManager Navigation
 
 <div class="doctor-dashboard theme-blue animate-in">
     <div class="header-top mb-4">
@@ -24,11 +28,11 @@
                 <p class="text-primary font-weight-bold">Cardiology Specialist</p>
                 <div class="d-flex justify-content-around mt-4">
                     <div>
-                        <div class="font-weight-bold">12</div>
+                        <div class="font-weight-bold">@(_docStats?.Appointments ?? 12)</div>
                         <div class="small text-muted">Apt. Today</div>
                     </div>
                     <div>
-                        <div class="font-weight-bold">4</div>
+                        <div class="font-weight-bold">@(_docStats?.Surgeries ?? 4)</div>
                         <div class="small text-muted">Surgeries</div>
                     </div>
                 </div>
@@ -37,9 +41,19 @@
             <div class="premium-card">
                 <h3>Schedule</h3>
                 <div class="schedule-list mt-3">
-                    <div class="schedule-item active">09:00 - Consult John Doe</div>
-                    <div class="schedule-item">10:30 - Heart Surgery (OR-2)</div>
-                    <div class="schedule-item">14:00 - Staff Meet</div>
+                    @if (_appointments != null && _appointments.Any())
+                    {
+                        @foreach (var apt in _appointments.Take(3))
+                        {
+                            <div class='schedule-item @(apt.Status == "Ready" ? "active" : "")'>
+                                @apt.AppointmentTime.ToString(@"hh\:mm") - @apt.PatientName
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="schedule-item">No appointments for today</div>
+                    }
                 </div>
             </div>
         </div>
@@ -50,7 +64,7 @@
                     <div class="card-icon-wrapper blue bg-theme-light">
                         <i class="fas fa-procedures"></i>
                     </div>
-                    <div class="card-value">8</div>
+                    <div class="card-value">@(_docStats?.InPatients ?? 8)</div>
                     <div class="card-label">In-Patients</div>
                 </div>
                 <div class="premium-card">
@@ -64,7 +78,7 @@
                     <div class="card-icon-wrapper cyan bg-theme-light">
                         <i class="fas fa-vial"></i>
                     </div>
-                    <div class="card-value">14</div>
+                    <div class="card-value">@(_docStats?.LabReports ?? 14)</div>
                     <div class="card-label">Lab Reports</div>
                 </div>
             </div>
@@ -72,7 +86,7 @@
             <div class="premium-card mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Patient Waiting Room</h3>
-                    <div class="badge bg-primary">4 Patients Waiting</div>
+                    <div class="badge bg-primary">@_appointments.Count(a => a.Status == "Waiting" || a.Status == "Ready") Patients Waiting</div>
                 </div>
                 <table class="table premium-table">
                     <thead>
@@ -85,40 +99,50 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Alice Johnson</td>
-                            <td>Routine Check</td>
-                            <td>10:15 AM</td>
-                            <td><span class="badge bg-success">Ready</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Call</button></td>
-                        </tr>
-                        <tr>
-                            <td>Mark Smith</td>
-                            <td>Chest Pain</td>
-                            <td>10:45 AM</td>
-                            <td><span class="badge bg-warning">Waiting</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary">Call</button></td>
-                        </tr>
+                        @if (_isLoading)
+                        {
+                            <tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
+                        }
+                        else if (!_appointments.Any())
+                        {
+                            <tr><td colspan="5" class="text-center py-5 text-muted">Waiting room is currently empty.</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var apt in _appointments)
+                            {
+                                <tr>
+                                    <td>@apt.PatientName</td>
+                                    <td>@(apt.Reason ?? "Not specified")</td>
+                                    <td>@apt.AppointmentTime.ToString(@"hh\:mm")</td>
+                                    <td><span class="badge @GetBadgeClass(apt.Status)">@apt.Status</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary mr-2" @onclick="() => CallPatient(apt)">Call</button>
+                                        <button class="btn btn-sm btn-primary" @onclick='() => UpdateStatus(apt, "Completed")'>Done</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
 
             <div class="action-grid">
-                <div class="innovative-btn">
+                <div class="innovative-btn" @onclick='() => Navigation.NavigateTo("/medical-records")'>
                     <i class="fas fa-file-medical"></i>
                     <span>Records</span>
                 </div>
-                <div class="innovative-btn">
-                    <i class="fas fa-prescription"></i>
-                    <span>E-Rx</span>
+                <div class="innovative-btn" @onclick='() => Navigation.NavigateTo("/pharmacy")'>
+                    <i class="fas fa-pills"></i>
+                    <span>Pharmacy</span>
                 </div>
-                <div class="innovative-btn">
+                <div class="innovative-btn" @onclick='() => Navigation.NavigateTo("/lab-reports")'>
                     <i class="fas fa-flask"></i>
                     <span>Labs</span>
                 </div>
-                <div class="innovative-btn">
-                    <i class="fas fa-video"></i>
-                    <span>Telemed</span>
+                <div class="innovative-btn" @onclick='() => Navigation.NavigateTo("/ambulance-fleet")'>
+                    <i class="fas fa-ambulance"></i>
+                    <span>Fleet</span>
                 </div>
             </div>
         </div>
@@ -138,4 +162,58 @@
 
 @code {
     [Parameter] public string FullName { get; set; } = "";
+    private DoctorStats? _docStats;
+    private List<AppointmentModel> _appointments = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        var statsTask = DashboardService.GetDashboardStatsAsync("Doctor");
+        
+        var user = AuthService.CurrentUser;
+        if (user?.DoctorId > 0)
+        {
+            _appointments = await AppointmentService.GetDoctorAppointmentsAsync(user.DoctorId.Value, DateTime.Today);
+        }
+
+        var stats = await statsTask;
+        if (stats?.RoleStats != null)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(stats.RoleStats);
+            _docStats = System.Text.Json.JsonSerializer.Deserialize<DoctorStats>(json);
+        }
+        _isLoading = false;
+    }
+
+    private string GetBadgeClass(string status) => status switch {
+        "Ready" => "bg-success",
+        "Waiting" => "bg-warning",
+        "Scheduled" => "bg-info",
+        _ => "bg-secondary"
+    };
+
+    private async Task CallPatient(AppointmentModel apt)
+    {
+        await UpdateStatus(apt, "Ready");
+    }
+
+    private async Task UpdateStatus(AppointmentModel apt, string status)
+    {
+        var success = await AppointmentService.UpdateStatusAsync(apt.AppointmentId, status);
+        if (success)
+        {
+            var user = AuthService.CurrentUser;
+            if (user?.DoctorId > 0)
+                _appointments = await AppointmentService.GetDoctorAppointmentsAsync(user.DoctorId.Value, DateTime.Today);
+        }
+    }
+
+    private class DoctorStats
+    {
+        public int Appointments { get; set; }
+        public int Surgeries { get; set; }
+        public int InPatients { get; set; }
+        public int LabReports { get; set; }
+    }
 }

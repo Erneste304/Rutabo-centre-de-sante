@@ -2,6 +2,8 @@
 @using HospitalManagementSystem.Blazor.Services
 @using HospitalManagementSystem.Blazor.Shared
 @inject AuthService AuthService
+@inject DashboardService DashboardService
+@inject NavigationManager Navigation
 
 <PageTitle>Global Data 365 | Hospital Management Dashboard</PageTitle>
 
@@ -39,19 +41,19 @@ else if (!_isAuthenticated)
                         <h1 class="main-title">Hospital<br/>Dashboard</h1>
                         
                         <div class="action-pills">
-                            <div class="pill">
+                            <div class="pill @(_selectedPreview == "Hospital Overview" ? "active" : "")" @onclick="@(() => SelectPreview("Hospital Overview"))">
                                 <i class="fas fa-heartbeat"></i> <span>Hospital Overview</span>
                             </div>
-                            <div class="pill">
+                            <div class="pill @(_selectedPreview == "Patient Insights" ? "active" : "")" @onclick="@(() => SelectPreview("Patient Insights"))">
                                 <i class="fas fa-user"></i> <span>Patient Insights</span>
                             </div>
-                            <div class="pill">
+                            <div class="pill @(_selectedPreview == "Staff Performance" ? "active" : "")" @onclick="@(() => SelectPreview("Staff Performance"))">
                                 <i class="fas fa-users"></i> <span>Staff Performance</span>
                             </div>
-                            <div class="pill">
+                            <div class="pill @(_selectedPreview == "Finance Evaluation" ? "active" : "")" @onclick="@(() => SelectPreview("Finance Evaluation"))">
                                 <i class="fas fa-coins"></i> <span>Finance Evaluation</span>
                             </div>
-                            <div class="pill">
+                            <div class="pill @(_selectedPreview == "Medical Efficiency" ? "active" : "")" @onclick="@(() => SelectPreview("Medical Efficiency"))">
                                 <i class="fas fa-plus-circle"></i> <span>Medical Efficiency</span>
                             </div>
                         </div>
@@ -60,6 +62,84 @@ else if (!_isAuthenticated)
                             <button class="btn btn-primary btn-lg btn-round" @onclick="() => { _showLoginForm = true; _showRegisterForm = false; _showForgotForm = false; }">
                                 <i class="fas fa-play-circle"></i> Access Portal
                             </button>
+                        </div>
+                    </div>
+                    
+                    <div class="content-right animate-in">
+                        <div class="premium-card feature-preview-card" style="margin-top: 5rem;">
+                            @if (_selectedPreview == "Hospital Overview")
+                            {
+                                <div class="preview-header mb-3">
+                                    <div class="preview-icon" style="background: var(--primary-gradient)"><i class="fas fa-chart-pie"></i></div>
+                                    <h3 class="preview-title">Hospital Overview</h3>
+                                </div>
+                                <p class="preview-desc">Explore real-time bed availability, emergency room wait times, and global clinic metrics mapped across all active departments.</p>
+                                <div class="mock-stats mt-4">
+                                    <div class="stat-box"><h4>@(_stats?.TotalPatients.ToString("N0") ?? "...")</h4><span>Active Patients</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.TotalStaff.ToString("N0") ?? "...")</h4><span>Staff on Duty</span></div>
+                                </div>
+                            }
+                            else if (_selectedPreview == "Patient Insights")
+                            {
+                                <div class="preview-header mb-3">
+                                    <div class="preview-icon" style="background: var(--secondary-gradient)"><i class="fas fa-procedures"></i></div>
+                                    <h3 class="preview-title">Patient Insights</h3>
+                                </div>
+                                <p class="preview-desc">Access complete medical histories securely, track patient vitals instantly, and predict admission trends before they happen.</p>
+                                <div class="mock-stats mt-4">
+                                    <div class="stat-box"><h4>18m</h4><span>Avg Wait Time</span></div>
+                                    <div class="stat-box"><h4>99%</h4><span>Satisfaction</span></div>
+                                </div>
+                            }
+                            else if (_selectedPreview == "Staff Performance")
+                            {
+                                <div class="preview-header mb-3">
+                                    <div class="preview-icon" style="background: var(--accent-gradient)"><i class="fas fa-user-md"></i></div>
+                                    <h3 class="preview-title">Staff Performance</h3>
+                                </div>
+                                <p class="preview-desc">Monitor doctor shift reports, verify nurse availability, and streamline your workforce with automated tracking.</p>
+                                <div class="mock-stats mt-4">
+                                    <div class="stat-box"><h4>12</h4><span>Active Shifts</span></div>
+                                    <div class="stat-box"><h4>5</h4><span>Departments</span></div>
+                                </div>
+                            }
+                            else if (_selectedPreview == "Finance Evaluation")
+                            {
+                                <div class="preview-header mb-3">
+                                    <div class="preview-icon" style="background: linear-gradient(135deg, #059669, #10b981)"><i class="fas fa-file-invoice-dollar"></i></div>
+                                    <h3 class="preview-title">Finance Evaluation</h3>
+                                </div>
+                                <p class="preview-desc">Accelerate your revenue cycle management with automated hospital billing and instantaneous insurance claims processing.</p>
+                                <div class="mock-stats mt-4">
+                                    <div class="stat-box"><h4>$@((_stats?.ClinicRevenue ?? 42800).ToString("N1"))k</h4><span>Daily Rev</span></div>
+                                    <div class="stat-box"><h4>42</h4><span>Claims Placed</span></div>
+                                </div>
+                                <div class="mt-4">
+                                    <button class="btn btn-outline-primary btn-round w-100" @onclick='() => Navigation.NavigateTo("/billings")'>
+                                        <i class="fas fa-external-link-alt mr-2"></i> Open Billing Hub
+                                    </button>
+                                </div>
+                            }
+                            else if (_selectedPreview == "Medical Efficiency")
+                            {
+                                <div class="preview-header mb-3">
+                                    <div class="preview-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2)"><i class="fas fa-stethoscope"></i></div>
+                                    <h3 class="preview-title">Medical Efficiency</h3>
+                                </div>
+                                <p class="preview-desc">Track essential medical equipment usage dynamically, reduce appointment bottlenecks, and drastically improve triage speed.</p>
+                                <div class="mock-stats mt-4">
+                                    <div class="stat-box"><h4>94%</h4><span>Resource Use</span></div>
+                                    <div class="stat-box"><h4>3m</h4><span>Triage Time</span></div>
+                                </div>
+                                <div class="mt-4 d-flex gap-2">
+                                    <button class="btn btn-outline-info btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/inventory")'>
+                                        <i class="fas fa-boxes mr-2"></i> Inventory
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/blood-bank")'>
+                                        <i class="fas fa-tint mr-2"></i> Blood Bank
+                                    </button>
+                                </div>
+                            }
                         </div>
                     </div>
                 }
@@ -214,12 +294,19 @@ else
 
     .landing-main {
         flex: 1;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 40px;
         align-items: center;
     }
 
     .content-left {
         max-width: 600px;
+    }
+
+    .content-right {
+        display: flex;
+        justify-content: center;
     }
 
     .main-title {
@@ -256,6 +343,74 @@ else
 
     .pill:hover {
         transform: translateY(-2px);
+    }
+
+    .pill.active {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+        color: #1e293b;
+    }
+
+    .feature-preview-card {
+        width: 100%;
+        max-width: 450px;
+        padding: 2.5rem;
+        border-radius: 20px;
+    }
+
+    .preview-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .preview-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.4rem;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .preview-title {
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .preview-desc {
+        color: #64748b;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
+
+    .mock-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding-top: 1.2rem;
+    }
+
+    .stat-box h4 {
+        font-weight: 800;
+        font-size: 1.6rem;
+        color: #1e293b;
+        margin-bottom: 2px;
+    }
+
+    .stat-box span {
+        font-size: 0.85rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
     }
 
     .pill i {
@@ -438,7 +593,14 @@ else
     private bool _showLoginForm = false;
     private bool _showRegisterForm = false;
     private bool _showForgotForm = false;
+    private string _selectedPreview = "Hospital Overview";
     private UserModel? _currentUser;
+    private DashboardStatsModel? _stats;
+
+    private void SelectPreview(string feature)
+    {
+        _selectedPreview = feature;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -447,6 +609,12 @@ else
         if (_isAuthenticated)
         {
             _currentUser = await AuthService.GetCurrentUserAsync();
+            _stats = await DashboardService.GetDashboardStatsAsync(_currentUser?.UserType ?? "Public");
+        }
+        else
+        {
+            // For landing page previews
+            _stats = await DashboardService.GetDashboardStatsAsync("Public");
         }
         _isLoading = false;
     }

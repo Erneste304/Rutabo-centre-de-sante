@@ -17,6 +17,8 @@ namespace HospitalManagementSystem.Data.Repositories
         public async Task<HospitalManagementSystem.Core.Models.User?> GetByUsernameAsync(string username)
         {
             var entity = await _context.Users
+                .Include(u => u.Patient)
+                .Include(u => u.Doctor)
                 .FirstOrDefaultAsync(u => u.Username == username);
             
             if (entity == null) return null;
@@ -47,7 +49,10 @@ namespace HospitalManagementSystem.Data.Repositories
 
         public async Task<HospitalManagementSystem.Core.Models.User?> GetByIdAsync(int id)
         {
-            var entity = await _context.Users.FindAsync(id);
+            var entity = await _context.Users
+                .Include(u => u.Patient)
+                .Include(u => u.Doctor)
+                .FirstOrDefaultAsync(u => u.UserId == id);
             return entity == null ? null : MapToModel(entity);
         }
 
@@ -88,6 +93,8 @@ namespace HospitalManagementSystem.Data.Repositories
                 PasswordHash = entity.PasswordHash,
                 UserType = userType,
                 IsActive = entity.Status == "Active",
+                DoctorId = entity.Doctor?.DoctorId,
+                PatientId = entity.Patient?.PatientId,
                 ResetRequested = entity.ResetRequested,
                 CreatedAt = entity.CreatedAt
             };

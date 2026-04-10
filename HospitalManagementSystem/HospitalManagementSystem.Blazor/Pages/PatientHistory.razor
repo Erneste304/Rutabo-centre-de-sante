@@ -1,0 +1,177 @@
+@page "/medical-records"
+@page "/medical-records/{PatientId:int}"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject ClinicalService ClinicalService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+
+<div class="clinical-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Patient Medical History</h1>
+                <p class="text-secondary">Comprehensive clinical timeline, diagnostic history, and treatment records.</p>
+            </div>
+            <div class="header-actions">
+                @if (AuthService.CurrentUser?.UserType == "Doctor")
+                {
+                    <button class="btn btn-primary btn-round px-4 shadow-sm">
+                        <i class="fas fa-plus mr-2"></i> New Clinical Note
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar: Patient Info & Filters -->
+            <div class="col-lg-3">
+                <div class="premium-card mb-4">
+                    <div class="text-center mb-4">
+                        <div class="avatar-placeholder mx-auto mb-3">
+                            <i class="fas fa-user-circle fa-4x text-primary-light"></i>
+                        </div>
+                        <h4 class="font-weight-bold mb-1">Patient #@PatientId</h4>
+                        <span class="badge badge-soft-info">Blood Type: A+</span>
+                    </div>
+                    <hr/>
+                    <div class="info-list">
+                        <div class="info-item mb-3">
+                            <label class="text-muted small uppercase font-weight-bold d-block">Allergies</label>
+                            <span class="text-danger font-weight-bold">Penicillin, Peanuts</span>
+                        </div>
+                        <div class="info-item mb-3">
+                            <label class="text-muted small uppercase font-weight-bold d-block">Chronic Conditions</label>
+                            <span>Hypertension</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <h5 class="font-weight-bold mb-3">Filter History</h5>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="checkConsult" checked>
+                        <label class="custom-control-label" for="checkConsult">Consultations</label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" id="checkLabs" checked>
+                        <label class="custom-control-label" for="checkLabs">Lab Reports</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="checkMed" checked>
+                        <label class="custom-control-label" for="checkMed">Prescriptions</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Timeline -->
+            <div class="col-lg-9">
+                @if (_isLoading)
+                {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-3 text-muted">Loading clinical history...</p>
+                    </div>
+                }
+                else if (!_history.Any())
+                {
+                    <div class="premium-card text-center py-5">
+                        <img src="https://img.icons8.com/clouds/100/000000/medical-history.png" class="mb-3"/>
+                        <h3 class="text-muted">No medical records found.</h3>
+                        <p>Start by creating a new clinical note during a patient visit.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="timeline">
+                        @foreach (var record in _history)
+                        {
+                            <div class="timeline-item @(record.IsCritical ? "critical" : "")">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content premium-card shadow-sm mb-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <div class="badge @GetBadgeClass(record.RecordType) mb-2">@record.RecordType</div>
+                                            <h4 class="font-weight-bold mb-0">@(record.Diagnosis ?? "Clinical Consult")</h4>
+                                            <span class="text-muted small">@record.VisitDate.ToString("D") • Dr. @record.DoctorName</span>
+                                        </div>
+                                        @if (record.IsCritical)
+                                        {
+                                            <span class="badge badge-danger blink"><i class="fas fa-exclamation-triangle"></i> CRITICAL</span>
+                                        }
+                                    </div>
+
+                                    <div class="record-details row">
+                                        <div class="col-md-6">
+                                            <label class="text-muted small font-weight-bold uppercase d-block">Symptoms</label>
+                                            <p>@(record.Symptoms ?? "Not recorded")</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="text-muted small font-weight-bold uppercase d-block">Treatment Plan</label>
+                                            <p>@(record.Treatment ?? "Observation")</p>
+                                        </div>
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(record.Notes))
+                                    {
+                                        <div class="record-notes p-3 bg-light rounded mt-2">
+                                            <div class="small text-muted mb-1 italic">Doctor's Notes:</div>
+                                            <div class="notes-content">@record.Notes</div>
+                                        </div>
+                                    }
+
+                                    <div class="record-footer d-flex mt-3 gap-2">
+                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-print mr-1"></i> Print</button>
+                                        <button class="btn btn-sm btn-link text-primary"><i class="fas fa-external-link-alt mr-1"></i> View Lab Result</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .clinical-page { background: #f0f2f5; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .premium-card { background: white; border-radius: 16px; padding: 20px; border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e0e6ed; }
+    .timeline-item { position: relative; margin-bottom: 2rem; }
+    .timeline-marker { position: absolute; left: -25px; top: 10px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); border: 2px solid white; box-shadow: 0 0 0 4px #e0e7ff; z-index: 10; }
+    .timeline-item.critical .timeline-marker { background: #ef4444; box-shadow: 0 0 0 4px #fee2e2; }
+    .timeline-item.critical .timeline-content { border-left: 5px solid #ef4444; }
+    .badge-soft-info { background: #e0f2fe; color: #0369a1; }
+    .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+    .italic { font-style: italic; }
+    .blink { animation: blinker 1.5s linear infinite; }
+    @@keyframes blinker { 50% { opacity: 0.5; } }
+    .btn-round { border-radius: 100px; }
+</style>
+
+@code {
+    [Parameter] public int PatientId { get; set; } = 1; // Default for demo
+    private List<MedicalRecordModel> _history = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _history = await ClinicalService.GetPatientHistoryAsync(PatientId);
+        _isLoading = false;
+    }
+
+    private string GetBadgeClass(string type) => type switch {
+        "Consultation" => "badge-primary",
+        "Lab Test" => "badge-info",
+        "Surgery" => "badge-dark",
+        "Emergency" => "badge-danger",
+        _ => "badge-secondary"
+    };
+}

@@ -1,0 +1,5 @@
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/obj/Debug/net10.0/Rutabo-centre-de-sante.GeneratedMSBuildEditorConfig.editorconfig
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/obj/Debug/net10.0/Rutabo-centre-de-sante.AssemblyInfoInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/obj/Debug/net10.0/Rutabo-centre-de-sante.AssemblyInfo.cs
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/obj/Debug/net10.0/Rutabo-centre-de-sante.csproj.CoreCompileInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/obj/Debug/net10.0/Rutabo-centre-de-sante.sourcelink.json

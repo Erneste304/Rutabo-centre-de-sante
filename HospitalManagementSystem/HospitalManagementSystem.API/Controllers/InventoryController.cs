@@ -11,11 +11,11 @@ namespace HospitalManagementSystem.API.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly INurseService _nurseService;
+        private readonly IInventoryService _inventoryService;
 
-        public InventoryController(INurseService nurseService)
+        public InventoryController(IInventoryService inventoryService)
         {
-            _nurseService = nurseService;
+            _inventoryService = inventoryService;
         }
 
         [HttpGet]
@@ -23,9 +23,7 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                // For now, return all low stock items or all items if available
-                // nurse.js expects general inventory list
-                var items = await _nurseService.GetLowStockItemsAsync();
+                var items = await _inventoryService.GetAllInventoryAsync();
                 return Ok(items);
             }
             catch (Exception ex)

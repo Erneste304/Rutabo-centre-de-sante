@@ -1,0 +1,222 @@
+@page "/ambulance-fleet"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject AmbulanceService FleetService
+@inject NavigationManager Navigation
+
+<div class="fleet-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Ambulance Fleet & Dispatch</h1>
+                <p class="text-secondary">Real-time emergency response monitoring and hospital fleet management.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-danger btn-round px-4 shadow-sm" @onclick="OpenDispatchModal">
+                    <i class="fas fa-bullhorn mr-2"></i> New Emergency Call
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Active Fleet Grid -->
+            <div class="col-lg-8">
+                <div class="fleet-grid">
+                    @if (_isLoading)
+                    {
+                        <div class="text-center py-5 w-100"><div class="spinner-border text-primary"></div></div>
+                    }
+                    else
+                    {
+                        @foreach (var v in _fleet)
+                        {
+                            <div class="fleet-card @GetStatusColorClass(v.Availability)">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-4">
+                                        <div class="vehicle-info">
+                                            <div class="badge badge-pill badge-dark mb-2"># @v.AmbulanceNumber</div>
+                                            <h3 class="font-weight-bold mb-0">Toyota Hiace</h3>
+                                            <span class="text-muted small">Standard Life Support</span>
+                                        </div>
+                                        <div class="status-indicator">
+                                            <div class="pulse-ring"></div>
+                                            <span class="status-text font-weight-bold uppercase">@v.Availability</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="driver-info d-flex align-items-center p-3 bg-light rounded mb-4">
+                                        <div class="avatar-sm bg-primary text-white mr-3">D</div>
+                                        <div>
+                                            <div class="small text-muted uppercase font-weight-bold">Active Driver</div>
+                                            <div class="font-weight-bold">@(v.DriverName ?? "Unassigned")</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="h6 mb-0"><i class="fas fa-oil-can text-muted mr-1"></i> 82% Fuel</div>
+                                        <button class="btn btn-sm btn-outline-primary btn-round px-3">Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Active Emergencies Queue -->
+            <div class="col-lg-4">
+                <div class="premium-card shadow-lg border-0 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="font-weight-bold mb-0">Active Dispatches</h4>
+                        <span class="badge badge-primary">@_activeLogs.Count</span>
+                    </div>
+
+                    <div class="emergency-list">
+                        @if (!_activeLogs.Any())
+                        {
+                            <div class="text-center py-5 opacity-50">
+                                <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
+                                <p>No active emergency calls.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            @foreach (var log in _activeLogs)
+                            {
+                                <div class="emergency-item p-3 mb-3 border rounded shadow-sm">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="badge badge-danger">Emergency</span>
+                                        <span class="small text-muted">@log.PickupTime?.ToString("t")</span>
+                                    </div>
+                                    <div class="location-box mb-3">
+                                        <div class="small text-muted uppercase font-weight-bold">Location</div>
+                                        <div class="font-weight-bold">@log.PickupLocation</div>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 6px;">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="width: 75%"></div>
+                                    </div>
+                                    <button class="btn btn-sm btn-success btn-block btn-round" @onclick="() => CompleteTrip(log.LogId)">
+                                        Mark Completed
+                                    </button>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_showDispatchModal)
+{
+    <div class="modal d-block" style="background: rgba(0,0,0,0.6)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content radius-20 border-0 p-4 shadow-2xl">
+                <h3 class="font-weight-bold mb-4">Dispatch Ambulance</h3>
+                <div class="form-group">
+                    <label>Pickup Location</label>
+                    <input type="text" class="form-control" placeholder="123 Hospital St, Rutabo" @bind="_newLog.PickupLocation" />
+                </div>
+                <div class="form-group">
+                    <label>Select Ambulance</label>
+                    <select class="form-control" @bind="_newLog.AmbulanceId">
+                        <option value="0">-- Select Available Vehicle --</option>
+                        @foreach (var v in _fleet.Where(a => a.Availability == "Available"))
+                        {
+                            <option value="@v.AmbulanceId">Ambulance @v.AmbulanceNumber</option>
+                        }
+                    </select>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button class="btn btn-light btn-round flex-grow-1" @onclick="() => _showDispatchModal = false">Cancel</button>
+                    <button class="btn btn-danger btn-round flex-grow-1 shadow" @onclick="SubmitDispatch">Confirm Dispatch</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .fleet-page { background: #f1f5f9; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .fleet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .fleet-card { background: white; border-radius: 20px; border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 5px solid #64748b; transition: transform 0.2s; }
+    .fleet-card:hover { transform: translateY(-5px); }
+    .fleet-card.Available { border-top-color: #10b981; }
+    .fleet-card.Dispatched { border-top-color: #ef4444; }
+    .fleet-card.Maintenance { border-top-color: #f59e0b; }
+    .status-text { font-size: 0.75rem; letter-spacing: 0.05em; }
+    .Available .status-text { color: #10b981; }
+    .Dispatched .status-text { color: #ef4444; }
+    .Maintenance .status-text { color: #f59e0b; }
+    .avatar-sm { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
+    .premium-card { background: white; border-radius: 20px; padding: 25px; }
+    .btn-round { border-radius: 100px; font-weight: 700; }
+    .radius-20 { border-radius: 20px; }
+    .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    .pulse-ring { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; }
+    .Available .pulse-ring { background: #10b981; box-shadow: 0 0 0 rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; }
+    .Dispatched .pulse-ring { background: #ef4444; animation: pulse-red 2s infinite; }
+    
+    @@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    @@keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+</style>
+
+@code {
+    private List<AmbulanceModel> _fleet = new();
+    private List<AmbulanceLogModel> _activeLogs = new();
+    private bool _isLoading = true;
+    private bool _showDispatchModal = false;
+    private AmbulanceLogModel _newLog = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        var fleetTask = FleetService.GetFleetAsync();
+        var logsTask = FleetService.GetActiveLogsAsync();
+        
+        _fleet = await fleetTask;
+        _activeLogs = await logsTask;
+        _isLoading = false;
+    }
+
+    private void OpenDispatchModal()
+    {
+        _newLog = new AmbulanceLogModel { AmbulanceId = 0 };
+        _showDispatchModal = true;
+    }
+
+    private async Task SubmitDispatch()
+    {
+        if (_newLog.AmbulanceId == 0 || string.IsNullOrEmpty(_newLog.PickupLocation)) return;
+        
+        var result = await FleetService.DispatchAmbulanceAsync(_newLog);
+        if (result != null)
+        {
+            _showDispatchModal = false;
+            await LoadData();
+        }
+    }
+
+    private async Task CompleteTrip(int logId)
+    {
+        var success = await FleetService.UpdateTripStatusAsync(logId, "Completed");
+        if (success)
+        {
+            await LoadData();
+        }
+    }
+
+    private string GetStatusColorClass(string status) => status;
+}

@@ -1,0 +1,222 @@
+@page "/lab-reports"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject ClinicalService ClinicalService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+
+<div class="lab-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Diagnostic Laboratory</h1>
+                <p class="text-secondary">Manage diagnostic tests, submit results, and track laboratory performance.</p>
+            </div>
+            <div class="header-actions">
+                <div class="btn-group shadow-sm">
+                    <button class="btn btn-outline-primary bg-white px-4">Daily Export</button>
+                    <button class="btn btn-primary px-4"><i class="fas fa-plus mr-2"></i> New Test Order</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lab Stats -->
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="premium-card text-center border-left-info shadow-sm">
+                    <div class="stat-num text-info mb-1">@_pendingTestsCount</div>
+                    <div class="stat-label text-muted">Pending Samples</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="premium-card text-center border-left-success shadow-sm">
+                    <div class="stat-num text-success mb-1">128</div>
+                    <div class="stat-label text-muted">Tests Completed (24h)</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="premium-card text-center border-left-danger shadow-sm">
+                    <div class="stat-num text-danger mb-1">4</div>
+                    <div class="stat-label text-muted">Critical Flags</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="premium-card p-0 shadow-lg border-0">
+            <div class="table-header p-4 bg-white d-flex justify-content-between align-items-center border-bottom">
+                <div class="d-flex align-items-center">
+                    <h3 class="m-0 font-weight-bold mr-3">Active Test Queue</h3>
+                    <div class="badge badge-pill badge-warning px-3 py-2">Requires Action</div>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="form-control" placeholder="Search by patient or test name..." @bind="_searchTerm" @bind:event="oninput" />
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 clinical-table">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4">Test Code</th>
+                            <th>Patient / Ordered By</th>
+                            <th>Test Description</th>
+                            <th>Status / Sample</th>
+                            <th class="text-right px-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_isLoading)
+                        {
+                            <tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
+                        }
+                        else if (!FilteredTests.Any())
+                        {
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No active test requests found.</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var test in FilteredTests)
+                            {
+                                <tr>
+                                    <td class="px-4"><code class="font-weight-bold">@test.TestCode</code></td>
+                                    <td>
+                                        <div class="font-weight-bold">@test.PatientName</div>
+                                        <div class="small text-muted">Dr. @test.DoctorName</div>
+                                    </td>
+                                    <td>
+                                        <div class="font-weight-bold">@test.TestName</div>
+                                        <div class="badge badge-soft-secondary">@test.TestType</div>
+                                    </td>
+                                    <td>
+                                        <div class="badge @GetStatusClass(test.Status) mb-1">@test.Status</div>
+                                        <div class="small text-muted italic">Sample: @(test.SampleType ?? "N/A")</div>
+                                    </td>
+                                    <td class="text-right px-4">
+                                        <button class="btn btn-sm btn-outline-info mr-2" @onclick="() => SelectTest(test)">Input Result</button>
+                                        <button class="btn btn-sm btn-primary">Verify</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_selectedTest != null)
+{
+    <div class="modal d-block shadow-lg" style="background: rgba(0,0,0,0.5)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 radius-20">
+                <div class="modal-header bg-primary text-white border-0 p-4">
+                    <h5 class="modal-title font-weight-bold">Submit Result for @(_selectedTest.TestName)</h5>
+                    <button type="button" class="close text-white" @onclick="() => _selectedTest = null">&times;</button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="form-group mb-4 text-center">
+                        <label class="text-muted uppercase small font-weight-bold d-block">Patient Name</label>
+                        <h4 class="font-weight-bold">@_selectedTest.PatientName</h4>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Result Value / Findings</label>
+                        <textarea class="form-control" rows="4" @bind="_resultInput" placeholder="Enter diagnostic findings..."></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Normal Range</label>
+                                <input type="text" class="form-control" placeholder="e.g. 70-100" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Units</label>
+                                <input type="text" class="form-control" placeholder="e.g. mg/dL" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-secondary px-4 btn-round" @onclick="() => _selectedTest = null">Cancel</button>
+                    <button type="button" class="btn btn-primary px-4 btn-round shadow" @onclick="SubmitResult">Submit & Finalize</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .lab-page { background: #f4f7f6; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .premium-card { background: white; border-radius: 12px; padding: 25px; border: none; }
+    .stat-num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+    .stat-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .border-left-info { border-left: 6px solid #06b6d4; }
+    .border-left-success { border-left: 6px solid #10b981; }
+    .border-left-danger { border-left: 6px solid #ef4444; }
+    .clinical-table th { border: none; color: #64748b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .btn-round { border-radius: 100px; font-weight: 700; }
+    .badge-soft-secondary { background: #f1f5f9; color: #475569; }
+    .radius-20 { border-radius: 20px; }
+</style>
+
+@code {
+    private List<LabTestModel> _tests = new();
+    private bool _isLoading = true;
+    private string _searchTerm = "";
+    private int _pendingTestsCount = 0;
+    private LabTestModel? _selectedTest;
+    private string _resultInput = "";
+
+    private IEnumerable<LabTestModel> FilteredTests => 
+        string.IsNullOrWhiteSpace(_searchTerm) 
+        ? _tests 
+        : _tests.Where(t => t.PatientName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                          t.TestName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTests();
+    }
+
+    private async Task LoadTests()
+    {
+        _isLoading = true;
+        _tests = await ClinicalService.GetPendingTestsAsync();
+        _pendingTestsCount = _tests.Count;
+        _isLoading = false;
+    }
+
+    private void SelectTest(LabTestModel test)
+    {
+        _selectedTest = test;
+        _resultInput = "";
+    }
+
+    private async Task SubmitResult()
+    {
+        if (_selectedTest == null) return;
+        
+        var pharmacist = AuthService.CurrentUser?.FullName ?? "Lab Technician";
+        var success = await ClinicalService.SubmitLabResultAsync(_selectedTest.LabTestId, _resultInput, pharmacist);
+        
+        if (success)
+        {
+            _selectedTest = null;
+            await LoadTests();
+        }
+    }
+
+    private string GetStatusClass(string status) => status switch {
+        "Pending" => "badge-warning",
+        "Completed" => "badge-success",
+        "Cancelled" => "badge-danger",
+        _ => "badge-secondary"
+    };
+}

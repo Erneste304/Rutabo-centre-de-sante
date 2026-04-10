@@ -1,4 +1,4 @@
-﻿namespace HospitalManagementSystem.Core.Models
+namespace HospitalManagementSystem.Core.Models
 {
     public class User
     {
@@ -9,6 +9,8 @@
         public string Email { get; set; } = string.Empty;
         public UserType UserType { get; set; }
         public bool IsActive { get; set; } = true;
+        public int? DoctorId { get; set; }
+        public int? PatientId { get; set; }
         public bool ResetRequested { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

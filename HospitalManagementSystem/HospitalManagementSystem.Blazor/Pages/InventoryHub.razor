@@ -1,0 +1,193 @@
+@page "/inventory"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject InventoryService InventoryService
+@inject NavigationManager Navigation
+
+<div class="inventory-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Medical Inventory Hub</h1>
+                <p class="text-secondary">Track hospital supplies, monitor stock levels, and manage supplier relationships.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-outline-primary btn-round px-4 mr-2"><i class="fas fa-file-download mr-2"></i> Export Inventory</button>
+                <button class="btn btn-primary btn-round px-4 shadow-sm">
+                    <i class="fas fa-plus mr-2"></i> Add Item
+                </button>
+            </div>
+        </div>
+
+        <!-- Inventory Stats -->
+        <div class="row mb-5">
+            <div class="col-md-3">
+                <div class="premium-card text-center">
+                    <div class="stat-icon bg-soft-primary mx-auto mb-3"><i class="fas fa-box"></i></div>
+                    <div class="text-muted small font-weight-bold uppercase">Total Items</div>
+                    <div class="h3 font-weight-bold mb-0">@_inventory.Count</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="premium-card text-center border-bottom-warning">
+                    <div class="stat-icon bg-soft-warning mx-auto mb-3"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="text-muted small font-weight-bold uppercase">Low Stock</div>
+                    <div class="h3 font-weight-bold mb-0 text-warning">@_inventory.Count(i => i.CurrentStock <= i.MinimumStock)</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="premium-card text-center border-bottom-danger">
+                    <div class="stat-icon bg-soft-danger mx-auto mb-3"><i class="fas fa-hourglass-end"></i></div>
+                    <div class="text-muted small font-weight-bold uppercase">Expiring Soon</div>
+                    <div class="h3 font-weight-bold mb-0 text-danger">@(_inventory.Count(i => i.ExpiryDate.HasValue && i.ExpiryDate.Value < DateTime.Now.AddMonths(2)))</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="premium-card text-center">
+                    <div class="stat-icon bg-soft-success mx-auto mb-3"><i class="fas fa-truck-loading"></i></div>
+                    <div class="text-muted small font-weight-bold uppercase">Monthly Orders</div>
+                    <div class="h3 font-weight-bold mb-0">12</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Table -->
+        <div class="premium-card p-0 overflow-hidden shadow-lg border-0">
+            <div class="table-header p-4 bg-white d-flex justify-content-between align-items-center border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <h3 class="m-0 font-weight-bold">Supplies & Equipment</h3>
+                    <div class="badge badge-soft-primary px-3 py-2">Real-time Stock</div>
+                </div>
+                <div class="search-box">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-right-0"><i class="fas fa-search"></i></span>
+                        </div>
+                        <input type="text" class="form-control border-left-0" placeholder="Search by name or item code..." @bind="_searchTerm" @bind:event="oninput" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4">Item Code</th>
+                            <th>Item Name</th>
+                            <th>Category</th>
+                            <th>Current Stock</th>
+                            <th>Expiry</th>
+                            <th class="text-right px-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_isLoading)
+                        {
+                            <tr><td colspan="6" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
+                        }
+                        else if (!FilteredInventory.Any())
+                        {
+                            <tr><td colspan="6" class="text-center py-5">No items found matching your search.</td></tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in FilteredInventory)
+                            {
+                                <tr>
+                                    <td class="px-4"><code class="text-primary font-weight-bold">@item.ItemCode</code></td>
+                                    <td>
+                                        <div class="font-weight-bold">@item.ItemName</div>
+                                        <div class="text-muted extra-small">Supplier: @(item.Supplier ?? "Generic")</div>
+                                    </td>
+                                    <td><span class="badge badge-soft-secondary">@item.Category</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="mr-2 @(item.CurrentStock <= item.MinimumStock ? "text-danger font-weight-bold" : "")">@item.CurrentStock @item.Unit</span>
+                                            @if (item.CurrentStock <= item.MinimumStock)
+                                            {
+                                                <i class="fas fa-exclamation-circle text-danger small" title="Low Stock"></i>
+                                            }
+                                        </div>
+                                        <div class="progress mt-1" style="height: 4px; width: 60px;">
+                                            <div class="progress-bar @(GetStockColorClass(item))" style="width: @(GetStockPercentage(item))%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="@(GetExpiryColorClass(item))">
+                                            @(item.ExpiryDate?.ToString("MMM yyyy") ?? "N/A")
+                                        </div>
+                                    </td>
+                                    <td class="text-right px-4">
+                                        <button class="btn btn-sm btn-outline-info mr-2"><i class="fas fa-history"></i></button>
+                                        <button class="btn btn-sm btn-primary btn-round px-3">Restock</button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .inventory-page { background: #f1f5f9; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .premium-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: none; }
+    .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+    .bg-soft-primary { background: #e0e7ff; color: #4338ca; }
+    .bg-soft-warning { background: #fef3c7; color: #92400e; }
+    .bg-soft-danger { background: #fee2e2; color: #b91c1c; }
+    .bg-soft-success { background: #dcfce7; color: #15803d; }
+    .badge-soft-primary { background: #e0e7ff; color: #4338ca; border: none; }
+    .badge-soft-secondary { background: #f1f5f9; color: #475569; border: none; }
+    .border-bottom-warning { border-bottom: 4px solid #f59e0b; }
+    .border-bottom-danger { border-bottom: 4px solid #ef4444; }
+    .extra-small { font-size: 0.75rem; }
+    .animate-in { animation: fadeInUp 0.4s ease-out; }
+    @@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+@code {
+    private List<InventoryModel> _inventory = new();
+    private bool _isLoading = true;
+    private string _searchTerm = "";
+
+    private IEnumerable<InventoryModel> FilteredInventory => 
+        string.IsNullOrWhiteSpace(_searchTerm) 
+        ? _inventory 
+        : _inventory.Where(i => i.ItemName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                              i.ItemCode.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _inventory = await InventoryService.GetInventoryAsync();
+        _isLoading = false;
+    }
+
+    private string GetStockColorClass(InventoryModel item) 
+    {
+        if (item.CurrentStock <= item.MinimumStock) return "bg-danger";
+        if (item.CurrentStock <= item.MinimumStock * 2) return "bg-warning";
+        return "bg-success";
+    }
+
+    private int GetStockPercentage(InventoryModel item) 
+    {
+        var pct = (int)((double)item.CurrentStock / 200 * 100); // Normalized against 200 units
+        return Math.Min(100, pct);
+    }
+
+    private string GetExpiryColorClass(InventoryModel item)
+    {
+        if (!item.ExpiryDate.HasValue) return "text-muted";
+        if (item.ExpiryDate < DateTime.Now) return "text-danger font-weight-bold";
+        if (item.ExpiryDate < DateTime.Now.AddMonths(3)) return "text-warning";
+        return "text-dark";
+    }
+}

@@ -30,6 +30,8 @@ namespace HospitalManagementSystem.API.Controllers
                 FullName = user.FullName,
                 UserType = user.UserType.ToString(),
                 Email = user.Email,
+                DoctorId = user.DoctorId,
+                PatientId = user.PatientId,
                 Status = user.IsActive ? "Active" : "Inactive",
                 CreatedAt = user.CreatedAt,
                 LastLogin = DateTime.UtcNow

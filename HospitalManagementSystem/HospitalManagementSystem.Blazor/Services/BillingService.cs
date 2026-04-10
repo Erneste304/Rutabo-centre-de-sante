@@ -11,6 +11,20 @@ namespace HospitalManagementSystem.Blazor.Services
             _api = api;
         }
 
-        // Add billing specific methods here
+        public async Task<List<BillingModel>> GetBillingsAsync()
+        {
+            return await _api.RequestAsync<List<BillingModel>>("api/billings") ?? new List<BillingModel>();
+        }
+
+        public async Task<BillingModel?> GetBillByIdAsync(int id)
+        {
+            return await _api.RequestAsync<BillingModel>($"api/billings/{id}");
+        }
+
+        public async Task<bool> ProcessPaymentAsync(int billId, PaymentModel payment)
+        {
+            var result = await _api.RequestAsync<PaymentModel>($"api/billings/{billId}/payments", HttpMethod.Post, payment);
+            return result != null;
+        }
     }
 }

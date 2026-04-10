@@ -1,0 +1,144 @@
+@page "/blood-bank"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject BloodBankService BloodService
+@inject NavigationManager Navigation
+
+<div class="blood-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Blood Bank Management</h1>
+                <p class="text-secondary">Track real-time blood inventory, monitor donor cycles, and manage critical stock levels.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary btn-round px-4 shadow-sm">
+                    <i class="fas fa-heartbeat mr-2"></i> Register New Donor
+                </button>
+            </div>
+        </div>
+
+        <!-- Inventory Grid -->
+        <div class="blood-grid mb-5">
+            @if (_isLoading)
+            {
+                <div class="text-center py-5 w-100"><div class="spinner-border text-primary"></div></div>
+            }
+            else
+            {
+                @foreach (var group in _stock)
+                {
+                    <div class="blood-card @(group.StockQuantity < 2 ? "critical" : "")">
+                        <div class="blood-type">@group.BloodType</div>
+                        <div class="stock-info">
+                            <div class="stock-count">@group.StockQuantity</div>
+                            <div class="stock-label text-muted">Units Available</div>
+                        </div>
+                        <div class="stock-actions mt-3">
+                            <button class="btn btn-icon plus shadow-sm" @onclick="() => UpdateStock(group.BloodType, 1)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-icon minus shadow-sm" @onclick="() => UpdateStock(group.BloodType, -1)"><i class="fas fa-minus"></i></button>
+                        </div>
+                        @if (group.StockQuantity < 2)
+                        {
+                            <div class="critical-shield">
+                                <i class="fas fa-exclamation-triangle"></i> LOW STOCK
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Transfusion History / Recent Activity -->
+        <div class="premium-card shadow-lg border-0">
+            <h4 class="font-weight-bold mb-4">Recent Inventory Activity</h4>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Time</th>
+                            <th>Action</th>
+                            <th>Blood Group</th>
+                            <th>Amount</th>
+                            <th>Staff Member</th>
+                            <th class="text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:45 AM</td>
+                            <td><span class="badge badge-soft-success">New Donation</span></td>
+                            <td class="font-weight-bold">O+</td>
+                            <td>2 Units</td>
+                            <td>Nurse Sarah K.</td>
+                            <td class="text-right"><span class="badge badge-success">Verified</span></td>
+                        </tr>
+                        <tr>
+                            <td>09:12 AM</td>
+                            <td><span class="badge badge-soft-danger">Transfusion</span></td>
+                            <td class="font-weight-bold">AB-</td>
+                            <td>1 Unit</td>
+                            <td>Dr. Robert M.</td>
+                            <td class="text-right"><span class="badge badge-success">Verified</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .blood-page { background: #fdfdfd; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .blood-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    
+    .blood-card { background: white; border-radius: 20px; padding: 30px; border: 1px solid #edf2f7; text-align: center; position: relative; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .blood-card:hover { transform: scale(1.05); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    
+    .blood-type { font-size: 2.5rem; font-weight: 900; color: #e11d48; margin-bottom: 15px; }
+    .stock-count { font-size: 3rem; font-weight: 800; line-height: 1; color: #1e293b; }
+    .stock-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    .stock-actions { display: flex; justify-content: center; gap: 15px; }
+    .btn-icon { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; font-size: 1.2rem; }
+    .btn-icon.plus { background: #10b981; color: white; }
+    .btn-icon.minus { background: #f1f5f9; color: #64748b; }
+    
+    .blood-card.critical { border-color: #fca5a5; background: #fff1f2; }
+    .critical-shield { position: absolute; top: 15px; right: 20px; font-size: 0.7rem; font-weight: 800; color: #e11d48; }
+    
+    .premium-card { background: white; border-radius: 20px; padding: 30px; }
+    .btn-round { border-radius: 100px; font-weight: 700; }
+    .badge-soft-success { background: #dcfce7; color: #166534; }
+    .badge-soft-danger { background: #fee2e2; color: #991b1b; }
+</style>
+
+@code {
+    private List<BloodBankModel> _stock = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _isLoading = true;
+        _stock = await BloodService.GetStockAsync();
+        _isLoading = false;
+    }
+
+    private async Task UpdateStock(string type, int delta)
+    {
+        var success = await BloodService.UpdateBloodStockAsync(type, delta);
+        if (success)
+        {
+            await LoadData();
+        }
+    }
+}

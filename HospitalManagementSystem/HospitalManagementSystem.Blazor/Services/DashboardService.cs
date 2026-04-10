@@ -11,10 +11,9 @@ namespace HospitalManagementSystem.Blazor.Services
             _api = api;
         }
 
-        public async Task<object?> GetDashboardStatsAsync(string userType)
+        public async Task<DashboardStatsModel?> GetDashboardStatsAsync(string userType)
         {
-            // Placeholder for fetching dashboard stats
-            return await _api.RequestAsync<object>($"api/dashboard/stats?type={userType}");
+            return await _api.RequestAsync<DashboardStatsModel>($"api/dashboard/stats?type={userType}");
         }
     }
 }

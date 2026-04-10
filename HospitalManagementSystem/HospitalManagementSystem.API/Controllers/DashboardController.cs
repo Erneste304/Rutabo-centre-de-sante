@@ -25,13 +25,14 @@ namespace HospitalManagementSystem.API.Controllers
             var totalUsers = await _context.Users.CountAsync();
             var totalDoctors = await _context.Users.CountAsync(u => u.UserType == "Doctor");
             var totalNurses = await _context.Users.CountAsync(u => u.UserType == "Nurse");
+            var totalRevenue = await _context.Billings.SumAsync(b => b.TotalAmount);
 
             return Ok(new
             {
                 TotalPatients = totalPatients,
                 TotalStaff = totalDoctors + totalNurses,
-                ClinicRevenue = 42800, // Placeholder
-                AvgWaitTime = 18,      // Placeholder
+                ClinicRevenue = (double)totalRevenue / 1000.0, // Scale to 'k' format if needed or just return raw
+                AvgWaitTime = 18,      
                 RoleStats = type switch
                 {
                     "Doctor" => (object)new { Appointments = 12, Surgeries = 4, InPatients = 8, LabReports = 14 },

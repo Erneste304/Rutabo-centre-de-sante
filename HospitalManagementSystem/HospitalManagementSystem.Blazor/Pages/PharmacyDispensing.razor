@@ -1,0 +1,183 @@
+@page "/pharmacy"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject PharmacyService PharmacyService
+@inject NavigationManager Navigation
+
+<div class="pharmacy-page animate-in">
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <button class="btn btn-link text-muted p-0 mb-2" @onclick='() => Navigation.NavigateTo("/")'>
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h1 class="display-5 font-weight-bold color-primary">Pharmacy Dispensing</h1>
+                <p class="text-secondary">Review patient prescriptions, verify dosages, and record pharmaceutical dispensing.</p>
+            </div>
+            <div class="header-actions">
+                <div class="badge badge-soft-success px-4 py-3 h6 mb-0 d-flex align-items-center">
+                    <i class="fas fa-check-circle mr-2"></i> System Online & Synced
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Active Prescriptions Queue -->
+            <div class="col-lg-8">
+                <div class="premium-card p-0 shadow-lg border-0 overflow-hidden">
+                    <div class="table-header p-4 bg-white d-flex justify-content-between align-items-center border-bottom">
+                        <h3 class="m-0 font-weight-bold">Pending Dispensation</h3>
+                        <div class="search-box">
+                            <input type="text" class="form-control" placeholder="Search by patient name..." @bind="_searchTerm" @bind:event="oninput" />
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="px-4">Date</th>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Diagnosis</th>
+                                    <th class="text-right px-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (_isLoading)
+                                {
+                                    <tr><td colspan="5" class="text-center py-5"><div class="spinner-border text-primary"></div></td></tr>
+                                }
+                                else if (!FilteredPrescriptions.Any())
+                                {
+                                    <tr><td colspan="5" class="text-center py-5 text-muted">No pending prescriptions found.</td></tr>
+                                }
+                                else
+                                {
+                                    @foreach (var p in FilteredPrescriptions)
+                                    {
+                                        <tr class="@(_selectedPrescription?.PrescriptionId == p.PrescriptionId ? "table-active-row" : "")" @onclick="() => SelectPrescription(p)">
+                                            <td class="px-4">@p.PrescriptionDate.ToString("t")<br/><span class="small text-muted">Today</span></td>
+                                            <td>
+                                                <div class="font-weight-bold">@p.PatientName</div>
+                                                <div class="text-muted extra-small">ID: #P-@p.PatientId</div>
+                                            </td>
+                                            <td><span class="text-primary font-weight-bold">Dr. @p.DoctorName</span></td>
+                                            <td><div class="text-truncate" style="max-width: 150px;">@(p.Diagnosis ?? "General Treatment")</div></td>
+                                            <td class="text-right px-4">
+                                                <button class="btn btn-sm btn-primary btn-round px-3">Review</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Review Pane -->
+            <div class="col-lg-4">
+                @if (_selectedPrescription != null)
+                {
+                    <div class="premium-card shadow-lg border-0 animate-in">
+                        <div class="prescription-header border-bottom pb-3 mb-3">
+                            <h4 class="font-weight-bold mb-1">Prescription Details</h4>
+                            <span class="badge badge-soft-primary">Status: @_selectedPrescription.Status</span>
+                        </div>
+                        
+                        <div class="info-group mb-4">
+                            <label class="text-muted small uppercase font-weight-bold">Instructions</label>
+                            <p class="mb-0 italic text-dark">"@(_selectedPrescription.Instructions ?? "Follow standard dosage instructions.")"</p>
+                        </div>
+
+                        <div class="medicines-list mb-4">
+                            <label class="text-muted small uppercase font-weight-bold mb-2 d-block">Medications</label>
+                            @foreach (var item in _selectedPrescription.Items)
+                            {
+                                <div class="medicine-item p-3 mb-2 rounded bg-light border-left-primary">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="font-weight-bold">@item.MedicationName</span>
+                                        <span class="badge badge-dark">Qty: @item.Quantity</span>
+                                    </div>
+                                    <div class="small text-muted">@item.Dosage | @item.Frequency | @item.Duration</div>
+                                </div>
+                            }
+                        </div>
+
+                        <button class="btn btn-success btn-lg btn-block btn-round shadow" @onclick="ConfirmDispense" disabled="@_isProcessing">
+                            @if (_isProcessing) { <span class="spinner-border spinner-border-sm mr-2"></span> }
+                            <i class="fas fa-pills mr-2"></i> Confirm Dispensing
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="premium-card text-center py-5 d-flex flex-column align-items-center justify-content-center h-100 opacity-75">
+                        <img src="https://img.icons8.com/clouds/100/hospital.png" class="mb-3" />
+                        <h5 class="text-muted">Select a prescription<br/>to begin dispensing</h5>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pharmacy-page { background: #f8fafc; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .premium-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: none; }
+    .table-active-row { background: #eff6ff !important; border-left: 5px solid #2563eb !important; }
+    .border-left-primary { border-left: 4px solid #2563eb; }
+    .badge-soft-success { background: #dcfce7; color: #15803d; }
+    .badge-soft-primary { background: #eff6ff; color: #1e40af; }
+    .uppercase { text-transform: uppercase; letter-spacing: 0.05em; }
+    .italic { font-style: italic; }
+    .btn-round { border-radius: 100px; font-weight: 700; }
+    .medicine-item { transition: all 0.2s; }
+    .medicine-item:hover { background: #f1f5f9; }
+</style>
+
+@code {
+    private List<PrescriptionModel> _prescriptions = new();
+    private bool _isLoading = true;
+    private string _searchTerm = "";
+    private PrescriptionModel? _selectedPrescription;
+    private bool _isProcessing = false;
+
+    private IEnumerable<PrescriptionModel> FilteredPrescriptions => 
+        string.IsNullOrWhiteSpace(_searchTerm) 
+        ? _prescriptions 
+        : _prescriptions.Where(p => p.PatientName.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPrescriptions();
+    }
+
+    private async Task LoadPrescriptions()
+    {
+        _isLoading = true;
+        _prescriptions = await PharmacyService.GetActivePrescriptionsAsync();
+        _isLoading = false;
+    }
+
+    private void SelectPrescription(PrescriptionModel p)
+    {
+        _selectedPrescription = p;
+    }
+
+    private async Task ConfirmDispense()
+    {
+        if (_selectedPrescription == null) return;
+        
+        _isProcessing = true;
+        var success = await PharmacyService.DispensePrescriptionAsync(_selectedPrescription.PrescriptionId);
+        if (success)
+        {
+            _selectedPrescription = null;
+            await LoadPrescriptions();
+        }
+        _isProcessing = false;
+    }
+}

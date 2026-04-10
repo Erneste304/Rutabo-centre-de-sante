@@ -54,6 +54,14 @@ builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<INurseService, NurseService>();
+builder.Services.AddScoped<IBillingService, BillingService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
+builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
+builder.Services.AddScoped<ILabTestService, LabTestService>();
+builder.Services.AddScoped<IAmbulanceService, AmbulanceService>();
+builder.Services.AddScoped<IBloodBankService, BloodBankService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
 var app = builder.Build();
