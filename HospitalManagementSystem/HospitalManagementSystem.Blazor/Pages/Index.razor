@@ -16,7 +16,7 @@ else if (!_isAuthenticated)
     <div class="global-data-landing">
         <div class="landing-container">
             <header class="landing-header">
-                <div class="header-logo">
+                <div class="header-logo" @onclick="() => _showLoginForm = false" style="cursor: pointer;">
                     <i class="fas fa-hospital-alt"></i>
                     <div class="logo-text">
                         <span class="logo-main">Rutabo Clinic</span>
@@ -24,50 +24,95 @@ else if (!_isAuthenticated)
                     </div>
                 </div>
                 <nav class="header-nav">
-                    <button class="btn btn-link">Login</button>
-                    <button class="btn btn-primary btn-round">Register</button>
+                    @if (!_showLoginForm)
+                    {
+                        <button class="btn btn-link" @onclick="() => { _showLoginForm = true; _showRegisterForm = false; _showForgotForm = false; }">Login</button>
+                        <button class="btn btn-primary btn-round" @onclick="() => { _showLoginForm = true; _showRegisterForm = true; _showForgotForm = false; }">Register</button>
+                    }
                 </nav>
             </header>
 
             <main class="landing-main">
-                <div class="content-left">
-                    <h1 class="main-title">Hospital<br/>Dashboard</h1>
-                    
-                    <div class="action-pills">
-                        <div class="pill">
-                            <i class="fas fa-heartbeat"></i> <span>Hospital Overview</span>
+                @if (!_showLoginForm)
+                {
+                    <div class="content-left animate-in">
+                        <h1 class="main-title">Hospital<br/>Dashboard</h1>
+                        
+                        <div class="action-pills">
+                            <div class="pill">
+                                <i class="fas fa-heartbeat"></i> <span>Hospital Overview</span>
+                            </div>
+                            <div class="pill">
+                                <i class="fas fa-user"></i> <span>Patient Insights</span>
+                            </div>
+                            <div class="pill">
+                                <i class="fas fa-users"></i> <span>Staff Performance</span>
+                            </div>
+                            <div class="pill">
+                                <i class="fas fa-coins"></i> <span>Finance Evaluation</span>
+                            </div>
+                            <div class="pill">
+                                <i class="fas fa-plus-circle"></i> <span>Medical Efficiency</span>
+                            </div>
                         </div>
-                        <div class="pill">
-                            <i class="fas fa-user"></i> <span>Patient Insights</span>
-                        </div>
-                        <div class="pill">
-                            <i class="fas fa-users"></i> <span>Staff Performance</span>
-                        </div>
-                        <div class="pill">
-                            <i class="fas fa-coins"></i> <span>Finance Evaluation</span>
-                        </div>
-                        <div class="pill">
-                            <i class="fas fa-plus-circle"></i> <span>Medical Efficiency</span>
+
+                        <div class="action-buttons-group">
+                            <button class="btn btn-primary btn-lg btn-round" @onclick="() => { _showLoginForm = true; _showRegisterForm = false; _showForgotForm = false; }">
+                                <i class="fas fa-play-circle"></i> Access Portal
+                            </button>
                         </div>
                     </div>
-
-                    <div class="action-buttons-group">
-                        <button class="btn btn-primary btn-lg btn-round">
-                            <i class="fas fa-play-circle"></i> Explore Full Demo
+                }
+                else
+                {
+                    <div class="login-wrapper center-login animate-in">
+                        <button class="btn btn-link back-btn mb-4" @onclick="() => _showLoginForm = false" style="text-align: left; padding: 0; color: white;">
+                            <i class="fas fa-arrow-left"></i> Back to Home
                         </button>
+                        @if (_showForgotForm)
+                        {
+                            <ForgotPassword OnSwitchToLogin="() => { _showForgotForm = false; _showRegisterForm = false; }" />
+                        }
+                        else if (_showRegisterForm)
+                        {
+                            <Register OnRegisterSuccess="@HandleLoginSuccess" OnSwitchToLogin="() => { _showRegisterForm = false; _showForgotForm = false; }" />
+                        }
+                        else
+                        {
+                            <Login OnLoginSuccess="@HandleLoginSuccess" OnSwitchToRegister="() => { _showRegisterForm = true; _showForgotForm = false; }" OnSwitchToForgot="() => { _showForgotForm = true; _showRegisterForm = false; }" />
+                        }
                     </div>
-
-                    <div class="login-auth-section">
-                        <Login OnLoginSuccess="@HandleLoginSuccess" />
-                    </div>
-                </div>
+                }
             </main>
         </div>
     </div>
 }
 else
 {
-    <DashboardContainer User="@_currentUser" />
+    <div class="authenticated-layout">
+        <!-- Global Unified Top Navbar -->
+        <header class="dashboard-top-navbar">
+            <div class="nav-brand">
+                <i class="fas fa-hospital-alt logo-icon"></i>
+                <span class="logo-text">Rutabo Clinic</span>
+            </div>
+            
+            <div class="nav-user-section">
+                <div class="user-info">
+                    <span class="user-fullname">@_currentUser?.FullName</span>
+                    <span class="user-role badge">@_currentUser?.UserType</span>
+                </div>
+                <button class="btn btn-logout" @onclick="HandleLogout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Role-based Dashboard -->
+        <main class="dashboard-main-content">
+            <DashboardContainer User="@_currentUser" />
+        </main>
+    </div>
 }
 
 <style>
@@ -270,9 +315,33 @@ else
         color: rgba(255, 255, 255, 0.7) !important;
     }
 
+    .center-login {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 20;
+    }
+
+    .animate-in {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .back-btn:hover {
+        opacity: 0.8;
+        text-decoration: none;
+    }
+
     @@keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     @@media (max-width: 900px) {
@@ -281,11 +350,94 @@ else
         .action-pills { grid-template-columns: 1fr; }
         .pill:nth-child(5) { grid-column: auto; margin-left: 0; justify-self: start; }
     }
+        /* Global Dashboard Navbar Styles */
+        .dashboard-top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #1e293b;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-user-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-fullname {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .user-role {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 2px;
+        }
+
+        .btn-logout {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #f87171;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .dashboard-main-content {
+            padding: 2rem;
+            background: #f8fafc;
+            min-height: calc(100vh - 75px);
+        }
 </style>
 
 @code {
     private bool _isLoading = true;
     private bool _isAuthenticated = false;
+    private bool _showLoginForm = false;
+    private bool _showRegisterForm = false;
+    private bool _showForgotForm = false;
     private UserModel? _currentUser;
 
     protected override async Task OnInitializedAsync()
@@ -303,6 +455,17 @@ else
     {
         _currentUser = user;
         _isAuthenticated = true;
+        _showLoginForm = false;
+        _showRegisterForm = false;
+        _showForgotForm = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        _isAuthenticated = false;
+        _currentUser = null;
         StateHasChanged();
     }
 }

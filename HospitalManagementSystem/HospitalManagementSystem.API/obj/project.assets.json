@@ -103,7 +103,7 @@
           }
         }
       },
-      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
+      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.105": {
         "type": "package",
         "compile": {
           "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {}
@@ -490,7 +490,7 @@
         "dependencies": {
           "HospitalManagementSystem.Core": "1.0.0",
           "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.101"
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.105"
         },
         "compile": {
           "bin/placeholder/HospitalManagementSystem.Blazor.dll": {}
@@ -635,10 +635,10 @@
         "microsoft.data.sqlite.core.nuspec"
       ]
     },
-    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
-      "sha512": "30d2d7ti8GiDYf9zg4+w5cvH3jm9HAQMyXzZgCVpEjmh3WLErJazuu2tyoIO75uNYLWPD/NNTTRD9SoPpDiACw==",
+    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.105": {
+      "sha512": "tF2FVhqfVBB9BtE5rVJQuRIN/NRQ0uEWbJvfvROLQQMpOvlHShavayDODo7hPGQGzc9PYUPgaTX+ylZ86dkzyQ==",
       "type": "package",
-      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.101",
+      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.105",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -649,7 +649,7 @@
         "buildMultiTargeting/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
         "buildTransitive/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
         "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll",
-        "microsoft.dotnet.hotreload.webassembly.browser.10.0.101.nupkg.sha512",
+        "microsoft.dotnet.hotreload.webassembly.browser.10.0.105.nupkg.sha512",
         "microsoft.dotnet.hotreload.webassembly.browser.nuspec",
         "staticwebassets/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js"
       ]
@@ -1069,39 +1069,39 @@
     ]
   },
   "packageFolders": {
-    "/home/runner/.nuget/packages/": {}
+    "/home/erneste/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/HospitalManagementSystem.API.csproj",
+      "projectUniqueName": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/HospitalManagementSystem.API.csproj",
       "projectName": "HospitalManagementSystem.API",
-      "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/HospitalManagementSystem.API.csproj",
-      "packagesPath": "/home/runner/.nuget/packages/",
-      "outputPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/obj/",
+      "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/HospitalManagementSystem.API.csproj",
+      "packagesPath": "/home/erneste/.nuget/packages/",
+      "outputPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/runner/.nuget/NuGet/NuGet.Config"
+        "/home/erneste/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/library-packs": {},
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {
-              "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj"
+            "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {
+              "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj"
             },
-            "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
-              "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj"
+            "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
+              "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj"
             },
-            "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Data/HospitalManagementSystem.Data.csproj": {
-              "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Data/HospitalManagementSystem.Data.csproj"
+            "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Data/HospitalManagementSystem.Data.csproj": {
+              "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Data/HospitalManagementSystem.Data.csproj"
             }
           }
         }
@@ -1154,7 +1154,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

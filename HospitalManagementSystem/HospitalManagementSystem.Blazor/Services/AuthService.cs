@@ -39,8 +39,43 @@ namespace HospitalManagementSystem.Blazor.Services
                 // Ignore API failure for fallback
             }
             
-            // Fallback to mock login
             return await MockLogin(username, password, userType);
+        }
+
+        public async Task<bool> RegisterAsync(string username, string fullName, string email, string password, string userType)
+        {
+            try
+            {
+                var registerModel = new 
+                {
+                    Username = username,
+                    FullName = fullName,
+                    Email = email,
+                    Password = password,
+                    PasswordHash = "hashed",
+                    UserType = userType switch { "Admin" => 0, "Doctor" => 1, "Nurse" => 2, "Patient" => 3, "Receptionist" => 4, "Accountant" => 5, _ => 3 }
+                };
+                
+                await _api.RegisterAsync(registerModel);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ForgotPasswordAsync(string username)
+        {
+            try
+            {
+                await _api.ForgotPasswordAsync(username);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task LogoutAsync()
@@ -51,7 +86,7 @@ namespace HospitalManagementSystem.Blazor.Services
         
         private async Task<UserModel?> MockLogin(string username, string password, string userType)
         {
-            await Task.Delay(500); // Simulate delay
+            await Task.Delay(500);
             
             var mockUser = new UserModel 
             { 

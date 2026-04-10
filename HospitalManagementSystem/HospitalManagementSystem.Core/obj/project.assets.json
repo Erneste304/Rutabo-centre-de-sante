@@ -8,25 +8,25 @@
     "net10.0": []
   },
   "packageFolders": {
-    "/home/runner/.nuget/packages/": {}
+    "/home/erneste/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
+      "projectUniqueName": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
       "projectName": "HospitalManagementSystem.Core",
-      "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
-      "packagesPath": "/home/runner/.nuget/packages/",
-      "outputPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/obj/",
+      "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
+      "packagesPath": "/home/erneste/.nuget/packages/",
+      "outputPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/runner/.nuget/NuGet/NuGet.Config"
+        "/home/erneste/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
-        "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/library-packs": {},
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -66,7 +66,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",

@@ -22,3 +22,15 @@ C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/Hosp
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/refint/HospitalManagementSystem.Core.dll
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.pdb
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/ref/HospitalManagementSystem.Core.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/bin/Debug/net10.0/HospitalManagementSystem.Core.deps.json
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/bin/Debug/net10.0/HospitalManagementSystem.Core.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/bin/Debug/net10.0/HospitalManagementSystem.Core.pdb
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.AssemblyInfoInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.AssemblyInfo.cs
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.csproj.CoreCompileInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.sourcelink.json
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/refint/HospitalManagementSystem.Core.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/HospitalManagementSystem.Core.pdb
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/Debug/net10.0/ref/HospitalManagementSystem.Core.dll

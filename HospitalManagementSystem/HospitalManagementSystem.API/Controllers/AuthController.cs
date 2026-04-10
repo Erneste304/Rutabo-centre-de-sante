@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using HospitalManagementSystem.Core.Services;
 using HospitalManagementSystem.Core.Models;
 
@@ -25,10 +25,14 @@ namespace HospitalManagementSystem.API.Controllers
 
             // In production, generate JWT token here
             return Ok(new { 
-                UserId = user.UserId,
+                Id = user.UserId,
                 Username = user.Username,
+                FullName = user.FullName,
                 UserType = user.UserType.ToString(),
-                Email = user.Email
+                Email = user.Email,
+                Status = user.IsActive ? "Active" : "Inactive",
+                CreatedAt = user.CreatedAt,
+                LastLogin = DateTime.UtcNow
             });
         }
 

@@ -45,12 +45,26 @@ namespace HospitalManagementSystem.Blazor.Services
         
         public async Task<UserModel?> LoginAsync(string username, string password)
         {
-            // Adjust endpoint as needed. Using a common convention.
             return await RequestAsync<UserModel>("api/auth/login", HttpMethod.Post, new 
             { 
                 Username = username, 
                 Password = password 
             });
+        }
+
+        public async Task<bool> RegisterAsync(object registerModel)
+        {
+            var result = await RequestAsync<object>("api/auth/register", HttpMethod.Post, registerModel);
+            return true;
+        }
+
+        public async Task<bool> ForgotPasswordAsync(string username)
+        {
+            var result = await RequestAsync<object>("api/auth/forgot-password", HttpMethod.Post, new 
+            { 
+                Username = username 
+            });
+            return true;
         }
     }
 }
