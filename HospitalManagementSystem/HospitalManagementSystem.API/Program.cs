@@ -62,6 +62,7 @@ builder.Services.AddScoped<IMedicalRecordService, MedicalRecordService>();
 builder.Services.AddScoped<ILabTestService, LabTestService>();
 builder.Services.AddScoped<IAmbulanceService, AmbulanceService>();
 builder.Services.AddScoped<IBloodBankService, BloodBankService>();
+builder.Services.AddScoped<IPatientFlowService, PatientFlowService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
 var app = builder.Build();

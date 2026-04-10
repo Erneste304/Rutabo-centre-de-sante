@@ -132,6 +132,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUGF0aWVudEhpc3RvcnkucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/PatientJourneyHub.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUGF0aWVudEpvdXJuZXlIdWIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/PharmacyDispensing.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUGhhcm1hY3lEaXNwZW5zaW5nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

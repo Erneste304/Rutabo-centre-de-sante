@@ -131,13 +131,18 @@ else if (!_isAuthenticated)
                                     <div class="stat-box"><h4>94%</h4><span>Resource Use</span></div>
                                     <div class="stat-box"><h4>3m</h4><span>Triage Time</span></div>
                                 </div>
-                                <div class="mt-4 d-flex gap-2">
-                                    <button class="btn btn-outline-info btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/inventory")'>
-                                        <i class="fas fa-boxes mr-2"></i> Inventory
+                                <div class="mt-4 gap-2 d-flex flex-column">
+                                    <button class="btn btn-primary btn-round w-100 py-3 shadow-lg" @onclick='() => Navigation.NavigateTo("/patient-journey")'>
+                                        <i class="fas fa-route mr-2"></i> Start Patient Journey
                                     </button>
-                                    <button class="btn btn-outline-danger btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/blood-bank")'>
-                                        <i class="fas fa-tint mr-2"></i> Blood Bank
-                                    </button>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-info btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/inventory")'>
+                                            <i class="fas fa-boxes mr-2"></i> Inventory
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-round flex-grow-1" @onclick='() => Navigation.NavigateTo("/blood-bank")'>
+                                            <i class="fas fa-tint mr-2"></i> Blood Bank
+                                        </button>
+                                    </div>
                                 </div>
                             }
                         </div>

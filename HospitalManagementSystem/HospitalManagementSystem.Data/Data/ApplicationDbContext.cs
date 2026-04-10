@@ -1,4 +1,4 @@
-﻿using HospitalManagementSystem.Data.Entities;
+using HospitalManagementSystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -35,6 +35,9 @@ namespace HospitalManagementSystem.Data
         public DbSet<Entities.Ambulance> Ambulances { get; set; }
         public DbSet<Entities.AmbulanceLog> AmbulanceLogs { get; set; }
         public DbSet<Entities.BloodBank> BloodBanks { get; set; }
+        public DbSet<Entities.InsuranceType> InsuranceTypes { get; set; }
+        public DbSet<Entities.PatientVisit> PatientVisits { get; set; }
+        public DbSet<Entities.TriageRecord> TriageRecords { get; set; }
         public DbSet<Entities.Medicine> Medicines { get; set; }
         public DbSet<Entities.Pharmacy> Pharmacies { get; set; }
         public DbSet<Entities.RoomType> RoomTypes { get; set; }
@@ -319,6 +322,17 @@ namespace HospitalManagementSystem.Data
                 new BloodBank { BloodId = 6, BloodType = "O-", StockQuantity = 12, LastUpdated = new DateTime(2026, 3, 1) },
                 new BloodBank { BloodId = 7, BloodType = "AB+", StockQuantity = 9, LastUpdated = new DateTime(2026, 3, 1) },
                 new BloodBank { BloodId = 8, BloodType = "AB-", StockQuantity = 5, LastUpdated = new DateTime(2026, 3, 1) }
+            );
+
+            // Seed insurance types
+            modelBuilder.Entity<InsuranceType>().HasData(
+                new InsuranceType { InsuranceId = 1, Name = "Mutuelle de Santé", Code = "MUTUELLE", CoveragePercentage = 90.00m },
+                new InsuranceType { InsuranceId = 2, Name = "RAMA", Code = "RAMA", CoveragePercentage = 100.00m },
+                new InsuranceType { InsuranceId = 3, Name = "MMI (Military)", Code = "MMI", CoveragePercentage = 100.00m },
+                new InsuranceType { InsuranceId = 4, Name = "RSSB", Code = "RSSB", CoveragePercentage = 85.00m },
+                new InsuranceType { InsuranceId = 5, Name = "Britam", Code = "BRITAM", CoveragePercentage = 80.00m },
+                new InsuranceType { InsuranceId = 6, Name = "Sanlam", Code = "SANLAM", CoveragePercentage = 80.00m },
+                new InsuranceType { InsuranceId = 7, Name = "UAP Insurance", Code = "UAP", CoveragePercentage = 85.00m }
             );
 
             // Seed rooms

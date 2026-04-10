@@ -16,6 +16,11 @@ builder.Services.AddScoped<ApiService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DashboardService>();
 builder.Services.AddScoped<NurseService>();
+builder.Services.AddScoped<ClinicalService>();
+builder.Services.AddScoped<AmbulanceService>();
+builder.Services.AddScoped<BloodBankService>();
+builder.Services.AddScoped<PatientFlowService>();
+builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<BillingService>();
 
 await builder.Build().RunAsync();

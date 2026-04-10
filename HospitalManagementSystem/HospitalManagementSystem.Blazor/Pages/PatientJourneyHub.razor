@@ -1,0 +1,414 @@
+@page "/patient-journey"
+@using HospitalManagementSystem.Blazor.Models.DTOs
+@using HospitalManagementSystem.Blazor.Services
+@inject PatientFlowService FlowService
+@inject NavigationManager Navigation
+
+<div class="journey-page animate-in">
+    <div class="journey-header">
+        <div class="hospital-info">
+            <h1 class="hospital-title">Rutabo Health Center</h1>
+            <p class="hospital-motto">"Tuvura Indwara Zose - We Treat All Diseases"</p>
+        </div>
+        <div class="journey-stepper">
+            <div class="step @(GetStepClass(1))" @onclick="() => SetStep(1)">
+                <div class="step-num">1</div>
+                <div class="step-label">Reception</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step @(GetStepClass(2))" @onclick="() => SetStep(2)">
+                <div class="step-num">2</div>
+                <div class="step-label">Isuzumiro (Triage)</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step @(GetStepClass(3))" @onclick="() => SetStep(3)">
+                <div class="step-num">3</div>
+                <div class="step-label">Consultation</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step @(GetStepClass(4))" @onclick="() => SetStep(4)">
+                <div class="step-num">4</div>
+                <div class="step-label">Accounting</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid py-4">
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger animate-in shadow-sm rounded-xl mb-4 d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle mr-3"></i>
+                <div>@_errorMessage</div>
+                <button class="btn btn-sm ml-auto" @onclick='() => _errorMessage = ""'><i class="fas fa-times"></i></button>
+            </div>
+        }
+
+        @if (_currentStep == 1)
+        {
+            <!-- STEP 1: RECEPTION -->
+            <div class="premium-card shadow-lg glassmorphism animate-in">
+                <div class="card-header-icon"><i class="fas fa-id-card"></i></div>
+                <h2 class="section-title">Reception & Insurance Verification</h2>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Patient ID</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" @bind="_newVisit.PatientId" placeholder="ID (e.g., 1)" />
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-white border-left-0"><i class="fas fa-search text-muted"></i></span>
+                            </div>
+                        </div>
+                        <small class="text-muted">Enter ID (John Doe is usually ID 1 in local setup).</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Visit Type</label>
+                        <select class="form-control" @bind="_newVisit.VisitType">
+                            <option value="General">General Case</option>
+                            <option value="Emergency">Emergency (Accident/Trauma)</option>
+                            <option value="Maternity">Aho Babyrira (Maternity)</option>
+                            <option value="BodyCheckup">Full Body Checkup</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Initial Complaint</label>
+                        <textarea class="form-control" @bind="_newVisit.Complaint" rows="2" placeholder="Describe the symptoms..."></textarea>
+                    </div>
+                </div>
+                <div class="insurance-box p-3 rounded mb-4">
+                    <h5 class="font-weight-bold mb-3"><i class="fas fa-shield-alt mr-2"></i> Insurance Selection</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var type in _insurances)
+                        {
+                            <button class="btn btn-outline-primary btn-sm rounded-pill @(_selectedInsuranceId == type.InsuranceId ? "active" : "")" 
+                                    @onclick="() => _selectedInsuranceId = type.InsuranceId">
+                                @type.Name (@((int)type.CoveragePercentage)%)
+                            </button>
+                        }
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block py-3 rounded-xl shadow mt-3" @onclick="StartVisit">
+                    <i class="fas fa-check-circle mr-2"></i> Register & Send to Isuzumiro
+                </button>
+            </div>
+        }
+        else if (_currentStep == 2)
+        {
+            <!-- STEP 2: ISUZUMIRO (TRIAGE) -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="premium-card glassmorphism animate-in">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="font-weight-bold mb-0">Waiting List</h4>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill" @onclick="LoadData">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="patient-list">
+                            @foreach (var visit in _activeVisits.Where(v => v.Status == "Registered"))
+                            {
+                                <div class="patient-item @(_selectedVisit?.VisitId == visit.VisitId ? "selected" : "")" @onclick="() => SelectVisit(visit)">
+                                    <div class="p-info">
+                                        <strong>@visit.Patient?.FullName</strong>
+                                        <span class="badge @(visit.VisitType == "Emergency" ? "badge-danger" : "badge-info")">@visit.VisitType</span>
+                                    </div>
+                                    <div class="p-meta">VIS-@visit.VisitId</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    @if (_selectedVisit != null)
+                    {
+                        <div class="premium-card glassmorphism animate-in">
+                            <div class="card-header-icon bg-info text-white"><i class="fas fa-stethoscope"></i></div>
+                            <h2 class="section-title">Assessment for @_selectedVisit.Patient?.FullName</h2>
+                            <div class="row mt-4">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Temperature (°C)</label>
+                                    <input type="number" step="0.1" class="form-control" @bind="_triageData.Temperature" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">BP (Systolic)</label>
+                                    <input type="number" class="form-control" @bind="_triageData.BloodPressureSystolic" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">BP (Diastolic)</label>
+                                    <input type="number" class="form-control" @bind="_triageData.BloodPressureDiastolic" />
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Pulse (bpm)</label>
+                                    <input type="number" class="form-control" @bind="_triageData.HeartRate" />
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Assessment Notes</label>
+                                    <textarea class="form-control" @bind="_triageData.Notes" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="routing-logic p-3 rounded mb-4">
+                                @if (_selectedVisit.VisitType == "Maternity")
+                                {
+                                    <div class="alert alert-warning"><i class="fas fa-baby mr-2"></i> Redirecting to <strong>Aho Babyrira</strong> after vitals.</div>
+                                }
+                                else if (_selectedVisit.VisitType == "Emergency")
+                                {
+                                    <div class="alert alert-danger"><i class="fas fa-bolt mr-2"></i> PRIORITY CASE: Sending to <strong>Emergency Ward</strong>.</div>
+                                }
+                            </div>
+                            
+                            @if (_triageSaved)
+                            {
+                                <div class="alert alert-success animate-in"><i class="fas fa-check-circle mr-2"></i> Vitals Saved! Moving patient to Doctor's queue...</div>
+                            }
+
+                            <button class="btn @(_triageSaved ? "btn-success" : "btn-info") btn-block py-3 rounded-xl shadow-sm text-white" @onclick="SubmitTriage">
+                                <i class="fas @(_triageSaved ? "fa-check" : "fa-save") mr-2"></i> @(_triageSaved ? "Vitals Recorded" : "Submit & Forward to Doctor")
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else if (_currentStep == 3)
+        {
+            <!-- STEP 3: DOCTOR CONSULTATION -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="premium-card glassmorphism">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="font-weight-bold mb-0">Queue</h4>
+                            <button class="btn btn-sm btn-outline-success rounded-pill" @onclick="LoadData">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="patient-list">
+                            @foreach (var visit in _activeVisits.Where(v => v.Status == "WaitingForDoctor"))
+                            {
+                                <div class="patient-item @(_selectedVisit?.VisitId == visit.VisitId ? "selected" : "")" @onclick="() => SelectVisit(visit)">
+                                    <div class="p-info">
+                                        <strong>@visit.Patient?.FullName</strong>
+                                        <span class="badge @(GetPriorityClass(visit.Priority))">@visit.Priority</span>
+                                    </div>
+                                    <div class="vitals-strip">@visit.TriageRecord?.Temperature°C | @visit.TriageRecord?.BloodPressureSystolic/@visit.TriageRecord?.BloodPressureDiastolic</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                     @if (_selectedVisit != null)
+                     {
+                        <div class="premium-card glassmorphism">
+                            <div class="card-header-icon bg-success text-white"><i class="fas fa-user-md"></i></div>
+                            <h2 class="section-title">Consultation: @_selectedVisit.Patient?.FullName</h2>
+                            <p class="text-muted">History: @_selectedVisit.InitialComplaint</p>
+                            <hr/>
+                            <div class="diagnosis-fields mt-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Diagnosis & Body Checkup Findings</label>
+                                    <textarea class="form-control" rows="4" placeholder="Enter findings..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Medical Advice & Lifestyle Support</label>
+                                    <textarea class="form-control" rows="3" placeholder="Provide health education/advice..."></textarea>
+                                </div>
+                            </div>
+                            <button class="btn btn-success btn-block py-3 rounded-xl" @onclick="CompleteConsultation">
+                                <i class="fas fa-clipboard-check mr-2"></i> Save Diagnosis & Complete Visit
+                            </button>
+                        </div>
+                     }
+                </div>
+            </div>
+        }
+        else if (_currentStep == 4)
+        {
+            <!-- STEP 4: ACCOUNTING -->
+            <div class="premium-card glassmorphism animate-in text-center py-5">
+                <i class="fas fa-file-invoice-dollar fa-4x text-primary mb-4"></i>
+                <h2 class="font-weight-bold">Finalizing Patient Billing</h2>
+                <p class="text-muted max-w-400 mx-auto">This stage retrieves all insurance percentages (Mutuelle, RAMA) and generates the final patient contribution.</p>
+                <div class="mt-4">
+                    <button class="btn btn-primary px-5 rounded-pill" @onclick='() => Navigation.NavigateTo("/billings")'>
+                        Go to Billing Module <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .journey-page { background: #f4f7fe; min-height: 100vh; font-family: 'Inter', sans-serif; }
+    .journey-header { background: #fff; padding: 30px; border-bottom: 2px solid #eef2f8; display: flex; align-items: center; justify-content: space-between; }
+    .hospital-title { font-size: 1.8rem; font-weight: 800; color: #1a237e; margin: 0; }
+    .hospital-motto { font-size: 0.9rem; color: #64748b; font-weight: 600; margin-top: 5px; }
+    
+    .journey-stepper { display: flex; align-items: center; gap: 15px; }
+    .step { cursor: pointer; display: flex; flex-direction: column; align-items: center; opacity: 0.4; transition: all 0.3s; }
+    .step.active { opacity: 1; transform: scale(1.1); }
+    .step-num { width: 35px; height: 35px; border-radius: 50%; background: #2563eb; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .step-label { font-size: 0.75rem; font-weight: 700; margin-top: 5px; text-transform: uppercase; color: #1e293b; }
+    .step-line { width: 40px; height: 3px; background: #e2e8f0; border-radius: 2px; }
+
+    .premium-card { background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 30px; border: 1px solid #fff; position: relative; overflow: hidden; }
+    .glassmorphism { backdrop-filter: blur(10px); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
+    
+    .card-header-icon { width: 60px; height: 60px; border-radius: 15px; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+    .section-title { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
+    
+    .form-label { font-weight: 700; font-size: 0.85rem; color: #475569; margin-bottom: 8px; }
+    .form-control { border-radius: 12px; border: 2px solid #f1f5f9; padding: 12px 15px; font-weight: 500; }
+    .form-control:focus { border-color: #2563eb; background: #fff; box-shadow: none; }
+    
+    .insurance-box { background: #f8fafc; border: 2px dashed #e2e8f0; }
+    .gap-2 { gap: 10px; }
+    .rounded-xl { border-radius: 15px; font-weight: 700; }
+    
+    .patient-item { padding: 15px; border-radius: 12px; border: 1px solid #f1f5f9; background: #fff; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+    .patient-item:hover { border-color: #2563eb; background: #f0f9ff; }
+    .patient-item.selected { border-color: #2563eb; background: #f0f9ff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1); }
+    
+    .vitals-strip { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-top: 5px; }
+    .badge-danger { background: #fee2e2; color: #dc2626; font-weight: 700; }
+    .max-w-400 { max-width: 400px; }
+</style>
+
+@code {
+    private int _currentStep = 1;
+    private List<InsuranceTypeModel> _insurances = new();
+    private List<PatientVisitModel> _activeVisits = new();
+    private int _selectedInsuranceId;
+    private string _errorMessage = "";
+    
+    private StartVisitRequestModel _newVisit = new() { VisitType = "General" };
+    private PatientVisitModel? _selectedVisit;
+    private TriageRecordModel _triageData = new();
+    private bool _triageSaved = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try 
+        {
+            _insurances = await FlowService.GetInsuranceTypesAsync();
+            _activeVisits = await FlowService.GetActiveVisitsAsync();
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Connection error while loading hospital data.";
+        }
+    }
+
+    private void SetStep(int step) 
+    {
+        _errorMessage = "";
+        _triageSaved = false;
+        _currentStep = step;
+    }
+
+    private string GetStepClass(int step) => _currentStep == step ? "active" : "";
+
+    private async Task StartVisit()
+    {
+        if (_newVisit.PatientId <= 0) 
+        {
+            _errorMessage = "Please enter a valid Patient ID.";
+            return;
+        }
+
+        try 
+        {
+            _errorMessage = "";
+            var visit = await FlowService.StartVisitAsync(_newVisit.PatientId, _newVisit.VisitType, _newVisit.Complaint);
+            if (visit != null)
+            {
+                _newVisit = new() { VisitType = "General" };
+                await LoadData();
+                _currentStep = 2;
+            }
+            else 
+            {
+                _errorMessage = "Failed to start visit. Ensure Patient ID exists.";
+            }
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Server error occurred while registering patient.";
+        }
+    }
+
+    private void SelectVisit(PatientVisitModel visit)
+    {
+        _selectedVisit = visit;
+        _triageData = new TriageRecordModel { VisitId = visit.VisitId };
+        _triageSaved = false;
+    }
+
+    private async Task SubmitTriage()
+    {
+        if (_selectedVisit == null || _triageSaved) return;
+        
+        try 
+        {
+            _errorMessage = "";
+            var success = await FlowService.RecordTriageAsync(_triageData);
+            if (success)
+            {
+                _triageSaved = true;
+                await Task.Delay(1500); // Give user time to see success
+                _selectedVisit = null;
+                await LoadData();
+                _currentStep = 3;
+            }
+            else 
+            {
+                _errorMessage = "Triage submission failed. Please check BP and Temperature values.";
+            }
+        }
+        catch (Exception)
+        {
+            _errorMessage = "API Error: Unable to save vital signs at this time.";
+        }
+    }
+
+    private async Task CompleteConsultation()
+    {
+        if (_selectedVisit == null) return;
+        
+        try 
+        {
+            _errorMessage = "";
+            var success = await FlowService.UpdateVisitStatusAsync(_selectedVisit.VisitId, "Completed");
+            if (success)
+            {
+                _selectedVisit = null;
+                await LoadData();
+                _currentStep = 4;
+            }
+            else 
+            {
+                _errorMessage = "Failed to finalize consultation. Please try again.";
+            }
+        }
+        catch (Exception)
+        {
+             _errorMessage = "Circuit Error: Consultation could not be completed at this time.";
+        }
+    }
+
+    private string GetPriorityClass(string priority) => 
+        priority == "High" ? "badge-danger" : "badge-info";
+
+    public class StartVisitRequestModel
+    {
+        public int PatientId { get; set; }
+        public string VisitType { get; set; } = string.Empty;
+        public string Complaint { get; set; } = string.Empty;
+    }
+}
