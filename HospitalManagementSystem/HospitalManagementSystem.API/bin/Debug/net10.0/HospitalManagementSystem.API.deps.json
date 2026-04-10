@@ -9,9 +9,11 @@
       "HospitalManagementSystem.API/1.0.0": {
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
+          "HospitalManagementSystem.Blazor": "1.0.0",
           "HospitalManagementSystem.Core": "1.0.0",
           "HospitalManagementSystem.Data": "1.0.0",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.1"
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.1",
+          "Microsoft.AspNetCore.Components.WebAssembly.Server": "10.0.2"
         },
         "runtime": {
           "HospitalManagementSystem.API.dll": {}
@@ -47,6 +49,28 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+        "dependencies": {
+          "Microsoft.JSInterop.WebAssembly": "10.0.2"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll": {
+            "assemblyVersion": "10.0.2.0",
+            "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.2": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.Server.dll": {
+            "assemblyVersion": "10.0.2.0",
+            "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
       "Microsoft.Data.Sqlite.Core/10.0.2": {
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.11"
@@ -55,6 +79,14 @@
           "lib/net8.0/Microsoft.Data.Sqlite.dll": {
             "assemblyVersion": "10.0.2.0",
             "fileVersion": "10.0.225.61305"
+          }
+        }
+      },
+      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
+        "runtime": {
+          "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {
+            "assemblyVersion": "10.0.101.0",
+            "fileVersion": "10.1.125.57005"
           }
         }
       },
@@ -179,6 +211,14 @@
           "lib/net9.0/Microsoft.IdentityModel.Tokens.dll": {
             "assemblyVersion": "8.0.1.0",
             "fileVersion": "8.0.1.50722"
+          }
+        }
+      },
+      "Microsoft.JSInterop.WebAssembly/10.0.2": {
+        "runtime": {
+          "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll": {
+            "assemblyVersion": "10.0.2.0",
+            "fileVersion": "10.0.225.61305"
           }
         }
       },
@@ -344,6 +384,19 @@
           }
         }
       },
+      "HospitalManagementSystem.Blazor/1.0.0": {
+        "dependencies": {
+          "HospitalManagementSystem.Core": "1.0.0",
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2",
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.101"
+        },
+        "runtime": {
+          "HospitalManagementSystem.Blazor.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "HospitalManagementSystem.Core/1.0.0": {
         "runtime": {
           "HospitalManagementSystem.Core.dll": {
@@ -393,12 +446,33 @@
       "path": "microsoft.aspnetcore.authentication.jwtbearer/10.0.1",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.10.0.1.nupkg.sha512"
     },
+    "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xJ0Qi75jnR75IhZhEwIdH04WH03wbJEAbilFND4SKYH0xgG/4oNAarb4Duvb0/5ko6/qcn4rCmzRuNJ1hF4dRw==",
+      "path": "microsoft.aspnetcore.components.webassembly/10.0.2",
+      "hashPath": "microsoft.aspnetcore.components.webassembly.10.0.2.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0XL+5oFRL6OkV2d8SUE3HY79pBlwxQkDCJ0ieQ3VfPhN/3xbfdUGph3yJjdSYPjFguGMbzx4fmJNgxO3C0a9Cw==",
+      "path": "microsoft.aspnetcore.components.webassembly.server/10.0.2",
+      "hashPath": "microsoft.aspnetcore.components.webassembly.server.10.0.2.nupkg.sha512"
+    },
     "Microsoft.Data.Sqlite.Core/10.0.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-/8ubtRdyED4qyxmL1CAu3UZZUEgc9l0dPCItW5tlOkYlKOb3QNhjGuEeb7uTKAqm8L7kwFOx1fCsndiylrzZAg==",
       "path": "microsoft.data.sqlite.core/10.0.2",
       "hashPath": "microsoft.data.sqlite.core.10.0.2.nupkg.sha512"
+    },
+    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-30d2d7ti8GiDYf9zg4+w5cvH3jm9HAQMyXzZgCVpEjmh3WLErJazuu2tyoIO75uNYLWPD/NNTTRD9SoPpDiACw==",
+      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.101",
+      "hashPath": "microsoft.dotnet.hotreload.webassembly.browser.10.0.101.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore/10.0.2": {
       "type": "package",
@@ -484,6 +558,13 @@
       "path": "microsoft.identitymodel.tokens/8.0.1",
       "hashPath": "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512"
     },
+    "Microsoft.JSInterop.WebAssembly/10.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XeNFL2ozbjbPe32be7OVC3peMbS+vM1hu6Cp0RZfF1HepDRTmohQ+p3LF7BVhEKETxCh1/dd5sUwYuB7I/iApw==",
+      "path": "microsoft.jsinterop.webassembly/10.0.2",
+      "hashPath": "microsoft.jsinterop.webassembly.10.0.2.nupkg.sha512"
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.11": {
       "type": "package",
       "serviceable": true,
@@ -518,6 +599,11 @@
       "sha512": "sha512-GJw3bYkWpOgvN3tJo5X4lYUeIFA2HD293FPUhKmp7qxS+g5ywAb34Dnd3cDAFLkcMohy5XTpoaZ4uAHuw0uSPQ==",
       "path": "system.identitymodel.tokens.jwt/8.0.1",
       "hashPath": "system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512"
+    },
+    "HospitalManagementSystem.Blazor/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "HospitalManagementSystem.Core/1.0.0": {
       "type": "project",

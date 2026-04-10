@@ -228,7 +228,7 @@ namespace HospitalManagementSystem.Data.Services
                     new Room
                     {
                         RoomNumber = "101",
-                        RoomType = "General",
+                        RoomTypeId = null,
                         DepartmentId = cardiologyDept?.DepartmentId,
                         FloorNumber = 3,
                         BedCount = 2,
@@ -241,7 +241,7 @@ namespace HospitalManagementSystem.Data.Services
                     new Room
                     {
                         RoomNumber = "102",
-                        RoomType = "General",
+                        RoomTypeId = null,
                         DepartmentId = cardiologyDept?.DepartmentId,
                         FloorNumber = 3,
                         BedCount = 2,
@@ -254,7 +254,7 @@ namespace HospitalManagementSystem.Data.Services
                     new Room
                     {
                         RoomNumber = "ICU-01",
-                        RoomType = "ICU",
+                        RoomTypeId = null,
                         DepartmentId = emergencyDept?.DepartmentId,
                         FloorNumber = 1,
                         BedCount = 1,
