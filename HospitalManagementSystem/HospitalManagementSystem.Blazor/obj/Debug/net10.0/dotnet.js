@@ -5,7 +5,7 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
   "mainAssemblyName": "HospitalManagementSystem.Blazor",
   "applicationEnvironment": "Development",
   "resources": {
-    "hash": "sha256-f/zxuAOFPRxlAXiTk9cnR0V8ZjRKu69QYwfFhXQpZv8=",
+    "hash": "sha256-2uLY0fmywO6vP5FcfhIxStbxPS8N06s/Pecat+fvrWQ=",
     "jsModuleNative": [
       {
         "name": "dotnet.native.cs8mcre4gh.js"
@@ -1039,25 +1039,25 @@ var e=!1;const t=async()=>WebAssembly.validate(new Uint8Array([0,97,115,109,1,0,
       },
       {
         "virtualPath": "HospitalManagementSystem.Core.wasm",
-        "name": "HospitalManagementSystem.Core.t4i71p5qwl.wasm",
-        "integrity": "sha256-jcyqkSYRmUl+k+s5E8Rja6B7O4Tkna6p5D72aoJVc0Q="
+        "name": "HospitalManagementSystem.Core.m60a7wosp8.wasm",
+        "integrity": "sha256-boYQQ6kQ/mMtNf2uE4swUCI6NivGarMuKk7BWmr1Lsw="
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.wasm",
-        "name": "HospitalManagementSystem.Blazor.qxoc5zosta.wasm",
-        "integrity": "sha256-PhqLuw37BH97xbi/Y2ZsF6PVCSZhDU//0qzp/tzhXs8="
+        "name": "HospitalManagementSystem.Blazor.56r5cgm0nf.wasm",
+        "integrity": "sha256-zURg3KjuIHoOg9Ir6nkWpDLCrLJDs16e8OVFf4LWYyE="
       }
     ],
     "pdb": [
       {
         "virtualPath": "HospitalManagementSystem.Core.pdb",
-        "name": "HospitalManagementSystem.Core.7ehlirf9dr.pdb",
-        "integrity": "sha256-seYIdfTcqerdTW3aAOAhVOH55p18lJqHo8vMQhHLDjw="
+        "name": "HospitalManagementSystem.Core.wueawu4oty.pdb",
+        "integrity": "sha256-uAGCFYnhz38pUC/elI09n6yCn5qAa96zae2LZJHMy8A="
       },
       {
         "virtualPath": "HospitalManagementSystem.Blazor.pdb",
-        "name": "HospitalManagementSystem.Blazor.r0yhkc5p4q.pdb",
-        "integrity": "sha256-hWUXDkKnh9nSQWJqMpTm+ch/CfVZY3eqQlSXcy1i28M="
+        "name": "HospitalManagementSystem.Blazor.bkzpwxrfpf.pdb",
+        "integrity": "sha256-tctIk2AFq6eFrQwGfUvHOBIRsAy6G716ITaRwx9C3rg="
       }
     ],
     "libraryInitializers": [

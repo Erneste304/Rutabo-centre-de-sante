@@ -71,6 +71,7 @@ if (app.Environment.IsDevelopment())
     // app.UseSwagger();
     // app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
+    app.UseWebAssemblyDebugging();
 }
 
 app.UseCors("AllowAll");
@@ -79,7 +80,7 @@ app.UseAuthorization();
 
 app.UseBlazorFrameworkFiles();
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.MapStaticAssets();
 
 app.MapControllers();
 
