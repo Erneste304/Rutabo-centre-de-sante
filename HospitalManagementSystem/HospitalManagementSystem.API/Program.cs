@@ -14,18 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-// builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        builder.AllowAnyOrigin()
+        policy.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
 });
+
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -52,40 +51,14 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
 // Add Services
-    // builder.Services.AddScoped<IAuthService, AuthService>();
-    builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<IPatientService, PatientService>();
-    builder.Services.AddScoped<INurseService, NurseService>();
-    builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
-
-
-// Add AutoMapper
-// builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<INurseService, NurseService>();
+builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
 var app = builder.Build();
 
-
-if (app.Environment.IsDevelopment())
-{
-    // app.MapOpenApi();
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
-    app.UseWebAssemblyDebugging();
-}
-
-app.UseCors("AllowAll");
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseBlazorFrameworkFiles();
-app.UseDefaultFiles();
-app.MapStaticAssets();
-
-app.MapControllers();
-
-app.MapFallbackToFile("index.html");
-
+// Seed the database before starting the app
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -102,5 +75,37 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseWebAssemblyDebugging();
+}
+
+app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapStaticAssets();
+
+app.MapFallback(async context =>
+{
+    var blazorWwwroot = Path.Combine(
+        app.Environment.ContentRootPath,
+        "..", "HospitalManagementSystem.Blazor", "wwwroot", "index.html");
+
+    var indexPath = Path.GetFullPath(blazorWwwroot);
+
+    if (File.Exists(indexPath))
+    {
+        context.Response.ContentType = "text/html";
+        await context.Response.SendFileAsync(indexPath);
+    }
+    else
+    {
+        context.Response.StatusCode = 404;
+    }
+});
 
 app.Run();
