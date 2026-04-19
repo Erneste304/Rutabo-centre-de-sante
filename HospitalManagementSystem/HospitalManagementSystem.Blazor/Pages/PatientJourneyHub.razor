@@ -7,8 +7,8 @@
 <div class="journey-page animate-in">
     <div class="journey-header">
         <div class="hospital-info">
-            <h1 class="hospital-title">Rutabo Health Center</h1>
-            <p class="hospital-motto">"Tuvura Indwara Zose - We Treat All Diseases"</p>
+            <div class="d-flex align-items-center"><button class="btn btn-outline-secondary rounded-circle mr-3 back-btn" onclick="window.history.back()" title="Back"><i class="fas fa-arrow-left"></i></button><div><h1 class="hospital-title">Rutabo Health Center</h1>
+            <p class="hospital-motto">"Tuvura Indwara Zose - We Treat All Diseases"</p></div></div>
         </div>
         <div class="journey-stepper">
             <div class="step @(GetStepClass(1))" @onclick="() => SetStep(1)">
@@ -412,3 +412,4 @@
         public string Complaint { get; set; } = string.Empty;
     }
 }
+.back-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; border: 2px solid #e2e8f0; color: #64748b; margin-right: 15px; } .back-btn:hover { background-color: #f1f5f9; color: #2563eb; border-color: #2563eb; transform: translateX(-3px); }
