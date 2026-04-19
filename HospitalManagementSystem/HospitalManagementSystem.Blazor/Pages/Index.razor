@@ -87,8 +87,8 @@ else if (!_isAuthenticated)
                                 </div>
                                 <p class="preview-desc">Access complete medical histories securely, track patient vitals instantly, and predict admission trends before they happen.</p>
                                 <div class="mock-stats mt-4">
-                                    <div class="stat-box"><h4>18m</h4><span>Avg Wait Time</span></div>
-                                    <div class="stat-box"><h4>99%</h4><span>Satisfaction</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.AvgWaitTime ?? 18)m</h4><span>Avg Wait Time</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.SatisfactionRate ?? 99)%</h4><span>Satisfaction</span></div>
                                 </div>
                             }
                             else if (_selectedPreview == "Staff Performance")
@@ -99,8 +99,8 @@ else if (!_isAuthenticated)
                                 </div>
                                 <p class="preview-desc">Monitor doctor shift reports, verify nurse availability, and streamline your workforce with automated tracking.</p>
                                 <div class="mock-stats mt-4">
-                                    <div class="stat-box"><h4>12</h4><span>Active Shifts</span></div>
-                                    <div class="stat-box"><h4>5</h4><span>Departments</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.ActiveShifts ?? 12)</h4><span>Active Shifts</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.TotalDepartments ?? 5)</h4><span>Departments</span></div>
                                 </div>
                             }
                             else if (_selectedPreview == "Finance Evaluation")
@@ -112,7 +112,7 @@ else if (!_isAuthenticated)
                                 <p class="preview-desc">Accelerate your revenue cycle management with automated hospital billing and instantaneous insurance claims processing.</p>
                                 <div class="mock-stats mt-4">
                                     <div class="stat-box"><h4>$@((_stats?.ClinicRevenue ?? 42800).ToString("N1"))k</h4><span>Daily Rev</span></div>
-                                    <div class="stat-box"><h4>42</h4><span>Claims Placed</span></div>
+                                    <div class="stat-box"><h4>@(_stats?.ClaimsProcessed ?? 42)</h4><span>Claims Placed</span></div>
                                 </div>
                                 <div class="mt-4">
                                     <button class="btn btn-outline-primary btn-round w-100" @onclick='() => Navigation.NavigateTo("/billings")'>
@@ -128,7 +128,7 @@ else if (!_isAuthenticated)
                                 </div>
                                 <p class="preview-desc">Track essential medical equipment usage dynamically, reduce appointment bottlenecks, and drastically improve triage speed.</p>
                                 <div class="mock-stats mt-4">
-                                    <div class="stat-box"><h4>94%</h4><span>Resource Use</span></div>
+                                    <div class="stat-box"><h4>@((_stats?.ResourceUtilization ?? 94.5).ToString("N0"))%</h4><span>Resource Use</span></div>
                                     <div class="stat-box"><h4>3m</h4><span>Triage Time</span></div>
                                 </div>
                                 <div class="mt-4 gap-2 d-flex flex-column">
