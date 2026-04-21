@@ -1,241 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Management System</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard-cards.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rutabo HMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/app.css" />
 </head>
-
 <body>
-    <!-- Loading Screen -->
-    <div id="loading" class="loading-screen">
-        <div class="loading-content">
-            <div class="hospital-logo">
-                <i class="fas fa-hospital-alt"></i>
-                <h1>Hospital MS</h1>
-            </div>
-            <div class="spinner"></div>
-            <p>Loading System...</p>
+  <div id="root"></div>
+
+  <template id="tpl-login">
+    <div class="auth-shell">
+      <div class="auth-bg"></div>
+      <div class="auth-card">
+        <div class="auth-brand">
+          <div class="brand-logo"><i class="fa-solid fa-hospital"></i></div>
+          <div>
+            <h1>Rutabo HMS</h1>
+            <p>Centre de Santé · Hospital Management</p>
+          </div>
         </div>
+        <h2>Welcome back</h2>
+        <p class="muted">Sign in to your workspace</p>
+        <form id="loginForm" class="form">
+          <label>Username
+            <input name="username" placeholder="e.g. admin" autocomplete="username" required />
+          </label>
+          <label>Password
+            <div class="pw">
+              <input type="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+              <button type="button" class="pw-toggle" aria-label="Show password"><i class="fa-regular fa-eye"></i></button>
+            </div>
+          </label>
+          <div class="row-between">
+            <label class="check"><input type="checkbox" name="remember" /> Remember me</label>
+            <a href="#" class="link">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">
+            <span class="label">Sign in</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <div id="loginErr" class="alert hidden"></div>
+        </form>
+        <div class="quick-accounts">
+          <p class="muted small">Quick demo logins · password <code>Admin@123</code></p>
+          <div class="chips">
+            <button class="chip" data-u="admin">Admin</button>
+            <button class="chip" data-u="dr.smith">Doctor</button>
+            <button class="chip" data-u="nurse.alice">Nurse</button>
+            <button class="chip" data-u="reception">Reception</button>
+            <button class="chip" data-u="patient.john">Patient</button>
+            <button class="chip" data-u="accountant">Accountant</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </template>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-container">
-            <div class="login-header">
-                <div class="hospital-logo">
-                    <i class="fas fa-hospital-alt"></i>
-                    <h2>Hospital Management System</h2>
-                </div>
-                <p>Secure Login Portal</p>
-            </div>
-
-            <div class="login-form">
-                <div class="form-group">
-                    <label for="username">
-                        <i class="fas fa-user"></i> Username
-                    </label>
-                    <input type="text" id="username" placeholder="Enter your username">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i> Password
-                    </label>
-                    <div class="password-container">
-                        <input type="password" id="password" placeholder="Enter your password">
-                        <button type="button" class="toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="form-options">
-                    <label class="checkbox">
-                        <input type="checkbox" id="rememberMe">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
-                </div>
-
-                <button id="loginBtn" class="btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-
-                <div class="login-footer mt-3">
-                    <p>Don't have an account? <a href="register.html">Register</a></p>
-                    <p><a href="#" id="forgotPasswordLink">Forgot Password?</a></p>
-                </div>
-
-
-
-                <div class="login-footer">
-                    <p>Select User Type:</p>
-                    <div class="user-type-buttons">
-                        <button class="user-type-btn active" data-type="admin">
-                            <i class="fas fa-user-shield"></i> Admin
-                        </button>
-                        <button class="user-type-btn" data-type="doctor">
-                            <i class="fas fa-user-md"></i> Doctor
-                        </button>
-                        <button class="user-type-btn" data-type="nurse">
-                            <i class="fas fa-user-nurse"></i> Nurse
-                        </button>
-                        <button class="user-type-btn" data-type="reception">
-                            <i class="fas fa-headset"></i> Reception
-                        </button>
-                        <button class="user-type-btn" data-type="patient">
-                            <i class="fas fa-user-injured"></i> Patient
-                        </button>
-                        <button class="user-type-btn" data-type="accountant">
-                            <i class="fas fa-calculator"></i> Accountant
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="login-footer-info">
-                <p><i class="fas fa-shield-alt"></i> Secure System v2.0</p>
-                <p><i class="fas fa-phone"></i> Emergency: 911 | Support: 1-800-HOSPITAL</p>
-            </div>
+  <template id="tpl-app">
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="side-brand">
+          <div class="brand-logo"><i class="fa-solid fa-hospital"></i></div>
+          <div class="brand-text">
+            <strong>Rutabo HMS</strong>
+            <span>Health Centre</span>
+          </div>
         </div>
+        <nav class="side-nav" id="sideNav"></nav>
+        <div class="side-foot">
+          <div class="user-card">
+            <div class="avatar" id="sideAvatar">A</div>
+            <div class="meta">
+              <strong id="sideName">User</strong>
+              <span id="sideRole">Role</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-block" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button class="icon-btn only-mobile" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input placeholder="Search patients, doctors, appointments..." />
+          </div>
+          <div class="top-actions">
+            <button class="icon-btn" title="Notifications"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+            <button class="icon-btn" title="Messages"><i class="fa-regular fa-comment"></i></button>
+            <div class="avatar small" id="topAvatar">A</div>
+          </div>
+        </header>
+
+        <section id="view" class="view"></section>
+      </main>
     </div>
-
-    <!-- Main Dashboard (Hidden by default) -->
-    <div id="dashboard" class="dashboard-container" style="display: none;">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <div class="hospital-logo">
-                    <i class="fas fa-hospital-alt"></i>
-                    <h3>Hospital MS</h3>
-                </div>
-                <button class="sidebar-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-
-            <div class="user-profile">
-                <div class="profile-image">
-                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=4A90E2&color=fff" alt="Admin">
-                </div>
-                <div class="profile-info">
-                    <h4 id="userFullName">Admin User</h4>
-                    <span id="userRole" class="user-role admin-role">Administrator</span>
-                    <span id="userDepartment" class="user-department">System Administration</span>
-                </div>
-            </div>
-
-            <!-- Navigation Menu -->
-            <nav class="sidebar-menu" id="sidebarMenu">
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="system-status">
-                    <div class="status-indicator active"></div>
-                    <span>System Online</span>
-                </div>
-                <button id="logoutBtn" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-
-            <header class="top-header">
-                <div class="header-left">
-                    <h1 id="dashboardTitle">Admin Dashboard</h1>
-                    <div class="breadcrumb">
-                        <span id="breadcrumb">Dashboard</span>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <div class="header-actions">
-                        <button class="header-btn" id="notificationsBtn">
-                            <i class="fas fa-bell"></i>
-                            <span class="badge">3</span>
-                        </button>
-                        <button class="header-btn" id="messagesBtn">
-                            <i class="fas fa-envelope"></i>
-                            <span class="badge">5</span>
-                        </button>
-                        <button class="header-btn" id="searchBtn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-
-                    <div class="quick-stats">
-                        <div class="stat-item">
-                            <i class="fas fa-user-injured"></i>
-                            <div>
-                                <span class="stat-value" id="statPatients">1,245</span>
-                                <span class="stat-label">Patients</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-user-md"></i>
-                            <div>
-                                <span class="stat-value" id="statDoctors">45</span>
-                                <span class="stat-label">Doctors</span>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-bed"></i>
-                            <div>
-                                <span class="stat-value" id="statBeds">120/150</span>
-                                <span class="stat-label">Beds</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="datetime-display">
-                        <span id="currentDate">Monday, January 15, 2024</span>
-                        <span id="currentTime">10:30:45 AM</span>
-                    </div>
-                </div>
-            </header>
-
-            <div class="content-area" id="contentArea">
-                <div class="welcome-message">
-                    <h2>Welcome to Hospital Management System</h2>
-                    <p>Select an option from the sidebar to get started.</p>
-                </div>
-            </div>
-
-            <div class="notifications-panel" id="notificationsPanel">
-                <div class="panel-header">
-                    <h3>Notifications</h3>
-                    <button class="close-panel">&times;</button>
-                </div>
-                <div class="panel-content">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modals and other components -->
-    <div id="modalOverlay" class="modal-overlay"></div>
-
-    <!-- Scripts -->
-    <script src="js/config.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/modules/admin.js"></script>
-    <script src="js/modules/doctor.js"></script>
-    <script src="js/modules/nurse.js"></script>
-    <script src="js/modules/reception.js"></script>
-    <script src="js/modules/patient.js"></script>
-    <script src="js/modules/accountant.js"></script>
-    <script src="js/main.js"></script>
+  </template>
+  <script type="module" src="/js/app.js"></script>
 </body>
-
 </html>

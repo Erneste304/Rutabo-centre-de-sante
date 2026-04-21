@@ -1,58 +1,56 @@
-/**
- * ApiService Bridge for Hospital Management System
- * Handles API requests and authentication
- */
-class ApiService {
-    constructor() {
-        this.baseUrl = '/api';
-    }
+// Centralized API client with JWT auth
+const STORAGE_KEY = 'hms_session';
 
-    async request(url, options = {}) {
-        const token = localStorage.getItem('hms_token');
+export const session = {
+  get() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
+    catch { return null; }
+  },
+  set(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); },
+  clear() { localStorage.removeItem(STORAGE_KEY); },
+};
 
-        const defaultHeaders = {
-            'Content-Type': 'application/json'
-        };
-
-        if (token) {
-            defaultHeaders['Authorization'] = `Bearer ${token}`;
-        }
-
-        const config = {
-            ...options,
-            headers: {
-                ...defaultHeaders,
-                ...options.headers
-            }
-        };
-
-        // Ensure URL starts with / if not present
-        const fullUrl = url.startsWith('/') ? `${this.baseUrl}${url}` : `${this.baseUrl}/${url}`;
-
-        try {
-            const response = await fetch(fullUrl, config);
-
-            if (!response.ok) {
-                // Handle different error statuses
-                if (response.status === 401) {
-                    console.error('Unauthorized request');
-                    // Optional: redirect to login
-                }
-
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `API request failed with status ${response.status}`);
-            }
-
-            // Return empty object for 204 No Content
-            if (response.status === 204) return {};
-
-            return await response.json();
-        } catch (error) {
-            console.error(`API Request Error [${fullUrl}]:`, error);
-            throw error;
-        }
-    }
+async function request(path, { method = 'GET', body, auth = true } = {}) {
+  const headers = { 'Accept': 'application/json' };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  if (auth) {
+    const s = session.get();
+    if (s?.Token) headers['Authorization'] = `Bearer ${s.Token}`;
+  }
+  const res = await fetch(`/api${path}`, {
+    method,
+    headers,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  const text = await res.text();
+  let data = null;
+  if (text) { try { data = JSON.parse(text); } catch { data = text; } }
+  if (!res.ok) {
+    const msg = (data && (data.message || data.title)) || `Request failed (${res.status})`;
+    const err = new Error(msg);
+    err.status = res.status;
+    err.data = data;
+    throw err;
+  }
+  return data;
 }
 
-// Export for use in modules
-window.ApiService = ApiService;
+export const api = {
+  // Auth
+  login: (username, password) => request('/Auth/login', { method: 'POST', body: { username, password }, auth: false }),
+  register: (payload) => request('/Auth/register', { method: 'POST', body: payload, auth: false }),
+
+  // Dashboard
+  dashboard: (type = 'Admin') => request(`/Dashboard/stats?type=${encodeURIComponent(type)}`),
+
+  // Resources (lists)
+  patients: () => request('/Patients'),
+  doctors: () => request('/Doctors'),
+  appointments: () => request('/Appointments'),
+  rooms: () => request('/Rooms'),
+  inventory: () => request('/Inventory'),
+  billings: () => request('/Billings'),
+  emergencyAlerts: () => request('/EmergencyAlert/active/list').catch(() => []),
+
+  raw: request,
+};

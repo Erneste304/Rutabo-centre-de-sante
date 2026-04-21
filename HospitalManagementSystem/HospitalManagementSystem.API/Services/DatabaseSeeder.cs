@@ -76,15 +76,30 @@ namespace HospitalManagementSystem.Data.Services
             var patientUsers = await _context.Users.Where(u => u.UserType == "Patient").ToListAsync();
             if (!patientUsers.Any()) return;
 
-            var patients = new List<Patient>
+            int pu = patientUsers.Count;
+            var patientTemplates = new[]
             {
-                new Patient { UserId = patientUsers[0].UserId, MedicalRecordNumber = "MRN-2024-001", BloodType = "O+", Height = 175, Weight = 72, EmergencyContactName = "Jane Doe", EmergencyContactPhone = "+250788002001", EmergencyContactRelation = "Spouse", InsuranceProvider = "RSSB", InsurancePolicyNumber = "RSSB-001-2024", Allergies = "Penicillin", ChronicConditions = "Hypertension", CurrentMedications = "Lisinopril 10mg", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-60) },
-                new Patient { UserId = patientUsers[1].UserId, MedicalRecordNumber = "MRN-2024-002", BloodType = "A+", Height = 162, Weight = 58, EmergencyContactName = "Tom Smith", EmergencyContactPhone = "+250788002002", EmergencyContactRelation = "Father", InsuranceProvider = "MMI", InsurancePolicyNumber = "MMI-002-2024", Allergies = "None", ChronicConditions = "None", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-30) },
-                new Patient { UserId = patientUsers[2].UserId, MedicalRecordNumber = "MRN-2024-003", BloodType = "B-", Height = 180, Weight = 85, EmergencyContactName = "Mary Wilson", EmergencyContactPhone = "+250788002003", EmergencyContactRelation = "Wife", InsuranceProvider = "RSSB", InsurancePolicyNumber = "RSSB-003-2024", Allergies = "Aspirin, Sulfa drugs", ChronicConditions = "Diabetes Type 2, Hypertension", CurrentMedications = "Metformin 500mg, Lisinopril 10mg", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-90) },
-                new Patient { UserId = patientUsers[3].UserId, MedicalRecordNumber = "MRN-2024-004", BloodType = "AB+", Height = 165, Weight = 62, EmergencyContactName = "David Brown", EmergencyContactPhone = "+250788002004", EmergencyContactRelation = "Husband", InsuranceProvider = "Radiant", InsurancePolicyNumber = "RAD-004-2024", Allergies = "Latex", ChronicConditions = "Asthma", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-15) },
-                new Patient { UserId = patientUsers[4].UserId, MedicalRecordNumber = "MRN-2024-005", BloodType = "O-", Height = 172, Weight = 78, EmergencyContactName = "Lisa Davis", EmergencyContactPhone = "+250788002005", EmergencyContactRelation = "Daughter", InsuranceProvider = "RSSB", InsurancePolicyNumber = "RSSB-005-2024", Allergies = "Codeine", ChronicConditions = "Arthritis, High Cholesterol", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-120) },
-                new Patient { UserId = patientUsers[5].UserId, MedicalRecordNumber = "MRN-2024-006", BloodType = "A-", Height = 158, Weight = 55, EmergencyContactName = "Peter Jones", EmergencyContactPhone = "+250788002006", EmergencyContactRelation = "Brother", InsuranceProvider = "MMI", InsurancePolicyNumber = "MMI-006-2024", Allergies = "None", ChronicConditions = "Migraine", IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(-7) },
+                new { Mrn = "MRN-2024-001", Blood = "O+", H = 175m, W = 72m, EcN = "Jane Doe", EcP = "+250788002001", EcR = "Spouse", Ins = "RSSB", Pol = "RSSB-001-2024", Alg = "Penicillin", Chr = "Hypertension", Med = "Lisinopril 10mg", Days = -60 },
+                new { Mrn = "MRN-2024-002", Blood = "A+", H = 162m, W = 58m, EcN = "Tom Smith", EcP = "+250788002002", EcR = "Father", Ins = "MMI", Pol = "MMI-002-2024", Alg = "None", Chr = "None", Med = "", Days = -30 },
+                new { Mrn = "MRN-2024-003", Blood = "B-", H = 180m, W = 85m, EcN = "Mary Wilson", EcP = "+250788002003", EcR = "Wife", Ins = "RSSB", Pol = "RSSB-003-2024", Alg = "Aspirin, Sulfa drugs", Chr = "Diabetes Type 2, Hypertension", Med = "Metformin 500mg, Lisinopril 10mg", Days = -90 },
+                new { Mrn = "MRN-2024-004", Blood = "AB+", H = 165m, W = 62m, EcN = "David Brown", EcP = "+250788002004", EcR = "Husband", Ins = "Radiant", Pol = "RAD-004-2024", Alg = "Latex", Chr = "Asthma", Med = "", Days = -15 },
+                new { Mrn = "MRN-2024-005", Blood = "O-", H = 172m, W = 78m, EcN = "Lisa Davis", EcP = "+250788002005", EcR = "Daughter", Ins = "RSSB", Pol = "RSSB-005-2024", Alg = "Codeine", Chr = "Arthritis, High Cholesterol", Med = "", Days = -120 },
+                new { Mrn = "MRN-2024-006", Blood = "A-", H = 158m, W = 55m, EcN = "Peter Jones", EcP = "+250788002006", EcR = "Brother", Ins = "MMI", Pol = "MMI-006-2024", Alg = "None", Chr = "Migraine", Med = "", Days = -7 },
             };
+            var patients = new List<Patient>();
+            for (int i = 0; i < patientTemplates.Length && i < pu; i++)
+            {
+                var t = patientTemplates[i];
+                patients.Add(new Patient
+                {
+                    UserId = patientUsers[i].UserId,
+                    MedicalRecordNumber = t.Mrn, BloodType = t.Blood, Height = t.H, Weight = t.W,
+                    EmergencyContactName = t.EcN, EmergencyContactPhone = t.EcP, EmergencyContactRelation = t.EcR,
+                    InsuranceProvider = t.Ins, InsurancePolicyNumber = t.Pol,
+                    Allergies = t.Alg, ChronicConditions = t.Chr, CurrentMedications = t.Med,
+                    IsActive = true, AdmissionDate = DateTime.UtcNow.AddDays(t.Days)
+                });
+            }
 
             await _context.Patients.AddRangeAsync(patients);
         }
@@ -96,13 +111,26 @@ namespace HospitalManagementSystem.Data.Services
             var doctorUsers = await _context.Users.Where(u => u.UserType == "Doctor").ToListAsync();
             if (!doctorUsers.Any()) return;
 
-            var doctors = new List<Doctor>
+            int du = doctorUsers.Count;
+            var doctorTemplates = new[]
             {
-                new Doctor { UserId = doctorUsers[0].UserId, LicenseNumber = "MD-RW-001", Qualifications = "MBBS, MD (Cardiology)", YearsOfExperience = 15, ConsultationFee = 15000, AvailableDays = "Mon,Tue,Wed,Thu,Fri", WorkingHours = "8:00-16:00", MaxPatientsPerDay = 20, IsAvailable = true, Rating = 4.8m, TotalRatings = 125 },
-                new Doctor { UserId = doctorUsers[1].UserId, LicenseNumber = "MD-RW-002", Qualifications = "MBBS, MD (Neurology)", YearsOfExperience = 12, ConsultationFee = 15000, AvailableDays = "Mon,Wed,Fri", WorkingHours = "9:00-17:00", MaxPatientsPerDay = 15, IsAvailable = true, Rating = 4.7m, TotalRatings = 98 },
-                new Doctor { UserId = doctorUsers[2].UserId, LicenseNumber = "MD-RW-003", Qualifications = "MBBS, Emergency Medicine Specialist", YearsOfExperience = 10, ConsultationFee = 12000, AvailableDays = "Mon,Tue,Wed,Thu,Fri,Sat,Sun", WorkingHours = "0:00-24:00", MaxPatientsPerDay = 30, IsAvailable = true, Rating = 4.9m, TotalRatings = 210 },
-                new Doctor { UserId = doctorUsers[3].UserId, LicenseNumber = "MD-RW-004", Qualifications = "MBBS, MD (Pediatrics)", YearsOfExperience = 8, ConsultationFee = 12000, AvailableDays = "Mon,Tue,Thu,Fri", WorkingHours = "8:00-16:00", MaxPatientsPerDay = 25, IsAvailable = true, Rating = 4.6m, TotalRatings = 87 },
+                new { Lic = "MD-RW-001", Qual = "MBBS, MD (Cardiology)", Yrs = 15, Fee = 15000m, Days = "Mon,Tue,Wed,Thu,Fri", Hrs = "8:00-16:00", Max = 20, Rating = 4.8m, Total = 125 },
+                new { Lic = "MD-RW-002", Qual = "MBBS, MD (Neurology)", Yrs = 12, Fee = 15000m, Days = "Mon,Wed,Fri", Hrs = "9:00-17:00", Max = 15, Rating = 4.7m, Total = 98 },
+                new { Lic = "MD-RW-003", Qual = "MBBS, Emergency Medicine Specialist", Yrs = 10, Fee = 12000m, Days = "Mon,Tue,Wed,Thu,Fri,Sat,Sun", Hrs = "0:00-24:00", Max = 30, Rating = 4.9m, Total = 210 },
+                new { Lic = "MD-RW-004", Qual = "MBBS, MD (Pediatrics)", Yrs = 8, Fee = 12000m, Days = "Mon,Tue,Thu,Fri", Hrs = "8:00-16:00", Max = 25, Rating = 4.6m, Total = 87 },
             };
+            var doctors = new List<Doctor>();
+            for (int i = 0; i < doctorTemplates.Length && i < du; i++)
+            {
+                var t = doctorTemplates[i];
+                doctors.Add(new Doctor
+                {
+                    UserId = doctorUsers[i].UserId,
+                    LicenseNumber = t.Lic, Qualifications = t.Qual, YearsOfExperience = t.Yrs,
+                    ConsultationFee = t.Fee, AvailableDays = t.Days, WorkingHours = t.Hrs,
+                    MaxPatientsPerDay = t.Max, IsAvailable = true, Rating = t.Rating, TotalRatings = t.Total
+                });
+            }
 
             await _context.Doctors.AddRangeAsync(doctors);
         }

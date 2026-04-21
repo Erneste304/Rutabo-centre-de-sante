@@ -26,7 +26,12 @@ namespace HospitalManagementSystem.API.Controllers
             
             // New real stats
             var now = DateTime.Now;
-            var activeShifts = await _context.EmployeeShifts.CountAsync(s => s.ShiftDate == now.Date && s.StartTime <= now.TimeOfDay && s.EndTime >= now.TimeOfDay);
+            var today = now.Date;
+            var nowTime = now.TimeOfDay;
+            var todaysShifts = await _context.EmployeeShifts
+                .Where(s => s.ShiftDate == today)
+                .ToListAsync();
+            var activeShifts = todaysShifts.Count(s => s.StartTime <= nowTime && s.EndTime >= nowTime);
             var totalDepartments = await _context.Departments.CountAsync();
             var claimsProcessed = await _context.Billings.CountAsync(b => b.PaymentStatus == "Paid");
             

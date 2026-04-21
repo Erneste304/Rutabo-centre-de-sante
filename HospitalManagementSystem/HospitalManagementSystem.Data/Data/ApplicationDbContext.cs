@@ -210,69 +210,7 @@ namespace HospitalManagementSystem.Data
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // Seed admin user (password: Admin@123)
-            modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    UserId = 1,
-                    Username = "admin",
-                    PasswordHash = "AQAAAAIAAYagAAAAECg8FLL1EfnVr9qWtsoeUFfccRYKxNK+9M0iVGTk6UqCV5HF8BRo1sKyyw7lLpRz1A==",
-                    Email = "admin@hospital.com",
-                    FullName = "System Administrator",
-                    UserType = "Admin",
-                    Status = "Active",
-                    CreatedAt = DateTime.UtcNow,
-                    IsEmailVerified = true
-                },
-                new User
-                {
-                    UserId = 2,
-                    Username = "doctor",
-                    PasswordHash = "AQAAAAIAAYagAAAAECg8FLL1EfnVr9qWtsoeUFfccRYKxNK+9M0iVGTk6UqCV5HF8BRo1sKyyw7lLpRz1A==",
-                    Email = "doctor@hospital.com",
-                    FullName = "Dr. John Smith",
-                    UserType = "Doctor",
-                    Status = "Active",
-                    CreatedAt = DateTime.UtcNow,
-                    IsEmailVerified = true
-                },
-                new User
-                {
-                    UserId = 3,
-                    Username = "patient",
-                    PasswordHash = "AQAAAAIAAYagAAAAECg8FLL1EfnVr9qWtsoeUFfccRYKxNK+9M0iVGTk6UqCV5HF8BRo1sKyyw7lLpRz1A==",
-                    Email = "patient@hospital.com",
-                    FullName = "John Doe",
-                    UserType = "Patient",
-                    Status = "Active",
-                    CreatedAt = DateTime.UtcNow,
-                    IsEmailVerified = true
-                },
-                new User
-                {
-                    UserId = 4,
-                    Username = "reception",
-                    PasswordHash = "AQAAAAIAAYagAAAAECg8FLL1EfnVr9qWtsoeUFfccRYKxNK+9M0iVGTk6UqCV5HF8BRo1sKyyw7lLpRz1A==",
-                    Email = "reception@hospital.com",
-                    FullName = "Sarah Johnson",
-                    UserType = "Receptionist",
-                    Status = "Active",
-                    CreatedAt = DateTime.UtcNow,
-                    IsEmailVerified = true
-                },
-                new User
-                {
-                    UserId = 5,
-                    Username = "accountant",
-                    PasswordHash = "AQAAAAIAAYagAAAAECg8FLL1EfnVr9qWtsoeUFfccRYKxNK+9M0iVGTk6UqCV5HF8BRo1sKyyw7lLpRz1A==",
-                    Email = "accountant@hospital.com",
-                    FullName = "Mike Wilson",
-                    UserType = "Accountant",
-                    Status = "Active",
-                    CreatedAt = DateTime.UtcNow,
-                    IsEmailVerified = true
-                }
-            );
+            // Users are seeded by DatabaseSeeder (SHA256 hashed) — do not seed via HasData here.
 
             // Seed departments
             modelBuilder.Entity<Department>().HasData(
