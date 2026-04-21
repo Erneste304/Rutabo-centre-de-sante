@@ -96,10 +96,11 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseWebAssemblyDebugging();
 }
 
 app.UseCors("AllowAll");
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -108,12 +109,7 @@ app.MapHub<HospitalHub>("/hubs/hospital");
 
 app.MapFallback(async context =>
 {
-    var blazorWwwroot = Path.Combine(
-        app.Environment.ContentRootPath,
-        "..", "HospitalManagementSystem.Blazor", "wwwroot", "index.html");
-
-    var indexPath = Path.GetFullPath(blazorWwwroot);
-
+    var indexPath = Path.Combine(app.Environment.WebRootPath, "index.html");
     if (File.Exists(indexPath))
     {
         context.Response.ContentType = "text/html";

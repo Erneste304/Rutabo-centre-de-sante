@@ -16,7 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\HospitalManagementSystem.Core\HospitalManagementSystem.Core.csproj" />
     <ProjectReference Include="..\HospitalManagementSystem.Data\HospitalManagementSystem.Data.csproj" />
-    <ProjectReference Include="..\HospitalManagementSystem.Blazor\HospitalManagementSystem.Blazor.csproj" />
   </ItemGroup>
 
 </Project>
