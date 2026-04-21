@@ -27,7 +27,7 @@
           "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.1": {
+      "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
@@ -46,10 +46,10 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+      "Microsoft.AspNetCore.Components.WebAssembly/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.JSInterop.WebAssembly": "10.0.2"
+          "Microsoft.JSInterop.WebAssembly": "10.0.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll": {
@@ -65,10 +65,10 @@
           "build/net10.0/_._": {}
         }
       },
-      "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.2": {
+      "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2"
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.Server.dll": {
@@ -87,7 +87,7 @@
           "build/Microsoft.AspNetCore.Components.WebAssembly.Server.targets": {}
         }
       },
-      "Microsoft.Data.Sqlite.Core/10.0.2": {
+      "Microsoft.Data.Sqlite.Core/10.0.0": {
         "type": "package",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.11"
@@ -103,7 +103,7 @@
           }
         }
       },
-      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.105": {
+      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.106": {
         "type": "package",
         "compile": {
           "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {}
@@ -118,11 +118,11 @@
           "buildMultiTargeting/Microsoft.DotNet.HotReload.WebAssembly.Browser.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore/10.0.2": {
+      "Microsoft.EntityFrameworkCore/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.2",
-          "Microsoft.EntityFrameworkCore.Analyzers": "10.0.2"
+          "Microsoft.EntityFrameworkCore.Abstractions": "10.0.0",
+          "Microsoft.EntityFrameworkCore.Analyzers": "10.0.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.EntityFrameworkCore.dll": {
@@ -138,7 +138,7 @@
           "buildTransitive/net10.0/Microsoft.EntityFrameworkCore.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Abstractions/10.0.2": {
+      "Microsoft.EntityFrameworkCore.Abstractions/10.0.0": {
         "type": "package",
         "compile": {
           "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
@@ -151,13 +151,13 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/10.0.2": {
+      "Microsoft.EntityFrameworkCore.Analyzers/10.0.0": {
         "type": "package"
       },
-      "Microsoft.EntityFrameworkCore.Relational/10.0.2": {
+      "Microsoft.EntityFrameworkCore.Relational/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "10.0.2"
+          "Microsoft.EntityFrameworkCore": "10.0.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll": {
@@ -170,11 +170,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite/10.0.2": {
+      "Microsoft.EntityFrameworkCore.Sqlite/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Sqlite.Core": "10.0.2",
-          "Microsoft.Extensions.DependencyModel": "10.0.2",
+          "Microsoft.EntityFrameworkCore.Sqlite.Core": "10.0.0",
+          "Microsoft.Extensions.DependencyModel": "10.0.0",
           "SQLitePCLRaw.bundle_e_sqlite3": "2.1.11",
           "SQLitePCLRaw.core": "2.1.11"
         },
@@ -185,12 +185,12 @@
           "lib/net10.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.2": {
+      "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "10.0.2",
-          "Microsoft.EntityFrameworkCore.Relational": "10.0.2",
-          "Microsoft.Extensions.DependencyModel": "10.0.2",
+          "Microsoft.Data.Sqlite.Core": "10.0.0",
+          "Microsoft.EntityFrameworkCore.Relational": "10.0.0",
+          "Microsoft.Extensions.DependencyModel": "10.0.0",
           "SQLitePCLRaw.core": "2.1.11"
         },
         "compile": {
@@ -204,7 +204,7 @@
           }
         }
       },
-      "Microsoft.Extensions.DependencyModel/10.0.2": {
+      "Microsoft.Extensions.DependencyModel/10.0.0": {
         "type": "package",
         "compile": {
           "lib/net10.0/Microsoft.Extensions.DependencyModel.dll": {
@@ -314,7 +314,7 @@
           }
         }
       },
-      "Microsoft.JSInterop.WebAssembly/10.0.2": {
+      "Microsoft.JSInterop.WebAssembly/10.0.0": {
         "type": "package",
         "compile": {
           "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll": {
@@ -489,8 +489,8 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "HospitalManagementSystem.Core": "1.0.0",
-          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.105"
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.0",
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.106"
         },
         "compile": {
           "bin/placeholder/HospitalManagementSystem.Blazor.dll": {}
@@ -514,7 +514,7 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "HospitalManagementSystem.Core": "1.0.0",
-          "Microsoft.EntityFrameworkCore.Sqlite": "10.0.2"
+          "Microsoft.EntityFrameworkCore.Sqlite": "10.0.0"
         },
         "compile": {
           "bin/placeholder/HospitalManagementSystem.Data.dll": {}
@@ -555,10 +555,10 @@
         "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
       ]
     },
-    "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.1": {
-      "sha512": "lvyUEBVv7V1/UvGxfOV3a0kyaQatPAU+ZHru7xha6WVOpa+7aJtKehbiu9VpAt/G50FR+hUwL4nTY33ijsCXwA==",
+    "Microsoft.AspNetCore.Authentication.JwtBearer/10.0.0": {
+      "sha512": "0BgDfT1GoZnzjJOBwx5vFMK5JtqsTEas9pCEwd1/KKxNUAqFmreN60WeUoF+CsmSd9tOQuqWedvdBo/QqHuNTQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.authentication.jwtbearer/10.0.1",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -567,14 +567,14 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
         "lib/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.xml",
-        "microsoft.aspnetcore.authentication.jwtbearer.10.0.1.nupkg.sha512",
+        "microsoft.aspnetcore.authentication.jwtbearer.10.0.0.nupkg.sha512",
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
-      "sha512": "xJ0Qi75jnR75IhZhEwIdH04WH03wbJEAbilFND4SKYH0xgG/4oNAarb4Duvb0/5ko6/qcn4rCmzRuNJ1hF4dRw==",
+    "Microsoft.AspNetCore.Components.WebAssembly/10.0.0": {
+      "sha512": "ens4WMX0PBTHxRDYpS3i//VktXi+24my01qXI0P91q2rDMHcIKRN0/sdE+4kB1ZwJpHec9vYxDmmnw/JOcXCwQ==",
       "type": "package",
-      "path": "microsoft.aspnetcore.components.webassembly/10.0.2",
+      "path": "microsoft.aspnetcore.components.webassembly/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -585,14 +585,14 @@
         "build/net10.0/blazor.webassembly.js",
         "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll",
         "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.xml",
-        "microsoft.aspnetcore.components.webassembly.10.0.2.nupkg.sha512",
+        "microsoft.aspnetcore.components.webassembly.10.0.0.nupkg.sha512",
         "microsoft.aspnetcore.components.webassembly.nuspec"
       ]
     },
-    "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.2": {
-      "sha512": "0XL+5oFRL6OkV2d8SUE3HY79pBlwxQkDCJ0ieQ3VfPhN/3xbfdUGph3yJjdSYPjFguGMbzx4fmJNgxO3C0a9Cw==",
+    "Microsoft.AspNetCore.Components.WebAssembly.Server/10.0.0": {
+      "sha512": "GwJrz6ZyXS5WvHLS//Xaf7iU/kYlE19GT1lD1RtDm7aZG+iQPi4Qxfmxm15+4224OeNi7RAiS+8n3jG9ti7/YA==",
       "type": "package",
-      "path": "microsoft.aspnetcore.components.webassembly.server/10.0.2",
+      "path": "microsoft.aspnetcore.components.webassembly.server/10.0.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -603,7 +603,7 @@
         "build/Microsoft.AspNetCore.Components.WebAssembly.Server.targets",
         "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.Server.dll",
         "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.Server.xml",
-        "microsoft.aspnetcore.components.webassembly.server.10.0.2.nupkg.sha512",
+        "microsoft.aspnetcore.components.webassembly.server.10.0.0.nupkg.sha512",
         "microsoft.aspnetcore.components.webassembly.server.nuspec",
         "tools/BlazorDebugProxy/BrowserDebugHost.dll",
         "tools/BlazorDebugProxy/BrowserDebugHost.runtimeconfig.json",
@@ -618,10 +618,10 @@
         "tools/BlazorDebugProxy/Newtonsoft.Json.dll"
       ]
     },
-    "Microsoft.Data.Sqlite.Core/10.0.2": {
-      "sha512": "/8ubtRdyED4qyxmL1CAu3UZZUEgc9l0dPCItW5tlOkYlKOb3QNhjGuEeb7uTKAqm8L7kwFOx1fCsndiylrzZAg==",
+    "Microsoft.Data.Sqlite.Core/10.0.0": {
+      "sha512": "wPKG/Ym6tSMCo06UOZXzVfeFGzawnOZrTba/R3PfK+RhNuNELZ9I7nFns4WGTtv2kKlrlmmErgJ+kgTXHaNdHg==",
       "type": "package",
-      "path": "microsoft.data.sqlite.core/10.0.2",
+      "path": "microsoft.data.sqlite.core/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -631,14 +631,14 @@
         "lib/net8.0/Microsoft.Data.Sqlite.xml",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.dll",
         "lib/netstandard2.0/Microsoft.Data.Sqlite.xml",
-        "microsoft.data.sqlite.core.10.0.2.nupkg.sha512",
+        "microsoft.data.sqlite.core.10.0.0.nupkg.sha512",
         "microsoft.data.sqlite.core.nuspec"
       ]
     },
-    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.105": {
-      "sha512": "tF2FVhqfVBB9BtE5rVJQuRIN/NRQ0uEWbJvfvROLQQMpOvlHShavayDODo7hPGQGzc9PYUPgaTX+ylZ86dkzyQ==",
+    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.106": {
+      "sha512": "8MzC43QmkOaut7+LL44MrLhtM3rcNeZOmqGtq92m5tbzJ+61bHExfWzE/6SL77ebzq8W+HVD58u+5pov6T1apg==",
       "type": "package",
-      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.105",
+      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.106",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -649,15 +649,15 @@
         "buildMultiTargeting/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
         "buildTransitive/Microsoft.DotNet.HotReload.WebAssembly.Browser.props",
         "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll",
-        "microsoft.dotnet.hotreload.webassembly.browser.10.0.105.nupkg.sha512",
+        "microsoft.dotnet.hotreload.webassembly.browser.10.0.106.nupkg.sha512",
         "microsoft.dotnet.hotreload.webassembly.browser.nuspec",
         "staticwebassets/Microsoft.DotNet.HotReload.WebAssembly.Browser.99zm1jdh75.lib.module.js"
       ]
     },
-    "Microsoft.EntityFrameworkCore/10.0.2": {
-      "sha512": "d3+XKbLSHPCu3vwpXECoXcFbvGKmAhEeUmc1xy2czmuPnEF7rZN2HP5ZGMwCMbAKk4B01+nS4HixSMo2Vf/Y9g==",
+    "Microsoft.EntityFrameworkCore/10.0.0": {
+      "sha512": "hHa2amRjMyBLUH/KTML6FgIAhZ0VFYkhCKwWEax0rO6iNeM1P5MflyeQLE5dniSIOZHc3Oqyv5UIyTFO4e1Auw==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/10.0.2",
+      "path": "microsoft.entityframeworkcore/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -666,14 +666,14 @@
         "buildTransitive/net10.0/Microsoft.EntityFrameworkCore.props",
         "lib/net10.0/Microsoft.EntityFrameworkCore.dll",
         "lib/net10.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Abstractions/10.0.2": {
-      "sha512": "BzAwIU5mYeOmnKbEXrkwx7feW2V+zUTrK/kRonSib94tjvc0/iRj2a4N6YGXRhTNjaFP3tvCMIDaX1vIFF6dkg==",
+    "Microsoft.EntityFrameworkCore.Abstractions/10.0.0": {
+      "sha512": "C+TT9k7f1GQ8agOfV512K9iwrzi76RXVSDiLx+iWC9pz3QhEpSF1Dyk+FpVvd8ULQ+rqymfM8KQ7g48ttQVyMg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.abstractions/10.0.2",
+      "path": "microsoft.entityframeworkcore.abstractions/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -681,28 +681,28 @@
         "PACKAGE.md",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
-        "microsoft.entityframeworkcore.abstractions.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.abstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/10.0.2": {
-      "sha512": "5C8aKN2HFhXfLhkrVvQ6yH990nw35pS7HNnwdBc628zIREaKJ4/rkdCXzxOdZo/SnCT3Kg7a/CqnhlzuJhlD4Q==",
+    "Microsoft.EntityFrameworkCore.Analyzers/10.0.0": {
+      "sha512": "TxHQq0kn0tpYs2ljeRl8jtmWk720B0nteqI6mAZM77HWJpYT9Zj8SkkBBlj8K3Yeq18a6NBjz6YutE+shEk4Ag==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.analyzers/10.0.2",
+      "path": "microsoft.entityframeworkcore.analyzers/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
         "docs/PACKAGE.md",
-        "microsoft.entityframeworkcore.analyzers.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Relational/10.0.2": {
-      "sha512": "1fUeyNmqDNfMogJ2ut7OKO57/WGjjkHMYeX51SpA3PwP7ftbx8g/Z3fbErD+1q14DILrqJfsszYsYhGssBRfDg==",
+    "Microsoft.EntityFrameworkCore.Relational/10.0.0": {
+      "sha512": "A3MX1ee7RDxWCUdx/KqP+74fbksz0UIhkVZh56YHvbPkEKsffCXgHU3LGkRDwqR/MrBNWLCWC/IVX79tzM30ZA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.relational/10.0.2",
+      "path": "microsoft.entityframeworkcore.relational/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -710,28 +710,28 @@
         "PACKAGE.md",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.dll",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Relational.xml",
-        "microsoft.entityframeworkcore.relational.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.relational.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.relational.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite/10.0.2": {
-      "sha512": "xprEItydc2HDhThghBsuq/2t9UoEhJvzKWE2Mx1+hlJdCZBUoZWmbuua9pZy9vTE+aVVssX261cx5F6nUpKzoA==",
+    "Microsoft.EntityFrameworkCore.Sqlite/10.0.0": {
+      "sha512": "nukHe+yBlhitLUUtkanay7zTbHwtcIh/U5PfmwzZJJTCqui9h2Mt+Gifc9ZjJR7QIuE0zgNQQJaI8+eFxkBaEQ==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite/10.0.2",
+      "path": "microsoft.entityframeworkcore.sqlite/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "PACKAGE.md",
         "lib/net10.0/_._",
-        "microsoft.entityframeworkcore.sqlite.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.2": {
-      "sha512": "IAaYGhV7lKXbG7c5G9mMlc1buAiUXME0RbLPrAFdlmtRuCnUaKbjcupJAQJPz2q2VEjwzm1Mx2WprizFVls0QQ==",
+    "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.0": {
+      "sha512": "VThKv9UqVxFEuuHvjAgMwy6ZFCeKJXOH+ISAR4IMuwlkozv26ptZhr09+6YxWrWwSR/Sinp8BxQ7qePCJFSALQ==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.sqlite.core/10.0.2",
+      "path": "microsoft.entityframeworkcore.sqlite.core/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -739,14 +739,14 @@
         "PACKAGE.md",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
         "lib/net10.0/Microsoft.EntityFrameworkCore.Sqlite.xml",
-        "microsoft.entityframeworkcore.sqlite.core.10.0.2.nupkg.sha512",
+        "microsoft.entityframeworkcore.sqlite.core.10.0.0.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlite.core.nuspec"
       ]
     },
-    "Microsoft.Extensions.DependencyModel/10.0.2": {
-      "sha512": "DHXzj/FKmUDmhzw7AHbMXbNNcgO8Cb9PDbYOUDICjFAdIALy2WbC6pm+dFKiAUNtcYMucZu2iMVw1ef/sdcZFw==",
+    "Microsoft.Extensions.DependencyModel/10.0.0": {
+      "sha512": "RFYJR7APio/BiqdQunRq6DB+nDB6nc2qhHr77mlvZ0q0BT8PubMXN7XicmfzCbrDE/dzhBnUKBRXLTcqUiZDGg==",
       "type": "package",
-      "path": "microsoft.extensions.dependencymodel/10.0.2",
+      "path": "microsoft.extensions.dependencymodel/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -767,7 +767,7 @@
         "lib/net9.0/Microsoft.Extensions.DependencyModel.xml",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.dll",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.xml",
-        "microsoft.extensions.dependencymodel.10.0.2.nupkg.sha512",
+        "microsoft.extensions.dependencymodel.10.0.0.nupkg.sha512",
         "microsoft.extensions.dependencymodel.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -910,10 +910,10 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.JSInterop.WebAssembly/10.0.2": {
-      "sha512": "XeNFL2ozbjbPe32be7OVC3peMbS+vM1hu6Cp0RZfF1HepDRTmohQ+p3LF7BVhEKETxCh1/dd5sUwYuB7I/iApw==",
+    "Microsoft.JSInterop.WebAssembly/10.0.0": {
+      "sha512": "j0lrmG+7X4OZh75IzOX00nkwAEjXSgt2Ul6kjwmVkAOBzd8JC1Q/yJ/fC4jWcIXe4h22881Qq1o46p/TnSNaRQ==",
       "type": "package",
-      "path": "microsoft.jsinterop.webassembly/10.0.2",
+      "path": "microsoft.jsinterop.webassembly/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -921,7 +921,7 @@
         "THIRD-PARTY-NOTICES.txt",
         "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll",
         "lib/net10.0/Microsoft.JSInterop.WebAssembly.xml",
-        "microsoft.jsinterop.webassembly.10.0.2.nupkg.sha512",
+        "microsoft.jsinterop.webassembly.10.0.0.nupkg.sha512",
         "microsoft.jsinterop.webassembly.nuspec"
       ]
     },
@@ -1065,8 +1065,8 @@
       "HospitalManagementSystem.Blazor >= 1.0.0",
       "HospitalManagementSystem.Core >= 1.0.0",
       "HospitalManagementSystem.Data >= 1.0.0",
-      "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.1",
-      "Microsoft.AspNetCore.Components.WebAssembly.Server >= 10.0.2"
+      "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.0",
+      "Microsoft.AspNetCore.Components.WebAssembly.Server >= 10.0.0"
     ]
   },
   "packageFolders": {
@@ -1133,11 +1133,11 @@
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
-            "version": "[10.0.1, )"
+            "version": "[10.0.0, )"
           },
           "Microsoft.AspNetCore.Components.WebAssembly.Server": {
             "target": "Package",
-            "version": "[10.0.2, )"
+            "version": "[10.0.0, )"
           }
         },
         "imports": [
@@ -1159,7 +1159,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.106/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

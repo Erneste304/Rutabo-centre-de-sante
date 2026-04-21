@@ -39,10 +39,10 @@ namespace HospitalManagementSystem.API.Controllers
                         r.RoomId,
                         r.RoomNumber,
                         r.RoomType.RoomTypeName,
-                        r.Capacity,
-                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        AvailableBeds = r.Capacity - r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        Status = r.RoomAssignments.Count(ra => ra.DischargeDate == null) >= r.Capacity ? "Full" : "Available"
+                        r.BedCount,
+                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        AvailableBeds = r.BedCount - r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        Status = r.RoomAssignments.Count(ra => ra.EndDate == null) >= r.BedCount ? "Full" : "Available"
                     })
                     .ToListAsync();
                 return Ok(rooms);
@@ -72,18 +72,18 @@ namespace HospitalManagementSystem.API.Controllers
                         r.RoomId,
                         r.RoomNumber,
                         r.RoomType.RoomTypeName,
-                        r.Capacity,
-                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        AvailableBeds = r.Capacity - r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        Status = r.RoomAssignments.Count(ra => ra.DischargeDate == null) >= r.Capacity ? "Full" : "Available",
+                        r.BedCount,
+                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        AvailableBeds = r.BedCount - r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        Status = r.RoomAssignments.Count(ra => ra.EndDate == null) >= r.BedCount ? "Full" : "Available",
                         CurrentPatients = r.RoomAssignments
-                            .Where(ra => ra.DischargeDate == null)
+                            .Where(ra => ra.EndDate == null)
                             .Select(ra => new
                             {
-                                ra.RoomAssignmentId,
+                                ra.AssignmentId,
                                 PatientName = ra.Patient.User.FullName,
                                 ra.Patient.User.Email,
-                                ra.AdmissionDate
+                                ra.AssignmentDate
                             })
                             .ToList()
                     })
@@ -115,7 +115,7 @@ namespace HospitalManagementSystem.API.Controllers
                 {
                     RoomNumber = dto.RoomNumber,
                     RoomTypeId = dto.RoomTypeId,
-                    Capacity = dto.Capacity
+                    BedCount = dto.Capacity
                 };
 
                 _context.Rooms.Add(room);
@@ -126,7 +126,7 @@ namespace HospitalManagementSystem.API.Controllers
                     room.RoomId,
                     room.RoomNumber,
                     room.RoomTypeId,
-                    room.Capacity
+                    room.BedCount
                 });
             }
             catch (Exception ex)
@@ -152,7 +152,7 @@ namespace HospitalManagementSystem.API.Controllers
                 if (dto.RoomTypeId.HasValue)
                     room.RoomTypeId = dto.RoomTypeId.Value;
                 if (dto.Capacity.HasValue && dto.Capacity > 0)
-                    room.Capacity = dto.Capacity.Value;
+                    room.BedCount = dto.Capacity.Value;
 
                 _context.Rooms.Update(room);
                 await _context.SaveChangesAsync();
@@ -199,15 +199,15 @@ namespace HospitalManagementSystem.API.Controllers
                 var availableRooms = await _context.Rooms
                     .Include(r => r.RoomType)
                     .Include(r => r.RoomAssignments)
-                    .Where(r => r.RoomAssignments.Count(ra => ra.DischargeDate == null) < r.Capacity)
+                    .Where(r => r.RoomAssignments.Count(ra => ra.EndDate == null) < r.BedCount)
                     .Select(r => new
                     {
                         r.RoomId,
                         r.RoomNumber,
                         r.RoomType.RoomTypeName,
-                        r.Capacity,
-                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        AvailableBeds = r.Capacity - r.RoomAssignments.Count(ra => ra.DischargeDate == null)
+                        r.BedCount,
+                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        AvailableBeds = r.BedCount - r.RoomAssignments.Count(ra => ra.EndDate == null)
                     })
                     .ToListAsync();
 
@@ -235,8 +235,8 @@ namespace HospitalManagementSystem.API.Controllers
                     return NotFound(new { message = "Room not found" });
 
                 // Check if room has available beds
-                var occupiedBeds = room.RoomAssignments.Count(ra => ra.DischargeDate == null);
-                if (occupiedBeds >= room.Capacity)
+                var occupiedBeds = room.RoomAssignments.Count(ra => ra.EndDate == null);
+                if (occupiedBeds >= room.BedCount)
                     return BadRequest(new { message = "Room is full" });
 
                 var patient = await _context.Patients.FindAsync(dto.PatientId);
@@ -247,7 +247,7 @@ namespace HospitalManagementSystem.API.Controllers
                 {
                     RoomId = id,
                     PatientId = dto.PatientId,
-                    AdmissionDate = DateTime.Now
+                    AssignmentDate = DateTime.Now
                 };
 
                 _context.RoomAssignments.Add(roomAssignment);
@@ -256,10 +256,10 @@ namespace HospitalManagementSystem.API.Controllers
                 return Ok(new
                 {
                     message = "Patient assigned to room successfully",
-                    roomAssignment.RoomAssignmentId,
+                    roomAssignment.AssignmentId,
                     roomAssignment.RoomId,
                     roomAssignment.PatientId,
-                    roomAssignment.AdmissionDate
+                    roomAssignment.AssignmentDate
                 });
             }
             catch (Exception ex)
@@ -283,15 +283,15 @@ namespace HospitalManagementSystem.API.Controllers
                 if (roomAssignment.RoomId != id)
                     return BadRequest(new { message = "Room assignment does not match the room" });
 
-                roomAssignment.DischargeDate = DateTime.Now;
+                roomAssignment.EndDate = DateTime.Now;
                 _context.RoomAssignments.Update(roomAssignment);
                 await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
                     message = "Patient discharged successfully",
-                    roomAssignment.RoomAssignmentId,
-                    roomAssignment.DischargeDate
+                    roomAssignment.AssignmentId,
+                    roomAssignment.EndDate
                 });
             }
             catch (Exception ex)
@@ -309,9 +309,9 @@ namespace HospitalManagementSystem.API.Controllers
             try
             {
                 var totalRooms = await _context.Rooms.CountAsync();
-                var totalCapacity = await _context.Rooms.SumAsync(r => r.Capacity);
+                var totalCapacity = await _context.Rooms.SumAsync(r => r.BedCount);
                 var occupiedBeds = await _context.RoomAssignments
-                    .Where(ra => ra.DischargeDate == null)
+                    .Where(ra => ra.EndDate == null)
                     .CountAsync();
 
                 var occupancyRate = totalCapacity > 0 ? (occupiedBeds * 100.0 / totalCapacity) : 0;
@@ -323,9 +323,9 @@ namespace HospitalManagementSystem.API.Controllers
                     {
                         r.RoomNumber,
                         r.RoomType.RoomTypeName,
-                        r.Capacity,
-                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.DischargeDate == null),
-                        OccupancyPercentage = r.Capacity > 0 ? (r.RoomAssignments.Count(ra => ra.DischargeDate == null) * 100.0 / r.Capacity) : 0
+                        r.BedCount,
+                        OccupiedBeds = r.RoomAssignments.Count(ra => ra.EndDate == null),
+                        OccupancyPercentage = r.BedCount > 0 ? (r.RoomAssignments.Count(ra => ra.EndDate == null) * 100.0 / r.BedCount) : 0
                     })
                     .ToListAsync();
 

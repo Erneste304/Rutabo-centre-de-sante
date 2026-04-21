@@ -31,17 +31,16 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var items = await _context.Inventories
-                    .Include(i => i.Medicine)
+                var items = await _context.Inventory
                     .Select(i => new
                     {
-                        i.InventoryId,
-                        i.Medicine.MedicineName,
-                        i.Quantity,
-                        i.ReorderLevel,
+                        i.ItemId,
+                        i.ItemName,
+                        i.CurrentStock,
+                        i.MinimumStock,
                         i.ExpiryDate,
                         i.UnitPrice,
-                        Status = i.Quantity <= i.ReorderLevel ? "Low Stock" : "In Stock"
+                        Status = i.CurrentStock <= i.MinimumStock ? "Low Stock" : "In Stock"
                     })
                     .ToListAsync();
                 return Ok(items);
@@ -60,19 +59,17 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var item = await _context.Inventories
-                    .Include(i => i.Medicine)
-                    .Where(i => i.InventoryId == id)
+                var item = await _context.Inventory
+                    .Where(i => i.ItemId == id)
                     .Select(i => new
                     {
-                        i.InventoryId,
-                        i.MedicineId,
-                        i.Medicine.MedicineName,
-                        i.Quantity,
-                        i.ReorderLevel,
+                        i.ItemId,
+                        i.ItemName,
+                        i.CurrentStock,
+                        i.MinimumStock,
                         i.ExpiryDate,
                         i.UnitPrice,
-                        Status = i.Quantity <= i.ReorderLevel ? "Low Stock" : "In Stock"
+                        Status = i.CurrentStock <= i.MinimumStock ? "Low Stock" : "In Stock"
                     })
                     .FirstOrDefaultAsync();
 
@@ -95,27 +92,29 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                if (dto.Quantity <= 0 || dto.UnitPrice <= 0)
-                    return BadRequest(new { message = "Quantity and UnitPrice must be greater than 0" });
+                if (dto.CurrentStock <= 0 || dto.UnitPrice <= 0)
+                    return BadRequest(new { message = "CurrentStock and UnitPrice must be greater than 0" });
 
                 var inventory = new Inventory
                 {
-                    MedicineId = dto.MedicineId,
-                    Quantity = dto.Quantity,
-                    ReorderLevel = dto.ReorderLevel,
+                    ItemName = dto.ItemName,
+                    ItemCode = dto.ItemCode,
+                    Category = dto.Category,
+                    CurrentStock = dto.CurrentStock,
+                    MinimumStock = dto.MinimumStock,
                     ExpiryDate = dto.ExpiryDate,
                     UnitPrice = dto.UnitPrice
                 };
 
-                _context.Inventories.Add(inventory);
+                _context.Inventory.Add(inventory);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetInventoryItem), new { id = inventory.InventoryId }, new
+                return CreatedAtAction(nameof(GetInventoryItem), new { id = inventory.ItemId }, new
                 {
-                    inventory.InventoryId,
-                    inventory.MedicineId,
-                    inventory.Quantity,
-                    inventory.ReorderLevel,
+                    inventory.ItemId,
+                    inventory.ItemName,
+                    inventory.CurrentStock,
+                    inventory.MinimumStock,
                     inventory.ExpiryDate,
                     inventory.UnitPrice
                 });
@@ -134,20 +133,20 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var inventory = await _context.Inventories.FindAsync(id);
+                var inventory = await _context.Inventory.FindAsync(id);
                 if (inventory == null)
                     return NotFound(new { message = "Inventory item not found" });
 
-                if (dto.Quantity.HasValue && dto.Quantity >= 0)
-                    inventory.Quantity = dto.Quantity.Value;
-                if (dto.ReorderLevel.HasValue && dto.ReorderLevel >= 0)
-                    inventory.ReorderLevel = dto.ReorderLevel.Value;
+                if (dto.CurrentStock.HasValue && dto.CurrentStock >= 0)
+                    inventory.CurrentStock = dto.CurrentStock.Value;
+                if (dto.MinimumStock.HasValue && dto.MinimumStock >= 0)
+                    inventory.MinimumStock = dto.MinimumStock.Value;
                 if (dto.ExpiryDate.HasValue)
                     inventory.ExpiryDate = dto.ExpiryDate.Value;
                 if (dto.UnitPrice.HasValue && dto.UnitPrice > 0)
                     inventory.UnitPrice = dto.UnitPrice.Value;
 
-                _context.Inventories.Update(inventory);
+                _context.Inventory.Update(inventory);
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Inventory updated successfully" });
@@ -166,11 +165,11 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var inventory = await _context.Inventories.FindAsync(id);
+                var inventory = await _context.Inventory.FindAsync(id);
                 if (inventory == null)
                     return NotFound(new { message = "Inventory item not found" });
 
-                _context.Inventories.Remove(inventory);
+                _context.Inventory.Remove(inventory);
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Inventory item deleted successfully" });
@@ -189,18 +188,17 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var lowStockItems = await _context.Inventories
-                    .Where(i => i.Quantity <= i.ReorderLevel)
-                    .Include(i => i.Medicine)
+                var lowStockItems = await _context.Inventory
+                    .Where(i => i.CurrentStock <= i.MinimumStock)
                     .Select(i => new
                     {
-                        i.InventoryId,
-                        i.Medicine.MedicineName,
-                        i.Quantity,
-                        i.ReorderLevel,
-                        Shortage = i.ReorderLevel - i.Quantity,
+                        i.ItemId,
+                        i.ItemName,
+                        i.CurrentStock,
+                        i.MinimumStock,
+                        Shortage = i.MinimumStock - i.CurrentStock,
                         i.UnitPrice,
-                        EstimatedCost = (i.ReorderLevel - i.Quantity) * i.UnitPrice
+                        EstimatedCost = (i.MinimumStock - i.CurrentStock) * i.UnitPrice
                     })
                     .ToListAsync();
 
@@ -223,19 +221,19 @@ namespace HospitalManagementSystem.API.Controllers
                 if (dto.Quantity <= 0)
                     return BadRequest(new { message = "Reorder quantity must be greater than 0" });
 
-                var inventory = await _context.Inventories.FindAsync(id);
+                var inventory = await _context.Inventory.FindAsync(id);
                 if (inventory == null)
                     return NotFound(new { message = "Inventory item not found" });
 
-                inventory.Quantity += dto.Quantity;
-                _context.Inventories.Update(inventory);
+                inventory.CurrentStock += dto.Quantity;
+                _context.Inventory.Update(inventory);
                 await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
                     message = "Medicine reordered successfully",
-                    inventory.InventoryId,
-                    inventory.Quantity,
+                    inventory.ItemId,
+                    inventory.CurrentStock,
                     ReorderedAmount = dto.Quantity
                 });
             }
@@ -253,16 +251,15 @@ namespace HospitalManagementSystem.API.Controllers
         {
             try
             {
-                var expiredItems = await _context.Inventories
+                var expiredItems = await _context.Inventory
                     .Where(i => i.ExpiryDate < DateTime.Now)
-                    .Include(i => i.Medicine)
                     .Select(i => new
                     {
-                        i.InventoryId,
-                        i.Medicine.MedicineName,
-                        i.Quantity,
+                        i.ItemId,
+                        i.ItemName,
+                        i.CurrentStock,
                         i.ExpiryDate,
-                        DaysExpired = (DateTime.Now - i.ExpiryDate).Days
+                        DaysExpired = i.ExpiryDate.HasValue ? (DateTime.Now - i.ExpiryDate.Value).Days : 0
                     })
                     .ToListAsync();
 
@@ -278,17 +275,19 @@ namespace HospitalManagementSystem.API.Controllers
     // DTOs
     public class CreateInventoryDto
     {
-        public int MedicineId { get; set; }
-        public int Quantity { get; set; }
-        public int ReorderLevel { get; set; }
+        public string ItemName { get; set; }
+        public string ItemCode { get; set; }
+        public string Category { get; set; }
+        public int CurrentStock { get; set; }
+        public int MinimumStock { get; set; }
         public DateTime ExpiryDate { get; set; }
         public decimal UnitPrice { get; set; }
     }
 
     public class UpdateInventoryDto
     {
-        public int? Quantity { get; set; }
-        public int? ReorderLevel { get; set; }
+        public int? CurrentStock { get; set; }
+        public int? MinimumStock { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public decimal? UnitPrice { get; set; }
     }

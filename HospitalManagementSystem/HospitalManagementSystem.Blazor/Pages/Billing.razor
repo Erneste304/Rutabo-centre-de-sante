@@ -1,0 +1,274 @@
+@page "/billing"
+@inject NavigationManager Navigation
+@inject BillingService BillingService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Billing - Hospital Management System</PageTitle>
+
+<div class="billing-container">
+    <div class="page-header">
+        <div>
+            <h1>Billing</h1>
+            <p>Manage invoices and payments</p>
+        </div>
+        <a href="/billing/new-invoice" class="btn btn-primary">+ New Invoice</a>
+    </div>
+
+    <div class="billing-stats">
+        <div class="stat-card">
+            <h3>Total Revenue</h3>
+            <p class="stat-value">$@totalRevenue.ToString("N0")</p>
+            <span class="stat-change positive">All time</span>
+        </div>
+        <div class="stat-card">
+            <h3>Pending Payments</h3>
+            <p class="stat-value">$@pendingAmount.ToString("N0")</p>
+            <span class="stat-change">@pendingCount invoices</span>
+        </div>
+        <div class="stat-card">
+            <h3>Paid</h3>
+            <p class="stat-value">$@paidAmount.ToString("N0")</p>
+            <span class="stat-change positive">@paidCount invoices</span>
+        </div>
+        <div class="stat-card">
+            <h3>Overdue</h3>
+            <p class="stat-value">@overdueCount</p>
+            <span class="stat-change negative">invoices overdue</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Invoices</h2>
+            <div class="filter-controls">
+                <input type="text" placeholder="Search patient..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" style="width:180px" />
+                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Partial">Partial</option>
+                    <option value="Overdue">Overdue</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading invoices...</p>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+            else if (filteredBillings?.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Bill #</th>
+                                <th>Patient</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Balance</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var bill in filteredBillings)
+                            {
+                                <tr>
+                                    <td><strong>@bill.BillNumber</strong></td>
+                                    <td>@bill.PatientName</td>
+                                    <td class="amount">$@bill.TotalAmount.ToString("N2")</td>
+                                    <td class="amount">$@bill.PaidAmount.ToString("N2")</td>
+                                    <td class="amount @(bill.BalanceDue > 0 ? "text-danger" : "text-success")">
+                                        $@bill.BalanceDue.ToString("N2")
+                                    </td>
+                                    <td>@bill.BillDate.ToString("MMM dd, yyyy")</td>
+                                    <td><span class="badge badge-@bill.PaymentStatus.ToLower()">@bill.PaymentStatus</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-icon" title="View" @onclick="() => ViewBill(bill.BillId)">👁️</button>
+                                            @if (bill.PaymentStatus == "Pending" || bill.PaymentStatus == "Partial")
+                                            {
+                                                <button class="btn-icon" title="Record Payment" @onclick="() => RecordPayment(bill.BillId)">💳</button>
+                                            }
+                                            <button class="btn-icon" title="Print" @onclick="() => PrintBill(bill.BillId)">🖨️</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No invoices found</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+@if (showPaymentModal && selectedBill != null)
+{
+    <div class="modal-overlay" @onclick="CloseModal">
+        <div class="modal-content" @onclick:stopPropagation="true">
+            <div class="modal-header">
+                <h3>Record Payment - @selectedBill.BillNumber</h3>
+                <button class="btn-close" @onclick="CloseModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Balance Due: <strong>$@selectedBill.BalanceDue.ToString("N2")</strong></p>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" @bind="paymentAmount" class="form-control" max="@selectedBill.BalanceDue" />
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select @bind="paymentMethod" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                <button class="btn btn-primary" @onclick="SubmitPayment" disabled="@isSubmitting">
+                    @(isSubmitting ? "Processing..." : "Record Payment")
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private List<BillingModel> allBillings = new();
+    private List<BillingModel> filteredBillings = new();
+    private string searchQuery = "";
+    private string selectedStatus = "";
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    // Stats
+    private decimal totalRevenue => allBillings.Sum(b => b.TotalAmount);
+    private decimal pendingAmount => allBillings.Where(b => b.PaymentStatus == "Pending").Sum(b => b.BalanceDue);
+    private int pendingCount => allBillings.Count(b => b.PaymentStatus == "Pending");
+    private decimal paidAmount => allBillings.Where(b => b.PaymentStatus == "Paid").Sum(b => b.PaidAmount);
+    private int paidCount => allBillings.Count(b => b.PaymentStatus == "Paid");
+    private int overdueCount => allBillings.Count(b => b.DueDate.HasValue && b.DueDate < DateTime.Today && b.PaymentStatus != "Paid");
+
+    // Payment modal
+    private bool showPaymentModal = false;
+    private BillingModel? selectedBill;
+    private decimal paymentAmount;
+    private string paymentMethod = "Cash";
+    private bool isSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBillings();
+    }
+
+    private async Task LoadBillings()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            allBillings = await BillingService.GetBillingsAsync();
+            ApplyFilters();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load billings: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? "";
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        filteredBillings = allBillings
+            .Where(b => string.IsNullOrEmpty(searchQuery) ||
+                   b.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                   b.BillNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .Where(b => string.IsNullOrEmpty(selectedStatus) ||
+                   b.PaymentStatus.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(b => b.BillDate)
+            .ToList();
+    }
+
+    private void ViewBill(int id) => Navigation.NavigateTo($"/billing/invoice/{id}");
+
+    private void RecordPayment(int id)
+    {
+        selectedBill = allBillings.FirstOrDefault(b => b.BillId == id);
+        if (selectedBill != null)
+        {
+            paymentAmount = selectedBill.BalanceDue;
+            paymentMethod = "Cash";
+            showPaymentModal = true;
+        }
+    }
+
+    private async Task SubmitPayment()
+    {
+        if (selectedBill == null || paymentAmount <= 0) return;
+        isSubmitting = true;
+        try
+        {
+            var payment = new PaymentModel
+            {
+                BillId = selectedBill.BillId,
+                Amount = paymentAmount,
+                PaymentMethod = paymentMethod,
+                PaymentDate = DateTime.Now,
+                PaymentStatus = "Completed"
+            };
+            var success = await BillingService.ProcessPaymentAsync(selectedBill.BillId, payment);
+            if (success)
+            {
+                CloseModal();
+                await LoadBillings();
+            }
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void CloseModal()
+    {
+        showPaymentModal = false;
+        selectedBill = null;
+    }
+
+    private async Task PrintBill(int id)
+    {
+        await JSRuntime.InvokeVoidAsync("window.print");
+    }
+}

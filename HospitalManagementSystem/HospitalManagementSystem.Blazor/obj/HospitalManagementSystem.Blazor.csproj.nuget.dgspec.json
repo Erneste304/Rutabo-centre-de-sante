@@ -52,33 +52,33 @@
             "Microsoft.AspNetCore.App.Internal.Assets": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.5, )",
+              "version": "[10.0.6, )",
               "autoReferenced": true
             },
             "Microsoft.AspNetCore.Components.WebAssembly": {
               "target": "Package",
-              "version": "[10.0.2, )"
+              "version": "[10.0.0, )"
             },
             "Microsoft.AspNetCore.Components.WebAssembly.DevServer": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.2, )"
+              "version": "[10.0.0, )"
             },
             "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
               "target": "Package",
-              "version": "[10.0.105, )",
+              "version": "[10.0.106, )",
               "autoReferenced": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.5, )",
+              "version": "[10.0.6, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.5, )",
+              "version": "[10.0.6, )",
               "autoReferenced": true
             }
           },
@@ -96,7 +96,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[10.0.5, 10.0.5]"
+              "version": "[10.0.6, 10.0.6]"
             }
           ],
           "frameworkReferences": {
@@ -104,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.106/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -443,7 +443,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.106/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

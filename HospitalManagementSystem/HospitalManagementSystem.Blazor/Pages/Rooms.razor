@@ -1,0 +1,175 @@
+@page "/rooms"
+@inject NavigationManager Navigation
+
+<PageTitle>Rooms & Beds - Hospital Management System</PageTitle>
+
+<div class="rooms-container">
+    <div class="page-header">
+        <div>
+            <h1>Rooms & Beds</h1>
+            <p>Manage hospital rooms and bed availability</p>
+        </div>
+        <a href="/rooms/new" class="btn btn-primary">+ Add Room</a>
+    </div>
+
+    <div class="rooms-stats">
+        <div class="stat-card">
+            <h3>Total Beds</h3>
+            <p class="stat-value">@totalBeds</p>
+        </div>
+        <div class="stat-card">
+            <h3>Occupied</h3>
+            <p class="stat-value">@occupiedBeds</p>
+        </div>
+        <div class="stat-card">
+            <h3>Available</h3>
+            <p class="stat-value">@(totalBeds - occupiedBeds)</p>
+        </div>
+        <div class="stat-card">
+            <h3>Occupancy Rate</h3>
+            <p class="stat-value">@occupancyPercentage%</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Room Status</h2>
+            <div class="filter-controls">
+                <select @bind="selectedFloor" @bind:event="oninput" class="filter-select">
+                    <option value="">All Floors</option>
+                    <option value="1">Floor 1</option>
+                    <option value="2">Floor 2</option>
+                    <option value="3">Floor 3</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading rooms...</p>
+                </div>
+            }
+            else if (rooms?.Count > 0)
+            {
+                <div class="rooms-grid">
+                    @foreach (var room in rooms)
+                    {
+                        <div class="room-card @(room.IsOccupied ? "occupied" : "available")">
+                            <div class="room-header">
+                                <h3>Room @room.RoomNumber</h3>
+                                <span class="badge badge-@(room.IsOccupied ? "occupied" : "available")">
+                                    @(room.IsOccupied ? "Occupied" : "Available")
+                                </span>
+                            </div>
+                            <div class="room-details">
+                                <p><strong>Type:</strong> @room.RoomType</p>
+                                <p><strong>Floor:</strong> @room.Floor</p>
+                                <p><strong>Beds:</strong> @room.TotalBeds</p>
+                                @if (room.IsOccupied)
+                                {
+                                    <p><strong>Patient:</strong> @room.PatientName</p>
+                                    <p><strong>Admitted:</strong> @room.AdmissionDate.ToString("MMM dd, yyyy")</p>
+                                }
+                            </div>
+                            <div class="room-actions">
+                                <button class="btn-icon" title="View" @onclick="() => ViewRoom(room.Id)">👁️</button>
+                                <button class="btn-icon" title="Edit" @onclick="() => EditRoom(room.Id)">✏️</button>
+                                @if (room.IsOccupied)
+                                {
+                                    <button class="btn-icon" title="Discharge" @onclick="() => DischargePatient(room.Id)">✓</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No rooms found</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<RoomDto> rooms = new();
+    private string selectedFloor = "";
+    private bool isLoading = true;
+    private int totalBeds = 0;
+    private int occupiedBeds = 0;
+    private int occupancyPercentage = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+
+            rooms = new List<RoomDto>
+            {
+                new RoomDto { Id = 1, RoomNumber = "101", RoomType = "Single", Floor = 1, TotalBeds = 1, IsOccupied = true, PatientName = "John Doe", AdmissionDate = DateTime.Now.AddDays(-5) },
+                new RoomDto { Id = 2, RoomNumber = "102", RoomType = "Double", Floor = 1, TotalBeds = 2, IsOccupied = true, PatientName = "Jane Smith", AdmissionDate = DateTime.Now.AddDays(-3) },
+                new RoomDto { Id = 3, RoomNumber = "103", RoomType = "Single", Floor = 1, TotalBeds = 1, IsOccupied = false },
+                new RoomDto { Id = 4, RoomNumber = "201", RoomType = "ICU", Floor = 2, TotalBeds = 1, IsOccupied = true, PatientName = "Bob Wilson", AdmissionDate = DateTime.Now.AddDays(-1) },
+                new RoomDto { Id = 5, RoomNumber = "202", RoomType = "Double", Floor = 2, TotalBeds = 2, IsOccupied = false },
+                new RoomDto { Id = 6, RoomNumber = "301", RoomType = "Single", Floor = 3, TotalBeds = 1, IsOccupied = false },
+            };
+
+            totalBeds = rooms.Sum(r => r.TotalBeds);
+            occupiedBeds = rooms.Where(r => r.IsOccupied).Sum(r => r.TotalBeds);
+            occupancyPercentage = (occupiedBeds * 100) / totalBeds;
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading rooms: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        selectedFloor = e.Value?.ToString() ?? "";
+        // Apply filter
+    }
+
+    private void ViewRoom(int id)
+    {
+        Navigation.NavigateTo($"/rooms/{id}");
+    }
+
+    private void EditRoom(int id)
+    {
+        Navigation.NavigateTo($"/rooms/{id}/edit");
+    }
+
+    private async Task DischargePatient(int id)
+    {
+        var room = rooms.FirstOrDefault(r => r.Id == id);
+        if (room != null)
+        {
+            room.IsOccupied = false;
+            room.PatientName = null;
+            occupiedBeds--;
+            occupancyPercentage = (occupiedBeds * 100) / totalBeds;
+        }
+    }
+
+    public class RoomDto
+    {
+        public int Id { get; set; }
+        public string RoomNumber { get; set; }
+        public string RoomType { get; set; }
+        public int Floor { get; set; }
+        public int TotalBeds { get; set; }
+        public bool IsOccupied { get; set; }
+        public string PatientName { get; set; }
+        public DateTime AdmissionDate { get; set; }
+    }
+}

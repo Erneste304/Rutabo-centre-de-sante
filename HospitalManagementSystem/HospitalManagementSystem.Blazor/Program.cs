@@ -22,5 +22,9 @@ builder.Services.AddScoped<BloodBankService>();
 builder.Services.AddScoped<PatientFlowService>();
 builder.Services.AddScoped<AppointmentService>();
 builder.Services.AddScoped<BillingService>();
+builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<DoctorService>();
+builder.Services.AddScoped<InventoryService>();
+builder.Services.AddScoped<PharmacyService>();
 
 await builder.Build().RunAsync();

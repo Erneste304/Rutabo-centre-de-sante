@@ -25,9 +25,10 @@ namespace HospitalManagementSystem.API.Controllers
             var totalRevenue = await _context.Billings.SumAsync(b => b.TotalAmount);
             
             // New real stats
-            var activeShifts = await _context.EmployeeShifts.CountAsync(s => s.StartTime <= DateTime.Now && s.EndTime >= DateTime.Now);
+            var now = DateTime.Now;
+            var activeShifts = await _context.EmployeeShifts.CountAsync(s => s.ShiftDate == now.Date && s.StartTime <= now.TimeOfDay && s.EndTime >= now.TimeOfDay);
             var totalDepartments = await _context.Departments.CountAsync();
-            var claimsProcessed = await _context.Billings.CountAsync(b => b.Status == "Paid");
+            var claimsProcessed = await _context.Billings.CountAsync(b => b.PaymentStatus == "Paid");
             
             // Mocked but consistent stats for UI
             var avgWaitTime = 18;

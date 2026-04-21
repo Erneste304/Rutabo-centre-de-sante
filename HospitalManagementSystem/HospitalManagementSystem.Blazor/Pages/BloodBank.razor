@@ -1,0 +1,194 @@
+@page "/blood-bank"
+@inject NavigationManager Navigation
+
+<PageTitle>Blood Bank - Hospital Management System</PageTitle>
+
+<div class="blood-bank-container">
+    <div class="page-header">
+        <div>
+            <h1>Blood Bank</h1>
+            <p>Manage blood inventory and donations</p>
+        </div>
+        <a href="/blood-bank/new-donation" class="btn btn-primary">+ Record Donation</a>
+    </div>
+
+    <div class="blood-stats">
+        @foreach (var bloodType in bloodInventory)
+        {
+            <div class="blood-card">
+                <div class="blood-type">@bloodType.BloodType</div>
+                <div class="blood-info">
+                    <p class="stock-level">@bloodType.Units Units</p>
+                    <div class="stock-bar">
+                        <div class="stock-fill" style="width: @(bloodType.StockPercentage)%"></div>
+                    </div>
+                    <p class="stock-status">@(bloodType.Units > 10 ? "Adequate" : "Low Stock")</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Blood Requests</h2>
+            <div class="filter-controls">
+                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="fulfilled">Fulfilled</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading blood requests...</p>
+                </div>
+            }
+            else if (requests?.Count > 0)
+            {
+                <div class="requests-list">
+                    @foreach (var request in requests)
+                    {
+                        <div class="request-item">
+                            <div class="request-header">
+                                <h3>@request.PatientName</h3>
+                                <span class="badge badge-@request.Status.ToLower()">@request.Status</span>
+                            </div>
+                            <div class="request-details">
+                                <p><strong>Blood Type:</strong> <span class="blood-type-badge">@request.BloodType</span></p>
+                                <p><strong>Units Needed:</strong> @request.UnitsNeeded</p>
+                                <p><strong>Doctor:</strong> @request.DoctorName</p>
+                                <p><strong>Requested:</strong> @request.RequestDate.ToString("MMM dd, yyyy HH:mm")</p>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-icon" title="View" @onclick="() => ViewRequest(request.Id)">👁️</button>
+                                @if (request.Status == "Pending")
+                                {
+                                    <button class="btn-icon" title="Fulfill" @onclick="() => FulfillRequest(request.Id)">✓</button>
+                                }
+                                <button class="btn-icon btn-danger" title="Cancel" @onclick="() => CancelRequest(request.Id)">✕</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No blood requests found</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<BloodInventoryDto> bloodInventory = new();
+    private List<BloodRequestDto> requests = new();
+    private string selectedStatus = "";
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+
+            bloodInventory = new List<BloodInventoryDto>
+            {
+                new BloodInventoryDto { BloodType = "O+", Units = 45, MaxUnits = 50 },
+                new BloodInventoryDto { BloodType = "O-", Units = 12, MaxUnits = 30 },
+                new BloodInventoryDto { BloodType = "A+", Units = 38, MaxUnits = 50 },
+                new BloodInventoryDto { BloodType = "A-", Units = 8, MaxUnits = 20 },
+                new BloodInventoryDto { BloodType = "B+", Units = 25, MaxUnits = 40 },
+                new BloodInventoryDto { BloodType = "B-", Units = 5, MaxUnits = 15 },
+                new BloodInventoryDto { BloodType = "AB+", Units = 15, MaxUnits = 30 },
+                new BloodInventoryDto { BloodType = "AB-", Units = 3, MaxUnits = 15 },
+            };
+
+            requests = new List<BloodRequestDto>
+            {
+                new BloodRequestDto
+                {
+                    Id = 1,
+                    PatientName = "John Doe",
+                    BloodType = "O+",
+                    UnitsNeeded = 2,
+                    DoctorName = "Dr. Smith",
+                    RequestDate = DateTime.Now.AddHours(-2),
+                    Status = "Pending"
+                },
+                new BloodRequestDto
+                {
+                    Id = 2,
+                    PatientName = "Jane Smith",
+                    BloodType = "A+",
+                    UnitsNeeded = 3,
+                    DoctorName = "Dr. Johnson",
+                    RequestDate = DateTime.Now.AddHours(-5),
+                    Status = "Fulfilled"
+                },
+            };
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading blood bank data: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        selectedStatus = e.Value?.ToString() ?? "";
+        // Apply filter
+    }
+
+    private void ViewRequest(int id)
+    {
+        Navigation.NavigateTo($"/blood-bank/request/{id}");
+    }
+
+    private async Task FulfillRequest(int id)
+    {
+        var request = requests.FirstOrDefault(r => r.Id == id);
+        if (request != null)
+        {
+            request.Status = "Fulfilled";
+        }
+    }
+
+    private async Task CancelRequest(int id)
+    {
+        var request = requests.FirstOrDefault(r => r.Id == id);
+        if (request != null)
+        {
+            request.Status = "Cancelled";
+        }
+    }
+
+    public class BloodInventoryDto
+    {
+        public string BloodType { get; set; }
+        public int Units { get; set; }
+        public int MaxUnits { get; set; }
+        public int StockPercentage => (Units * 100) / MaxUnits;
+    }
+
+    public class BloodRequestDto
+    {
+        public int Id { get; set; }
+        public string PatientName { get; set; }
+        public string BloodType { get; set; }
+        public int UnitsNeeded { get; set; }
+        public string DoctorName { get; set; }
+        public DateTime RequestDate { get; set; }
+        public string Status { get; set; }
+    }
+}

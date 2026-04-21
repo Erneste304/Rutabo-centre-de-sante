@@ -1,0 +1,186 @@
+@page "/emergency"
+@inject NavigationManager Navigation
+
+<PageTitle>Emergency Alerts - Hospital Management System</PageTitle>
+
+<div class="emergency-container">
+    <div class="page-header">
+        <div>
+            <h1>Emergency Alerts</h1>
+            <p>Monitor and manage emergency situations</p>
+        </div>
+        <button class="btn btn-danger" @onclick="CreateEmergencyAlert">🚨 New Emergency Alert</button>
+    </div>
+
+    <div class="emergency-stats">
+        <div class="stat-card critical">
+            <h3>Critical</h3>
+            <p class="stat-value">@criticalCount</p>
+        </div>
+        <div class="stat-card high">
+            <h3>High Priority</h3>
+            <p class="stat-value">@highPriorityCount</p>
+        </div>
+        <div class="stat-card medium">
+            <h3>Medium Priority</h3>
+            <p class="stat-value">@mediumPriorityCount</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Active Alerts</h2>
+            <div class="filter-controls">
+                <select @bind="selectedPriority" @bind:event="oninput" class="filter-select">
+                    <option value="">All Priorities</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading alerts...</p>
+                </div>
+            }
+            else if (alerts?.Count > 0)
+            {
+                <div class="alerts-list">
+                    @foreach (var alert in alerts)
+                    {
+                        <div class="alert-item alert-@alert.Priority.ToLower()">
+                            <div class="alert-icon">🚨</div>
+                            <div class="alert-content">
+                                <h3>@alert.Title</h3>
+                                <p class="alert-description">@alert.Description</p>
+                                <div class="alert-meta">
+                                    <span><strong>Location:</strong> @alert.Location</span>
+                                    <span><strong>Time:</strong> @alert.CreatedAt.ToString("HH:mm")</span>
+                                    <span><strong>Reported by:</strong> @alert.ReportedBy</span>
+                                </div>
+                            </div>
+                            <div class="alert-actions">
+                                <span class="badge badge-@alert.Priority.ToLower()">@alert.Priority</span>
+                                <button class="btn-icon" title="Acknowledge" @onclick="() => AcknowledgeAlert(alert.Id)">✓</button>
+                                <button class="btn-icon" title="Resolve" @onclick="() => ResolveAlert(alert.Id)">✓✓</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No active emergency alerts</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<EmergencyAlertDto> alerts = new();
+    private string selectedPriority = "";
+    private bool isLoading = true;
+    private int criticalCount = 0;
+    private int highPriorityCount = 0;
+    private int mediumPriorityCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+
+            alerts = new List<EmergencyAlertDto>
+            {
+                new EmergencyAlertDto
+                {
+                    Id = 1,
+                    Title = "Patient Cardiac Arrest",
+                    Description = "Patient in Room 201 experiencing cardiac arrest. CPR in progress.",
+                    Location = "Room 201 - ICU",
+                    Priority = "Critical",
+                    CreatedAt = DateTime.Now.AddMinutes(-5),
+                    ReportedBy = "Dr. Smith"
+                },
+                new EmergencyAlertDto
+                {
+                    Id = 2,
+                    Title = "Severe Allergic Reaction",
+                    Description = "Patient experiencing severe allergic reaction. Epinephrine administered.",
+                    Location = "Emergency Room",
+                    Priority = "High",
+                    CreatedAt = DateTime.Now.AddMinutes(-15),
+                    ReportedBy = "Nurse Sarah"
+                },
+                new EmergencyAlertDto
+                {
+                    Id = 3,
+                    Title = "Equipment Malfunction",
+                    Description = "Ventilator in Room 105 requires immediate maintenance.",
+                    Location = "Room 105",
+                    Priority = "High",
+                    CreatedAt = DateTime.Now.AddMinutes(-30),
+                    ReportedBy = "Technician John"
+                },
+            };
+
+            criticalCount = alerts.Count(a => a.Priority == "Critical");
+            highPriorityCount = alerts.Count(a => a.Priority == "High");
+            mediumPriorityCount = alerts.Count(a => a.Priority == "Medium");
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading alerts: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        selectedPriority = e.Value?.ToString() ?? "";
+        // Apply filter
+    }
+
+    private void CreateEmergencyAlert()
+    {
+        Navigation.NavigateTo("/emergency/new");
+    }
+
+    private async Task AcknowledgeAlert(int id)
+    {
+        var alert = alerts.FirstOrDefault(a => a.Id == id);
+        if (alert != null)
+        {
+            // Mark as acknowledged
+        }
+    }
+
+    private async Task ResolveAlert(int id)
+    {
+        var alert = alerts.FirstOrDefault(a => a.Id == id);
+        if (alert != null)
+        {
+            alerts.Remove(alert);
+        }
+    }
+
+    public class EmergencyAlertDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Location { get; set; }
+        public string Priority { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string ReportedBy { get; set; }
+    }
+}

@@ -1,0 +1,164 @@
+@page "/medical-records"
+@inject NavigationManager Navigation
+
+<PageTitle>Medical Records - Hospital Management System</PageTitle>
+
+<div class="medical-records-container">
+    <div class="page-header">
+        <div>
+            <h1>Medical Records</h1>
+            <p>View and manage patient medical history</p>
+        </div>
+        <a href="/medical-records/new" class="btn btn-primary">+ New Record</a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search by patient name or ID..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" />
+            </div>
+            <div class="filter-controls">
+                <select @bind="selectedRecordType" @bind:event="oninput" class="filter-select">
+                    <option value="">All Types</option>
+                    <option value="diagnosis">Diagnosis</option>
+                    <option value="lab-test">Lab Test</option>
+                    <option value="prescription">Prescription</option>
+                    <option value="surgery">Surgery</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading medical records...</p>
+                </div>
+            }
+            else if (records?.Count > 0)
+            {
+                <div class="records-timeline">
+                    @foreach (var record in records)
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="record-header">
+                                    <h3>@record.PatientName</h3>
+                                    <span class="badge badge-@record.RecordType.ToLower()">@record.RecordType</span>
+                                </div>
+                                <div class="record-details">
+                                    <p><strong>Date:</strong> @record.RecordDate.ToString("MMM dd, yyyy HH:mm")</p>
+                                    <p><strong>Doctor:</strong> @record.DoctorName</p>
+                                    <p><strong>Description:</strong> @record.Description</p>
+                                </div>
+                                <div class="record-actions">
+                                    <button class="btn-icon" title="View" @onclick="() => ViewRecord(record.Id)">👁️</button>
+                                    <button class="btn-icon" title="Edit" @onclick="() => EditRecord(record.Id)">✏️</button>
+                                    <button class="btn-icon" title="Download" @onclick="() => DownloadRecord(record.Id)">⬇️</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No medical records found</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<MedicalRecordDto> records = new();
+    private string searchQuery = "";
+    private string selectedRecordType = "";
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+
+            records = new List<MedicalRecordDto>
+            {
+                new MedicalRecordDto
+                {
+                    Id = 1,
+                    PatientName = "John Doe",
+                    DoctorName = "Dr. Smith",
+                    RecordDate = DateTime.Now.AddDays(-5),
+                    RecordType = "Diagnosis",
+                    Description = "Patient diagnosed with hypertension. Prescribed medication and lifestyle changes recommended."
+                },
+                new MedicalRecordDto
+                {
+                    Id = 2,
+                    PatientName = "Jane Smith",
+                    DoctorName = "Dr. Johnson",
+                    RecordDate = DateTime.Now.AddDays(-3),
+                    RecordType = "Lab Test",
+                    Description = "Blood test results: All values within normal range. No abnormalities detected."
+                },
+                new MedicalRecordDto
+                {
+                    Id = 3,
+                    PatientName = "Bob Wilson",
+                    DoctorName = "Dr. Brown",
+                    RecordDate = DateTime.Now.AddDays(-1),
+                    RecordType = "Surgery",
+                    Description = "Appendectomy performed successfully. Patient recovering well."
+                },
+            };
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading medical records: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? "";
+        // Apply search filter
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        selectedRecordType = e.Value?.ToString() ?? "";
+        // Apply filter
+    }
+
+    private void ViewRecord(int id)
+    {
+        Navigation.NavigateTo($"/medical-records/{id}");
+    }
+
+    private void EditRecord(int id)
+    {
+        Navigation.NavigateTo($"/medical-records/{id}/edit");
+    }
+
+    private void DownloadRecord(int id)
+    {
+        // Download logic
+    }
+
+    public class MedicalRecordDto
+    {
+        public int Id { get; set; }
+        public string PatientName { get; set; }
+        public string DoctorName { get; set; }
+        public DateTime RecordDate { get; set; }
+        public string RecordType { get; set; }
+        public string Description { get; set; }
+    }
+}

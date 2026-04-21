@@ -111,9 +111,9 @@ namespace HospitalManagementSystem.API.Controllers
                 if (room == null)
                     return NotFound(new { message = "Room not found" });
 
-                var occupiedBeds = room.RoomAssignments.Count(ra => ra.DischargeDate == null);
-                var availableBeds = room.Capacity - occupiedBeds;
-                var occupancyPercentage = (occupiedBeds * 100) / room.Capacity;
+                var occupiedBeds = room.RoomAssignments.Count(ra => ra.EndDate == null);
+                var availableBeds = room.BedCount - occupiedBeds;
+                var occupancyPercentage = (occupiedBeds * 100) / room.BedCount;
 
                 var notification = new BedAvailabilityNotification
                 {
@@ -122,7 +122,7 @@ namespace HospitalManagementSystem.API.Controllers
                     Status = "Pending",
                     AvailableBeds = availableBeds,
                     OccupiedBeds = occupiedBeds,
-                    TotalCapacity = room.Capacity,
+                    TotalCapacity = room.BedCount,
                     OccupancyPercentage = occupancyPercentage,
                     Message = GenerateMessage(dto.EventType, room.RoomNumber, availableBeds, occupancyPercentage),
                     CreatedAt = DateTime.Now,
@@ -286,9 +286,9 @@ namespace HospitalManagementSystem.API.Controllers
             try
             {
                 var totalRooms = await _context.Rooms.CountAsync();
-                var totalCapacity = await _context.Rooms.SumAsync(r => r.Capacity);
+                var totalCapacity = await _context.Rooms.SumAsync(r => r.BedCount);
                 var occupiedBeds = await _context.RoomAssignments
-                    .Where(ra => ra.DischargeDate == null)
+                    .Where(ra => ra.EndDate == null)
                     .CountAsync();
 
                 var availableBeds = totalCapacity - occupiedBeds;
@@ -296,7 +296,7 @@ namespace HospitalManagementSystem.API.Controllers
 
                 var criticalRooms = await _context.Rooms
                     .Include(r => r.RoomAssignments)
-                    .Where(r => r.RoomAssignments.Count(ra => ra.DischargeDate == null) >= r.Capacity)
+                    .Where(r => r.RoomAssignments.Count(ra => ra.EndDate == null) >= r.BedCount)
                     .CountAsync();
 
                 var urgentNotifications = await _context.BedAvailabilityNotifications

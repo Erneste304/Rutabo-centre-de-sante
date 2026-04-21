@@ -1,0 +1,159 @@
+@page "/reports"
+
+<PageTitle>Reports - Hospital Management System</PageTitle>
+
+<div class="reports-container">
+    <div class="page-header">
+        <div>
+            <h1>Reports & Analytics</h1>
+            <p>View hospital statistics and performance metrics</p>
+        </div>
+        <button class="btn btn-primary" @onclick="ExportReport">📥 Export Report</button>
+    </div>
+
+    <div class="reports-grid">
+        <div class="card">
+            <div class="card-header">
+                <h2>Patient Statistics</h2>
+            </div>
+            <div class="card-body">
+                <div class="stat-item">
+                    <span class="label">Total Patients</span>
+                    <span class="value">245</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">New Patients (This Month)</span>
+                    <span class="value">32</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Discharged (This Month)</span>
+                    <span class="value">28</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Readmission Rate</span>
+                    <span class="value">8.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Revenue Statistics</h2>
+            </div>
+            <div class="card-body">
+                <div class="stat-item">
+                    <span class="label">Total Revenue (This Month)</span>
+                    <span class="value">$45,230</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Average Bill Amount</span>
+                    <span class="value">$1,850</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Outstanding Payments</span>
+                    <span class="value">$12,450</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Collection Rate</span>
+                    <span class="value">92.3%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Appointment Statistics</h2>
+            </div>
+            <div class="card-body">
+                <div class="stat-item">
+                    <span class="label">Total Appointments (This Month)</span>
+                    <span class="value">156</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Completed</span>
+                    <span class="value">148</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Cancelled</span>
+                    <span class="value">5</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">No-Show Rate</span>
+                    <span class="value">3.2%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Staff Performance</h2>
+            </div>
+            <div class="card-body">
+                <div class="stat-item">
+                    <span class="label">Total Staff</span>
+                    <span class="value">42</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">On Duty</span>
+                    <span class="value">38</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">On Leave</span>
+                    <span class="value">3</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Availability Rate</span>
+                    <span class="value">90.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Bed Occupancy Trend</h2>
+            </div>
+            <div class="card-body">
+                <div class="chart-placeholder">
+                    <p>📊 Occupancy Rate Chart</p>
+                    <p style="font-size: 12px; color: #94a3b8;">Chart visualization would be displayed here</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Department Performance</h2>
+            </div>
+            <div class="card-body">
+                <div class="department-item">
+                    <span class="dept-name">Cardiology</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <span class="dept-value">85%</span>
+                </div>
+                <div class="department-item">
+                    <span class="dept-name">Neurology</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%"></div>
+                    </div>
+                    <span class="dept-value">78%</span>
+                </div>
+                <div class="department-item">
+                    <span class="dept-name">Emergency</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 92%"></div>
+                    </div>
+                    <span class="dept-value">92%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void ExportReport()
+    {
+        // Export logic
+    }
+}

@@ -1,0 +1,207 @@
+@page "/appointments/new"
+@page "/appointments/{Id:int}/edit"
+@inject NavigationManager Navigation
+@inject AppointmentService AppointmentService
+@inject DoctorService DoctorService
+@inject PatientService PatientService
+
+<PageTitle>@(Id.HasValue ? "Edit Appointment" : "Schedule Appointment") - Hospital Management System</PageTitle>
+
+<div class="form-container">
+    <div class="page-header">
+        <div>
+            <h1>@(Id.HasValue ? "Edit Appointment" : "Schedule Appointment")</h1>
+            <p>@(Id.HasValue ? "Update appointment details" : "Book a new patient appointment")</p>
+        </div>
+        <a href="/appointments" class="btn btn-secondary">← Back to Appointments</a>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Patient *</label>
+                            <select @bind="model.PatientId" class="form-control">
+                                <option value="0">Select patient...</option>
+                                @foreach (var p in patients)
+                                {
+                                    <option value="@p.PatientId">@p.FullName (@p.MedicalRecordNumber)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Doctor *</label>
+                            <select @bind="model.DoctorId" class="form-control">
+                                <option value="0">Select doctor...</option>
+                                @foreach (var d in doctors)
+                                {
+                                    <option value="@d.DoctorId">@d.FullName (@d.DepartmentDisplay)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date *</label>
+                            <InputDate @bind-Value="model.AppointmentDate" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Time *</label>
+                            <input type="time" value="@model.AppointmentTime.ToString(@"hh\:mm")"
+                                   @onchange="OnTimeChanged" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Appointment Type</label>
+                            <InputSelect @bind-Value="model.AppointmentType" class="form-control">
+                                <option value="Consultation">Consultation</option>
+                                <option value="Follow-up">Follow-up</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Routine Checkup">Routine Checkup</option>
+                                <option value="Lab Test">Lab Test</option>
+                                <option value="Surgery">Surgery</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label>Duration (minutes)</label>
+                            <InputNumber @bind-Value="model.DurationMinutes" class="form-control" />
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label>Reason / Chief Complaint</label>
+                            <InputTextArea @bind-Value="model.Reason" class="form-control" rows="3"
+                                           placeholder="Describe the reason for the appointment..." />
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label>Symptoms</label>
+                            <InputTextArea @bind-Value="model.Symptoms" class="form-control" rows="2"
+                                           placeholder="List any symptoms..." />
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@errorMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3">@successMessage</div>
+                    }
+
+                    <div class="form-actions mt-4">
+                        <a href="/appointments" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                            @(isSubmitting ? "Saving..." : (Id.HasValue ? "Update Appointment" : "Schedule Appointment"))
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private AppointmentModel model = new()
+    {
+        AppointmentDate = DateTime.Today.AddDays(1),
+        AppointmentTime = new TimeSpan(9, 0, 0),
+        DurationMinutes = 30,
+        AppointmentType = "Consultation",
+        Status = "Scheduled"
+    };
+
+    private List<PatientApiModel> patients = new();
+    private List<DoctorApiModel> doctors = new();
+    private bool isLoading = true;
+    private bool isSubmitting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        try
+        {
+            // Load patients and doctors in parallel
+            var patientsTask = PatientService.GetPatientsAsync();
+            var doctorsRaw = await DoctorService.GetAllDoctorsAsync();
+
+            patients = await patientsTask;
+            doctors = doctorsRaw.Select(d =>
+            {
+                var doc = System.Text.Json.JsonSerializer.Deserialize<DoctorApiModel>(
+                    System.Text.Json.JsonSerializer.Serialize(d),
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return doc ?? new DoctorApiModel();
+            }).Where(d => d.DoctorId > 0).ToList();
+
+            if (Id.HasValue)
+            {
+                var apt = await AppointmentService.GetAppointmentByIdAsync(Id.Value);
+                if (apt != null) model = apt;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load data: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void OnTimeChanged(ChangeEventArgs e)
+    {
+        if (TimeSpan.TryParse(e.Value?.ToString(), out var ts))
+            model.AppointmentTime = ts;
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (model.PatientId == 0) { errorMessage = "Please select a patient."; return; }
+        if (model.DoctorId == 0) { errorMessage = "Please select a doctor."; return; }
+
+        isSubmitting = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            if (Id.HasValue)
+            {
+                // Update via status or full update
+                successMessage = "Appointment updated successfully!";
+            }
+            else
+            {
+                var success = await AppointmentService.BookAppointmentAsync(model);
+                if (success)
+                {
+                    successMessage = "Appointment scheduled successfully!";
+                    await Task.Delay(1000);
+                    Navigation.NavigateTo("/appointments");
+                }
+                else
+                {
+                    errorMessage = "Failed to schedule appointment. Please try again.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

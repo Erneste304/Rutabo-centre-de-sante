@@ -1,0 +1,208 @@
+@page "/patients/new"
+@page "/patients/{Id:int}/edit"
+@inject NavigationManager Navigation
+@inject PatientService PatientService
+
+<PageTitle>@(Id.HasValue ? "Edit Patient" : "New Patient") - Hospital Management System</PageTitle>
+
+<div class="form-container">
+    <div class="page-header">
+        <div>
+            <h1>@(Id.HasValue ? "Edit Patient" : "Add New Patient")</h1>
+            <p>@(Id.HasValue ? "Update patient information" : "Register a new patient in the system")</p>
+        </div>
+        <a href="/patients" class="btn btn-secondary">← Back to Patients</a>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+
+                    <h3 class="section-title">Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <InputText @bind-Value="model.FullName" class="form-control" placeholder="Enter full name" />
+                            <ValidationMessage For="() => model.FullName" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <InputText @bind-Value="model.Email" class="form-control" placeholder="email@example.com" type="email" />
+                            <ValidationMessage For="() => model.Email" />
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <InputText @bind-Value="model.PhoneNumber" class="form-control" placeholder="+250 XXX XXX XXX" />
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <InputDate @bind-Value="model.DateOfBirth" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <InputSelect @bind-Value="model.Gender" class="form-control">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <InputText @bind-Value="model.Address" class="form-control" placeholder="Street address" />
+                        </div>
+                    </div>
+
+                    <h3 class="section-title mt-4">Medical Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Blood Type</label>
+                            <InputSelect @bind-Value="model.BloodType" class="form-control">
+                                <option value="">Unknown</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label>Insurance Provider</label>
+                            <InputText @bind-Value="model.InsuranceProvider" class="form-control" placeholder="e.g. RSSB, MMI" />
+                        </div>
+                        <div class="form-group">
+                            <label>Insurance Policy Number</label>
+                            <InputText @bind-Value="model.InsurancePolicyNumber" class="form-control" />
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label>Allergies</label>
+                            <InputTextArea @bind-Value="model.Allergies" class="form-control" rows="2" placeholder="List known allergies..." />
+                        </div>
+                        <div class="form-group form-group-full">
+                            <label>Chronic Conditions</label>
+                            <InputTextArea @bind-Value="model.ChronicConditions" class="form-control" rows="2" placeholder="List chronic conditions..." />
+                        </div>
+                    </div>
+
+                    <h3 class="section-title mt-4">Emergency Contact</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Contact Name</label>
+                            <InputText @bind-Value="model.EmergencyContactName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Phone</label>
+                            <InputText @bind-Value="model.EmergencyContactPhone" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Relationship</label>
+                            <InputText @bind-Value="model.EmergencyContactRelation" class="form-control" placeholder="e.g. Spouse, Parent" />
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@errorMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3">@successMessage</div>
+                    }
+
+                    <div class="form-actions mt-4">
+                        <a href="/patients" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                            @(isSubmitting ? "Saving..." : (Id.HasValue ? "Update Patient" : "Register Patient"))
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private CreatePatientRequest model = new();
+    private bool isLoading = false;
+    private bool isSubmitting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            isLoading = true;
+            var patient = await PatientService.GetPatientByIdAsync(Id.Value);
+            if (patient != null)
+            {
+                model = new CreatePatientRequest
+                {
+                    FullName = patient.FullName,
+                    Email = patient.Email,
+                    PhoneNumber = patient.PhoneNumber,
+                    BloodType = patient.BloodType,
+                    Gender = patient.Gender,
+                    DateOfBirth = patient.DateOfBirth,
+                    Allergies = patient.Allergies,
+                    ChronicConditions = patient.ChronicConditions,
+                    InsuranceProvider = patient.InsuranceProvider,
+                    InsurancePolicyNumber = patient.InsurancePolicyNumber,
+                    EmergencyContactName = patient.EmergencyContactName,
+                    EmergencyContactPhone = patient.EmergencyContactPhone
+                };
+            }
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            if (Id.HasValue)
+            {
+                await PatientService.UpdatePatientAsync(Id.Value, model);
+                successMessage = "Patient updated successfully!";
+            }
+            else
+            {
+                var created = await PatientService.CreatePatientAsync(model);
+                if (created != null)
+                {
+                    successMessage = "Patient registered successfully!";
+                    await Task.Delay(1000);
+                    Navigation.NavigateTo("/patients");
+                }
+                else
+                {
+                    errorMessage = "Failed to register patient. Please try again.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

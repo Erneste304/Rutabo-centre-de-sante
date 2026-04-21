@@ -20,6 +20,11 @@ namespace HospitalManagementSystem.Blazor.Services
             return await _api.RequestAsync<List<AppointmentModel>>("api/appointments") ?? new List<AppointmentModel>();
         }
 
+        public async Task<AppointmentModel?> GetAppointmentByIdAsync(int id)
+        {
+            return await _api.GetAsync<AppointmentModel>($"api/appointments/{id}");
+        }
+
         public async Task<List<AppointmentModel>> GetDoctorAppointmentsAsync(int doctorId, DateTime? date = null)
         {
             var url = $"api/appointments/doctor/{doctorId}";

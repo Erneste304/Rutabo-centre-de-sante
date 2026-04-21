@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using HospitalManagementSystem.Core.Services;
 using HospitalManagementSystem.Core.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace HospitalManagementSystem.API.Controllers
 {
@@ -9,10 +13,12 @@ namespace HospitalManagementSystem.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IUserService userService)
+        public AuthController(IUserService userService, IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
         [HttpPost("login")]
@@ -23,7 +29,8 @@ namespace HospitalManagementSystem.API.Controllers
             if (user == null)
                 return Unauthorized(new { message = "Invalid username or password" });
 
-            // In production, generate JWT token here
+            var token = GenerateJwtToken(user);
+
             return Ok(new { 
                 Id = user.UserId,
                 Username = user.Username,
@@ -34,8 +41,34 @@ namespace HospitalManagementSystem.API.Controllers
                 PatientId = user.PatientId,
                 Status = user.IsActive ? "Active" : "Inactive",
                 CreatedAt = user.CreatedAt,
-                LastLogin = DateTime.UtcNow
+                LastLogin = DateTime.UtcNow,
+                Token = token
             });
+        }
+
+        private string GenerateJwtToken(dynamic user)
+        {
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "ThisIsMySecretKeyForHospitalManagementSystem2024"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+                new Claim(ClaimTypes.Role, user.UserType.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(8),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         [HttpPost("register")]

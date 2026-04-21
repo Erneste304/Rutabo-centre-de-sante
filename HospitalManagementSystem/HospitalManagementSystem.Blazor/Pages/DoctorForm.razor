@@ -1,0 +1,221 @@
+@page "/staff/new"
+@page "/staff/doctor/{Id:int}/edit"
+@inject NavigationManager Navigation
+@inject DoctorService DoctorService
+@inject ApiService ApiService
+
+<PageTitle>@(Id.HasValue ? "Edit Doctor" : "Add Doctor") - Hospital Management System</PageTitle>
+
+<div class="form-container">
+    <div class="page-header">
+        <div>
+            <h1>@(Id.HasValue ? "Edit Doctor" : "Add New Doctor")</h1>
+            <p>@(Id.HasValue ? "Update doctor information" : "Register a new doctor in the system")</p>
+        </div>
+        <a href="/staff" class="btn btn-secondary">← Back to Staff</a>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <EditForm Model="model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+
+                    <h3 class="section-title">Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <InputText @bind-Value="model.FullName" class="form-control" placeholder="Dr. Full Name" />
+                            <ValidationMessage For="() => model.FullName" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <InputText @bind-Value="model.Email" class="form-control" placeholder="doctor@hospital.com" type="email" />
+                            <ValidationMessage For="() => model.Email" />
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <InputText @bind-Value="model.PhoneNumber" class="form-control" placeholder="+250 XXX XXX XXX" />
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <InputDate @bind-Value="model.DateOfBirth" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <InputSelect @bind-Value="model.Gender" class="form-control">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <InputText @bind-Value="model.Address" class="form-control" />
+                        </div>
+                    </div>
+
+                    <h3 class="section-title mt-4">Professional Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label>Qualifications</label>
+                            <InputText @bind-Value="model.Qualifications" class="form-control"
+                                       placeholder="e.g. MBBS, MD (Cardiology)" />
+                        </div>
+                        <div class="form-group">
+                            <label>Years of Experience</label>
+                            <InputNumber @bind-Value="model.YearsOfExperience" class="form-control" />
+                        </div>
+                    </div>
+
+                    @if (!Id.HasValue)
+                    {
+                        <h3 class="section-title mt-4">Login Credentials</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Username *</label>
+                                <InputText @bind-Value="username" class="form-control" placeholder="doctor.username" />
+                            </div>
+                            <div class="form-group">
+                                <label>Password *</label>
+                                <InputText @bind-Value="password" class="form-control" type="password" placeholder="Min 8 characters" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@errorMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3">@successMessage</div>
+                    }
+
+                    <div class="form-actions mt-4">
+                        <a href="/staff" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                            @(isSubmitting ? "Saving..." : (Id.HasValue ? "Update Doctor" : "Add Doctor"))
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private CreateDoctorDto model = new();
+    private string username = "";
+    private string password = "";
+    private bool isLoading = false;
+    private bool isSubmitting = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id.HasValue)
+        {
+            isLoading = true;
+            var doctor = await DoctorService.GetDoctorByIdAsync(Id.Value);
+            if (doctor != null)
+            {
+                var doc = System.Text.Json.JsonSerializer.Deserialize<DoctorApiModel>(
+                    System.Text.Json.JsonSerializer.Serialize(doctor),
+                    new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (doc != null)
+                {
+                    model = new CreateDoctorDto
+                    {
+                        FullName = doc.FullName,
+                        Email = doc.Email,
+                        PhoneNumber = doc.PhoneNumber,
+                        Qualifications = doc.Qualifications,
+                        YearsOfExperience = doc.YearsOfExperience
+                    };
+                }
+            }
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        successMessage = null;
+
+        try
+        {
+            if (Id.HasValue)
+            {
+                var updateDto = new UpdateDoctorDto
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+                    Qualifications = model.Qualifications,
+                    YearsOfExperience = model.YearsOfExperience
+                };
+                var success = await DoctorService.UpdateDoctorAsync(Id.Value, updateDto);
+                if (success)
+                {
+                    successMessage = "Doctor updated successfully!";
+                }
+                else
+                {
+                    errorMessage = "Failed to update doctor.";
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                {
+                    errorMessage = "Username and password are required.";
+                    return;
+                }
+
+                // First register the user account
+                var registerResult = await ApiService.PostAsync<object>("api/auth/register", new
+                {
+                    Username = username,
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    Password = password,
+                    PasswordHash = "",
+                    UserType = 1 // Doctor
+                });
+
+                // Then create the doctor profile
+                var created = await DoctorService.CreateDoctorAsync(model);
+                if (created != null)
+                {
+                    successMessage = "Doctor added successfully!";
+                    await Task.Delay(1000);
+                    Navigation.NavigateTo("/staff");
+                }
+                else
+                {
+                    errorMessage = "Failed to create doctor profile. Please try again.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

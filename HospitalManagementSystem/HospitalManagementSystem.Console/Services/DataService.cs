@@ -190,7 +190,7 @@ namespace HospitalManagementSystem.ConsoleApp.Services
             return rooms.Select(r => new Room
             {
                 RoomNumber = r.RoomNumber,
-                Type = r.RoomType,
+                Type = r.RoomType?.RoomTypeName ?? "Unknown",
                 Status = r.RoomStatus,
                 PatientName = "" // Room entity doesn't directly link to patient name in DB
             }).ToList();
@@ -536,10 +536,11 @@ namespace HospitalManagementSystem.ConsoleApp.Services
 
         public async Task<bool> AddRoomAsync(Room room)
         {
+            var roomType = await _db.RoomTypes.FirstOrDefaultAsync(rt => rt.RoomTypeName == room.Type);
             _db.Rooms.Add(new HospitalManagementSystem.Data.Entities.Room
             {
                 RoomNumber = room.RoomNumber,
-                RoomType = room.Type,
+                RoomType = roomType,
                 RoomStatus = room.Status
             });
             await _db.SaveChangesAsync();
@@ -550,7 +551,8 @@ namespace HospitalManagementSystem.ConsoleApp.Services
         {
             var dbRoom = await _db.Rooms.FirstOrDefaultAsync(r => r.RoomNumber == room.RoomNumber);
             if (dbRoom == null) return false;
-            dbRoom.RoomType = room.Type;
+            var roomType = await _db.RoomTypes.FirstOrDefaultAsync(rt => rt.RoomTypeName == room.Type);
+            dbRoom.RoomType = roomType;
             dbRoom.RoomStatus = room.Status;
             await _db.SaveChangesAsync();
             return true;

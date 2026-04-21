@@ -102,7 +102,7 @@ namespace HospitalManagementSystem.API.Controllers
                     FullName = dto.FullName,
                     Email = dto.Email,
                     PhoneNumber = dto.PhoneNumber,
-                    Role = "Doctor",
+                    UserType = "Doctor",
                     DateOfBirth = dto.DateOfBirth,
                     Gender = dto.Gender,
                     Address = dto.Address
@@ -223,7 +223,7 @@ namespace HospitalManagementSystem.API.Controllers
                         s.DayOfWeek,
                         s.StartTime,
                         s.EndTime,
-                        s.IsAvailable
+                        s.IsActive
                     })
                     .ToListAsync();
 

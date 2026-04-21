@@ -1,139 +1,141 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
+@inject AuthService AuthService
 
-<div class="dashboard-container">
-    <aside class="sidebar">
-        <NavMenu />
-    </aside>
+<div class="app-container">
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>HMS</h2>
+            <p>Hospital Management</p>
+        </div>
 
-    <main class="main-content">
-        <header class="header-top">
-            <div class="header-breadcrumb">
-                <h3>Rutabo Clinic Dashboard</h3>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <NavLink href="/" class="nav-link" Match="NavLinkMatch.All">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </NavLink>
+            </li>
+
+            <li class="nav-section-title">Clinical</li>
+            <li class="nav-item">
+                <NavLink href="/patients" class="nav-link">
+                    <span class="icon">👥</span>
+                    <span>Patients</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/appointments" class="nav-link">
+                    <span class="icon">📅</span>
+                    <span>Appointments</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/medical-records" class="nav-link">
+                    <span class="icon">📋</span>
+                    <span>Medical Records</span>
+                </NavLink>
+            </li>
+
+            <li class="nav-section-title">Operations</li>
+            <li class="nav-item">
+                <NavLink href="/pharmacy" class="nav-link">
+                    <span class="icon">💊</span>
+                    <span>Pharmacy</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/inventory" class="nav-link">
+                    <span class="icon">📦</span>
+                    <span>Inventory</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/blood-bank" class="nav-link">
+                    <span class="icon">🩸</span>
+                    <span>Blood Bank</span>
+                </NavLink>
+            </li>
+
+            <li class="nav-section-title">Management</li>
+            <li class="nav-item">
+                <NavLink href="/staff" class="nav-link">
+                    <span class="icon">👨‍⚕️</span>
+                    <span>Staff</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/rooms" class="nav-link">
+                    <span class="icon">🏥</span>
+                    <span>Rooms & Beds</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/billing" class="nav-link">
+                    <span class="icon">💰</span>
+                    <span>Billing</span>
+                </NavLink>
+            </li>
+
+            <li class="nav-section-title">Emergency</li>
+            <li class="nav-item">
+                <NavLink href="/ambulance" class="nav-link">
+                    <span class="icon">🚑</span>
+                    <span>Ambulance</span>
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink href="/emergency" class="nav-link">
+                    <span class="icon">🚨</span>
+                    <span>Emergency Alerts</span>
+                </NavLink>
+            </li>
+
+            <li class="nav-section-title">Analytics</li>
+            <li class="nav-item">
+                <NavLink href="/reports" class="nav-link">
+                    <span class="icon">📈</span>
+                    <span>Reports</span>
+                </NavLink>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="main-content">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="menu-toggle" @onclick="ToggleSidebar">☰</button>
+                <h1>Hospital Management System</h1>
             </div>
-            
-            <div class="header-actions">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search everything..." />
-                </div>
-                
-                <div class="header-tools">
-                    <div class="tool-item">
-                        <i class="far fa-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                    <div class="user-profile">
-                        <div class="user-info d-none d-md-block">
-                            <span class="user-name">Dr. Erneste</span>
-                            <span class="user-role">Administrator</span>
-                        </div>
-                        <div class="avatar">ER</div>
-                    </div>
+            <div class="top-bar-right">
+                <div class="user-menu">
+                    <span class="user-name">Welcome, User</span>
+                    <button class="btn-logout" @onclick="Logout">Logout</button>
                 </div>
             </div>
         </header>
 
-        <section class="content">
+        <main class="page-content">
             @Body
-        </section>
-    </main>
+        </main>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 Hospital Management System. All rights reserved.</p>
+        </footer>
+    </div>
 </div>
 
 @code {
-    // Layout logic if needed
+    private bool sidebarOpen = true;
+
+    private void ToggleSidebar()
+    {
+        sidebarOpen = !sidebarOpen;
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
+    }
 }
-
-<style>
-    .header-breadcrumb h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        color: var(--dark-color);
-        font-weight: 700;
-    }
-
-    .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-    }
-
-    .search-bar {
-        position: relative;
-        display: flex;
-        align-items: center;
-        background: var(--light-color);
-        border-radius: 5px;
-        padding: 5px 15px;
-        width: 300px;
-    }
-
-    .search-bar i {
-        color: var(--gray-color);
-        margin-right: 10px;
-    }
-
-    .search-bar input {
-        border: none;
-        background: transparent;
-        outline: none;
-        width: 100%;
-        font-size: 0.9rem;
-    }
-
-    .header-tools {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .tool-item {
-        position: relative;
-        font-size: 1.2rem;
-        color: var(--gray-color);
-        cursor: pointer;
-    }
-
-    .tool-item .badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: var(--danger-color);
-        color: white;
-        font-size: 0.65rem;
-        padding: 2px 5px;
-        border-radius: 10px;
-        min-width: 18px;
-        text-align: center;
-    }
-
-    .user-info {
-        text-align: right;
-    }
-
-    .user-name {
-        display: block;
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: var(--dark-color);
-        line-height: 1.2;
-    }
-
-    .user-role {
-        display: block;
-        font-size: 0.75rem;
-        color: var(--gray-color);
-        font-weight: 500;
-    }
-
-    .header-top .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        cursor: pointer;
-    }
-
-    .d-none { display: none; }
-    @@media (min-width: 768px) { .d-md-block { display: block; } }
-</style>

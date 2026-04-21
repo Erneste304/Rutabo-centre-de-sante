@@ -1,0 +1,207 @@
+@page "/ambulance"
+@inject NavigationManager Navigation
+
+<PageTitle>Ambulance - Hospital Management System</PageTitle>
+
+<div class="ambulance-container">
+    <div class="page-header">
+        <div>
+            <h1>Ambulance Management</h1>
+            <p>Track and manage ambulance fleet</p>
+        </div>
+        <button class="btn btn-primary" @onclick="RequestAmbulance">🚑 Request Ambulance</button>
+    </div>
+
+    <div class="ambulance-stats">
+        <div class="stat-card">
+            <h3>Total Fleet</h3>
+            <p class="stat-value">@totalAmbulances</p>
+        </div>
+        <div class="stat-card">
+            <h3>Available</h3>
+            <p class="stat-value">@availableAmbulances</p>
+        </div>
+        <div class="stat-card">
+            <h3>In Service</h3>
+            <p class="stat-value">@inServiceAmbulances</p>
+        </div>
+        <div class="stat-card">
+            <h3>Maintenance</h3>
+            <p class="stat-value">@maintenanceAmbulances</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Ambulance Fleet</h2>
+            <div class="filter-controls">
+                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="in-service">In Service</option>
+                    <option value="maintenance">Maintenance</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading ambulances...</p>
+                </div>
+            }
+            else if (ambulances?.Count > 0)
+            {
+                <div class="ambulances-grid">
+                    @foreach (var ambulance in ambulances)
+                    {
+                        <div class="ambulance-card">
+                            <div class="ambulance-header">
+                                <h3>@ambulance.VehicleNumber</h3>
+                                <span class="badge badge-@ambulance.Status.ToLower().Replace(" ", "-")">@ambulance.Status</span>
+                            </div>
+                            <div class="ambulance-details">
+                                <p><strong>Driver:</strong> @ambulance.DriverName</p>
+                                <p><strong>Paramedic:</strong> @ambulance.ParamedicName</p>
+                                <p><strong>Location:</strong> @ambulance.CurrentLocation</p>
+                                <p><strong>Equipment:</strong> @ambulance.Equipment</p>
+                            </div>
+                            @if (ambulance.Status == "In Service")
+                            {
+                                <div class="ambulance-trip">
+                                    <p><strong>Destination:</strong> @ambulance.Destination</p>
+                                    <p><strong>ETA:</strong> @ambulance.ETA.ToString("HH:mm")</p>
+                                </div>
+                            }
+                            <div class="ambulance-actions">
+                                <button class="btn-icon" title="View" @onclick="() => ViewAmbulance(ambulance.Id)">👁️</button>
+                                <button class="btn-icon" title="Edit" @onclick="() => EditAmbulance(ambulance.Id)">✏️</button>
+                                @if (ambulance.Status == "Available")
+                                {
+                                    <button class="btn-icon" title="Dispatch" @onclick="() => DispatchAmbulance(ambulance.Id)">📍</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No ambulances found</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<AmbulanceDto> ambulances = new();
+    private string selectedStatus = "";
+    private bool isLoading = true;
+    private int totalAmbulances = 0;
+    private int availableAmbulances = 0;
+    private int inServiceAmbulances = 0;
+    private int maintenanceAmbulances = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+
+            ambulances = new List<AmbulanceDto>
+            {
+                new AmbulanceDto
+                {
+                    Id = 1,
+                    VehicleNumber = "AMB-001",
+                    DriverName = "John Smith",
+                    ParamedicName = "Sarah Johnson",
+                    Status = "Available",
+                    CurrentLocation = "Hospital Base",
+                    Equipment = "Full",
+                    Destination = null,
+                    ETA = DateTime.MinValue
+                },
+                new AmbulanceDto
+                {
+                    Id = 2,
+                    VehicleNumber = "AMB-002",
+                    DriverName = "Mike Brown",
+                    ParamedicName = "Emily Davis",
+                    Status = "In Service",
+                    CurrentLocation = "Downtown",
+                    Equipment = "Full",
+                    Destination = "City Hospital",
+                    ETA = DateTime.Now.AddMinutes(15)
+                },
+                new AmbulanceDto
+                {
+                    Id = 3,
+                    VehicleNumber = "AMB-003",
+                    DriverName = "Tom Wilson",
+                    ParamedicName = "Lisa Anderson",
+                    Status = "Maintenance",
+                    CurrentLocation = "Service Center",
+                    Equipment = "Partial",
+                    Destination = null,
+                    ETA = DateTime.MinValue
+                },
+            };
+
+            totalAmbulances = ambulances.Count;
+            availableAmbulances = ambulances.Count(a => a.Status == "Available");
+            inServiceAmbulances = ambulances.Count(a => a.Status == "In Service");
+            maintenanceAmbulances = ambulances.Count(a => a.Status == "Maintenance");
+
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading ambulances: {ex.Message}");
+            isLoading = false;
+        }
+    }
+
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        selectedStatus = e.Value?.ToString() ?? "";
+        // Apply filter
+    }
+
+    private void RequestAmbulance()
+    {
+        Navigation.NavigateTo("/ambulance/request");
+    }
+
+    private void ViewAmbulance(int id)
+    {
+        Navigation.NavigateTo($"/ambulance/{id}");
+    }
+
+    private void EditAmbulance(int id)
+    {
+        Navigation.NavigateTo($"/ambulance/{id}/edit");
+    }
+
+    private async Task DispatchAmbulance(int id)
+    {
+        Navigation.NavigateTo($"/ambulance/{id}/dispatch");
+    }
+
+    public class AmbulanceDto
+    {
+        public int Id { get; set; }
+        public string VehicleNumber { get; set; }
+        public string DriverName { get; set; }
+        public string ParamedicName { get; set; }
+        public string Status { get; set; }
+        public string CurrentLocation { get; set; }
+        public string Equipment { get; set; }
+        public string Destination { get; set; }
+        public DateTime ETA { get; set; }
+    }
+}

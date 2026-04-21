@@ -1,0 +1,199 @@
+@page "/patients"
+@inject NavigationManager Navigation
+@inject PatientService PatientService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Patients - Hospital Management System</PageTitle>
+
+<div class="patients-container">
+    <div class="page-header">
+        <div>
+            <h1>Patients</h1>
+            <p>Manage patient records and information</p>
+        </div>
+        <a href="/patients/new" class="btn btn-primary">+ New Patient</a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="search-bar">
+                <input type="text" placeholder="Search patients..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" />
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="filter-controls">
+                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-body">
+            @if (isLoading)
+            {
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading patients...</p>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+            else if (pagedPatients?.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>MRN</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Age</th>
+                                <th>Blood Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var patient in pagedPatients)
+                            {
+                                <tr>
+                                    <td><code>@patient.MedicalRecordNumber</code></td>
+                                    <td>
+                                        <div class="patient-name">
+                                            <div class="avatar">@(patient.FullName.Length > 0 ? patient.FullName[0].ToString().ToUpper() : "?")</div>
+                                            <span>@patient.FullName</span>
+                                        </div>
+                                    </td>
+                                    <td>@patient.Email</td>
+                                    <td>@(patient.PhoneNumber ?? "—")</td>
+                                    <td>@(patient.Age > 0 ? patient.Age.ToString() : "—")</td>
+                                    <td>@(patient.BloodType ?? "—")</td>
+                                    <td><span class="badge badge-@patient.Status.ToLower()">@patient.Status</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn-icon" title="View" @onclick="() => ViewPatient(patient.PatientId)">👁️</button>
+                                            <button class="btn-icon" title="Edit" @onclick="() => EditPatient(patient.PatientId)">✏️</button>
+                                            <button class="btn-icon btn-danger" title="Delete" @onclick="() => DeletePatient(patient.PatientId)">🗑️</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button class="btn-pagination" disabled="@(currentPage == 1)" @onclick="PreviousPage">← Previous</button>
+                    <span class="page-info">Page @currentPage of @totalPages (@filteredPatients.Count total)</span>
+                    <button class="btn-pagination" disabled="@(currentPage >= totalPages)" @onclick="NextPage">Next →</button>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>No patients found</p>
+                    <a href="/patients/new" class="btn btn-primary mt-2">Add First Patient</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<PatientApiModel> allPatients = new();
+    private List<PatientApiModel> filteredPatients = new();
+    private List<PatientApiModel> pagedPatients = new();
+    private string searchQuery = "";
+    private string selectedStatus = "";
+    private bool isLoading = true;
+    private string? errorMessage;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPatients();
+    }
+
+    private async Task LoadPatients()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            allPatients = await PatientService.GetPatientsAsync();
+            ApplyFilters();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load patients: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void OnSearchChanged(ChangeEventArgs e)
+    {
+        searchQuery = e.Value?.ToString() ?? "";
+        currentPage = 1;
+        ApplyFilters();
+    }
+
+    private void ApplyFilters()
+    {
+        filteredPatients = allPatients
+            .Where(p => string.IsNullOrEmpty(searchQuery) ||
+                   p.FullName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                   p.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                   p.MedicalRecordNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .Where(p => string.IsNullOrEmpty(selectedStatus) ||
+                   p.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        totalPages = Math.Max(1, (int)Math.Ceiling((double)filteredPatients.Count / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        UpdatePage();
+    }
+
+    private void UpdatePage()
+    {
+        pagedPatients = filteredPatients
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private void ViewPatient(int id) => Navigation.NavigateTo($"/patients/{id}");
+    private void EditPatient(int id) => Navigation.NavigateTo($"/patients/{id}/edit");
+
+    private async Task DeletePatient(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this patient?"))
+        {
+            var success = await PatientService.DeletePatientAsync(id);
+            if (success)
+            {
+                allPatients.RemoveAll(p => p.PatientId == id);
+                ApplyFilters();
+            }
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (currentPage > 1) { currentPage--; UpdatePage(); }
+    }
+
+    private void NextPage()
+    {
+        if (currentPage < totalPages) { currentPage++; UpdatePage(); }
+    }
+}

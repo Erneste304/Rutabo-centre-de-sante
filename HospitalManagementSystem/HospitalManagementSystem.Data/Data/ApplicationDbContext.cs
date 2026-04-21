@@ -45,6 +45,11 @@ namespace HospitalManagementSystem.Data
         public DbSet<Entities.CleaningService> CleaningServices { get; set; }
         public DbSet<Entities.DoctorDepartment> DoctorDepartments { get; set; }
         public DbSet<Entities.MedicalRecordMedicine> MedicalRecordMedicines { get; set; }
+        public DbSet<Entities.BedAvailabilityNotification> BedAvailabilityNotifications { get; set; }
+        public DbSet<Entities.AppointmentReminder> AppointmentReminders { get; set; }
+        public DbSet<Entities.EmergencyAlert> EmergencyAlerts { get; set; }
+        public DbSet<Entities.PatientQueue> PatientQueues { get; set; }
+        public DbSet<Entities.StaffPerformanceMetrics> StaffPerformanceMetrics { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

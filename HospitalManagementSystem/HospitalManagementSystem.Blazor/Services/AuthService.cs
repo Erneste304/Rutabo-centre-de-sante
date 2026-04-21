@@ -81,6 +81,7 @@ namespace HospitalManagementSystem.Blazor.Services
         public async Task LogoutAsync()
         {
             _currentUser = null;
+            _api.ClearTokenCache();
             await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "user");
         }
         

@@ -1,0 +1,8 @@
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.csproj.AssemblyReference.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/rpswa.dswa.cache.json
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.GeneratedMSBuildEditorConfig.editorconfig
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.AssemblyInfoInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.AssemblyInfo.cs
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.csproj.CoreCompileInputs.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.MvcApplicationPartsAssemblyInfo.cache
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/Release/net8.0/HospitalManagementSystem.Blazor.sourcelink.json

@@ -1,0 +1,347 @@
+.pharmacy-container[b-albh750v4h] {
+    animation: fadeIn-b-albh750v4h 0.3s ease-in;
+}
+
+@keyframes fadeIn-b-albh750v4h {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header[b-albh750v4h] {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.page-header h1[b-albh750v4h] {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.page-header p[b-albh750v4h] {
+    font-size: 16px;
+    color: #64748b;
+}
+
+.pharmacy-grid[b-albh750v4h] {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.card-header[b-albh750v4h] {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-header h2[b-albh750v4h] {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.filter-controls[b-albh750v4h] {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.search-input[b-albh750v4h] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus[b-albh750v4h] {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.prescriptions-list[b-albh750v4h] {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.prescription-item[b-albh750v4h] {
+    padding: 16px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.prescription-item:hover[b-albh750v4h] {
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rx-header[b-albh750v4h] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.rx-header h3[b-albh750v4h] {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.badge[b-albh750v4h] {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-pending[b-albh750v4h] {
+    background-color: #fef3c7;
+    color: #78350f;
+}
+
+.badge-dispensed[b-albh750v4h] {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.rx-details[b-albh750v4h] {
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.rx-details p[b-albh750v4h] {
+    margin: 4px 0;
+}
+
+.rx-medications[b-albh750v4h] {
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+.rx-medications strong[b-albh750v4h] {
+    display: block;
+    margin-bottom: 8px;
+    color: #1e293b;
+}
+
+.rx-medications ul[b-albh750v4h] {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.rx-medications li[b-albh750v4h] {
+    padding: 4px 0;
+    color: #64748b;
+}
+
+.rx-actions[b-albh750v4h] {
+    display: flex;
+    gap: 10px;
+}
+
+.btn[b-albh750v4h] {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-success[b-albh750v4h] {
+    background-color: #16a34a;
+    color: white;
+}
+
+.btn-success:hover[b-albh750v4h] {
+    background-color: #15803d;
+}
+
+.btn-outline[b-albh750v4h] {
+    background-color: transparent;
+    border: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-outline:hover[b-albh750v4h] {
+    background-color: #f8fafc;
+    border-color: #2563eb;
+}
+
+/* Inventory List */
+.inventory-list[b-albh750v4h] {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inventory-item[b-albh750v4h] {
+    padding: 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.item-info[b-albh750v4h] {
+    flex: 1;
+}
+
+.item-info h4[b-albh750v4h] {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+}
+
+.item-code[b-albh750v4h] {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.item-stock[b-albh750v4h] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stock-bar[b-albh750v4h] {
+    height: 6px;
+    background-color: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.stock-fill[b-albh750v4h] {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #1e40af);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.stock-count[b-albh750v4h] {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.stock-status[b-albh750v4h] {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-success[b-albh750v4h] {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.badge-warning[b-albh750v4h] {
+    background-color: #fef3c7;
+    color: #78350f;
+}
+
+.empty-state[b-albh750v4h] {
+    text-align: center;
+    padding: 60px 20px;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.loading-spinner[b-albh750v4h] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 20px;
+}
+
+.spinner[b-albh750v4h] {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin-b-albh750v4h 1s linear infinite;
+}
+
+@keyframes spin-b-albh750v4h {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 1024px) {
+    .pharmacy-grid[b-albh750v4h] {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header[b-albh750v4h] {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .card-header[b-albh750v4h] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-controls[b-albh750v4h] {
+        width: 100%;
+    }
+
+    .rx-actions[b-albh750v4h] {
+        flex-direction: column;
+    }
+
+    .btn[b-albh750v4h] {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .inventory-item[b-albh750v4h] {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-stock[b-albh750v4h] {
+        width: 100%;
+    }
+}
