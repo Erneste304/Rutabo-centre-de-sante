@@ -7,6 +7,8 @@ using System.Text;
 using HospitalManagementSystem.Data.Repositories;
 using HospitalManagementSystem.Core.Repositories;
 using HospitalManagementSystem.Data.Services;
+using HospitalManagementSystem.API.Hubs;
+using HospitalManagementSystem.API.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -65,6 +70,9 @@ builder.Services.AddScoped<IBloodBankService, BloodBankService>();
 builder.Services.AddScoped<IPatientFlowService, PatientFlowService>();
 builder.Services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
+// Add Notification Service
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 var app = builder.Build();
 
 // Seed the database before starting the app
@@ -96,6 +104,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<HospitalHub>("/hubs/hospital");
 
 app.MapFallback(async context =>
 {

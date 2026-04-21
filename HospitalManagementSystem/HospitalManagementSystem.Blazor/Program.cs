@@ -26,5 +26,6 @@ builder.Services.AddScoped<PatientService>();
 builder.Services.AddScoped<DoctorService>();
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<PharmacyService>();
+builder.Services.AddScoped<RealTimeService>();
 
 await builder.Build().RunAsync();

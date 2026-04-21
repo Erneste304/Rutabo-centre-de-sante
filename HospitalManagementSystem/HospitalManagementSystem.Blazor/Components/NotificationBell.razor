@@ -1,0 +1,241 @@
+@using HospitalManagementSystem.Blazor.Services
+@inject RealTimeService RealTimeService
+@implements IAsyncDisposable
+
+<div class="notification-bell-wrapper">
+    <button class="notification-bell @(unreadCount > 0 ? "has-notifications" : "")" @onclick="TogglePanel">
+        🔔
+        @if (unreadCount > 0)
+        {
+            <span class="notification-badge">@(unreadCount > 9 ? "9+" : unreadCount.ToString())</span>
+        }
+    </button>
+
+    @if (showPanel)
+    {
+        <div class="notification-panel">
+            <div class="notification-panel-header">
+                <h4>Notifications</h4>
+                @if (notifications.Any())
+                {
+                    <button class="btn-link" @onclick="ClearAll">Clear all</button>
+                }
+            </div>
+            <div class="notification-list">
+                @if (!notifications.Any())
+                {
+                    <div class="notification-empty">No new notifications</div>
+                }
+                else
+                {
+                    @foreach (var n in notifications.OrderByDescending(x => x.Timestamp))
+                    {
+                        <div class="notification-item @(n.IsRead ? "" : "unread") priority-@n.Priority.ToLower()"
+                             @onclick="() => MarkRead(n)">
+                            <div class="notification-icon">@GetIcon(n.Type)</div>
+                            <div class="notification-content">
+                                <strong>@n.Title</strong>
+                                <p>@n.Message</p>
+                                <small>@n.Timestamp.ToString("HH:mm")</small>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<NotificationItem> notifications = new();
+    private bool showPanel = false;
+    private int unreadCount => notifications.Count(n => !n.IsRead);
+
+    protected override async Task OnInitializedAsync()
+    {
+        RealTimeService.OnEmergencyAlert += HandleEmergencyAlert;
+        RealTimeService.OnBedStatusUpdated += HandleBedUpdate;
+        await RealTimeService.StartAsync();
+    }
+
+    private void HandleEmergencyAlert(EmergencyAlertDto alert)
+    {
+        notifications.Insert(0, new NotificationItem
+        {
+            Title = alert.Title,
+            Message = alert.Message,
+            Priority = alert.Priority,
+            Type = "emergency",
+            Timestamp = alert.Timestamp,
+            IsRead = false
+        });
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleBedUpdate(object data)
+    {
+        notifications.Insert(0, new NotificationItem
+        {
+            Title = "Bed Status Update",
+            Message = "A bed status has changed.",
+            Priority = "Low",
+            Type = "bed",
+            Timestamp = DateTime.Now,
+            IsRead = false
+        });
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void TogglePanel() => showPanel = !showPanel;
+
+    private void MarkRead(NotificationItem n)
+    {
+        n.IsRead = true;
+    }
+
+    private void ClearAll()
+    {
+        notifications.Clear();
+        showPanel = false;
+    }
+
+    private string GetIcon(string type) => type switch
+    {
+        "emergency" => "🚨",
+        "bed" => "🛏️",
+        "queue" => "👥",
+        _ => "🔔"
+    };
+
+    public async ValueTask DisposeAsync()
+    {
+        RealTimeService.OnEmergencyAlert -= HandleEmergencyAlert;
+        RealTimeService.OnBedStatusUpdated -= HandleBedUpdate;
+    }
+
+    private class NotificationItem
+    {
+        public string Title { get; set; } = "";
+        public string Message { get; set; } = "";
+        public string Priority { get; set; } = "Low";
+        public string Type { get; set; } = "info";
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+        public bool IsRead { get; set; }
+    }
+}
+
+<style>
+    .notification-bell-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notification-bell {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        position: relative;
+        transition: background 0.2s;
+    }
+
+    .notification-bell:hover { background: rgba(0,0,0,0.05); }
+
+    .notification-bell.has-notifications {
+        animation: ring 1s ease-in-out;
+    }
+
+    @@keyframes ring {
+        0%, 100% { transform: rotate(0); }
+        20% { transform: rotate(15deg); }
+        40% { transform: rotate(-15deg); }
+        60% { transform: rotate(10deg); }
+        80% { transform: rotate(-10deg); }
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #dc2626;
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+    }
+
+    .notification-panel {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        width: 340px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        z-index: 500;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+    }
+
+    .notification-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .notification-panel-header h4 { font-size: 0.95rem; font-weight: 700; }
+
+    .btn-link {
+        background: none;
+        border: none;
+        color: #2563eb;
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .notification-list {
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
+    .notification-empty {
+        padding: 24px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    .notification-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .notification-item:hover { background: #f8fafc; }
+    .notification-item.unread { background: #eff6ff; }
+
+    .notification-item.priority-high { border-left: 3px solid #dc2626; }
+    .notification-item.priority-medium { border-left: 3px solid #ea580c; }
+    .notification-item.priority-low { border-left: 3px solid #16a34a; }
+
+    .notification-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+    .notification-content strong { font-size: 0.875rem; display: block; }
+    .notification-content p { font-size: 0.8rem; color: #64748b; margin: 2px 0; }
+    .notification-content small { font-size: 0.75rem; color: #94a3b8; }
+</style>
