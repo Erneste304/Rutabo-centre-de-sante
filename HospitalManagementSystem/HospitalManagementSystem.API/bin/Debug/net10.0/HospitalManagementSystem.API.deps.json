@@ -111,11 +111,11 @@
           }
         }
       },
-      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.106": {
+      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
         "runtime": {
           "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {
-            "assemblyVersion": "10.0.106.0",
-            "fileVersion": "10.1.626.17701"
+            "assemblyVersion": "10.0.101.0",
+            "fileVersion": "10.1.125.57005"
           }
         }
       },
@@ -418,7 +418,7 @@
           "HospitalManagementSystem.Core": "1.0.0",
           "Microsoft.AspNetCore.Components.WebAssembly": "10.0.0",
           "Microsoft.AspNetCore.SignalR.Client": "10.0.0",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.106"
+          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.101"
         },
         "runtime": {
           "HospitalManagementSystem.Blazor.dll": {
@@ -518,12 +518,12 @@
       "path": "microsoft.data.sqlite.core/10.0.0",
       "hashPath": "microsoft.data.sqlite.core.10.0.0.nupkg.sha512"
     },
-    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.106": {
+    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.101": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-8MzC43QmkOaut7+LL44MrLhtM3rcNeZOmqGtq92m5tbzJ+61bHExfWzE/6SL77ebzq8W+HVD58u+5pov6T1apg==",
-      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.106",
-      "hashPath": "microsoft.dotnet.hotreload.webassembly.browser.10.0.106.nupkg.sha512"
+      "sha512": "sha512-30d2d7ti8GiDYf9zg4+w5cvH3jm9HAQMyXzZgCVpEjmh3WLErJazuu2tyoIO75uNYLWPD/NNTTRD9SoPpDiACw==",
+      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.101",
+      "hashPath": "microsoft.dotnet.hotreload.webassembly.browser.10.0.101.nupkg.sha512"
     },
     "Microsoft.EntityFrameworkCore/10.0.0": {
       "type": "package",

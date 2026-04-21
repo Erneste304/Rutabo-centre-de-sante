@@ -1,34 +1,34 @@
 {
   "format": 1,
   "restore": {
-    "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {}
+    "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {}
   },
   "projects": {
-    "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {
+    "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj",
+        "projectUniqueName": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj",
         "projectName": "HospitalManagementSystem.Blazor",
-        "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj",
-        "packagesPath": "/home/erneste/.nuget/packages/",
-        "outputPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/",
+        "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/HospitalManagementSystem.Blazor.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Blazor/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/erneste/.nuget/NuGet/NuGet.Config"
+          "/home/runner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
-                "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj"
+              "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
+                "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj"
               }
             }
           }
@@ -52,7 +52,7 @@
             "Microsoft.AspNetCore.App.Internal.Assets": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.6, )",
+              "version": "[10.0.1, )",
               "autoReferenced": true
             },
             "Microsoft.AspNetCore.Components.Authorization": {
@@ -74,19 +74,19 @@
             },
             "Microsoft.DotNet.HotReload.WebAssembly.Browser": {
               "target": "Package",
-              "version": "[10.0.106, )",
+              "version": "[10.0.101, )",
               "autoReferenced": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.6, )",
+              "version": "[10.0.1, )",
               "autoReferenced": true
             },
             "Microsoft.NET.Sdk.WebAssembly.Pack": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[10.0.6, )",
+              "version": "[10.0.1, )",
               "autoReferenced": true
             }
           },
@@ -104,7 +104,7 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
-              "version": "[10.0.6, 10.0.6]"
+              "version": "[10.0.1, 10.0.1]"
             }
           ],
           "frameworkReferences": {
@@ -112,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.106/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -395,23 +395,23 @@
         }
       }
     },
-    "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
+    "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
+        "projectUniqueName": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
         "projectName": "HospitalManagementSystem.Core",
-        "projectPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
-        "packagesPath": "/home/erneste/.nuget/packages/",
-        "outputPath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Core/obj/",
+        "projectPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/HospitalManagementSystem.Core.csproj",
+        "packagesPath": "/home/runner/.nuget/packages/",
+        "outputPath": "/home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/erneste/.nuget/NuGet/NuGet.Config"
+          "/home/runner/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
+          "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -451,7 +451,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.106/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/nix/store/bjzmfa360s8f3n4xqlnkamy13fkywb2x-dotnet-sdk-10.0.101/share/dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
