@@ -32,6 +32,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/AuthorizedRoute.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BdXRob3JpemVkUm91dGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/BillingComponents/BillList.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9CaWxsaW5nQ29tcG9uZW50cy9CaWxsTGlzdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -42,6 +46,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/BillingComponents/PaymentProcessor.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9CaWxsaW5nQ29tcG9uZW50cy9QYXltZW50UHJvY2Vzc29yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/NotificationBell.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Ob3RpZmljYXRpb25CZWxsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Components/NurseComponents/RoomManagement.razor]
@@ -62,6 +70,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/AmbulanceFleet.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQW1idWxhbmNlRmxlZXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/AppointmentForm.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQXBwb2ludG1lbnRGb3JtLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/Billings.razor]
@@ -100,6 +112,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRGFzaGJvYXJkL1JlY2VwdGlvbmlzdERhc2hib2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/DoctorForm.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRG9jdG9yRm9ybS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/ForgotPassword.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvRm9yZ290UGFzc3dvcmQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -118,6 +134,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/NotFound.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTm90Rm91bmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/PatientForm.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvUGF0aWVudEZvcm0ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.Blazor/Pages/PatientHistory.razor]

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "owFgtC4M5ow=",
+  "dgSpecHash": "Dd3FtSc8fLc=",
   "success": true,
   "projectFilePath": "/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/HospitalManagementSystem.API.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,9 @@
     "/home/erneste/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/10.0.0/microsoft.aspnetcore.authentication.jwtbearer.10.0.0.nupkg.sha512",
     "/home/erneste/.nuget/packages/microsoft.aspnetcore.components.webassembly/10.0.0/microsoft.aspnetcore.components.webassembly.10.0.0.nupkg.sha512",
     "/home/erneste/.nuget/packages/microsoft.aspnetcore.components.webassembly.server/10.0.0/microsoft.aspnetcore.components.webassembly.server.10.0.0.nupkg.sha512",
+    "/home/erneste/.nuget/packages/microsoft.aspnetcore.http.connections.client/10.0.0/microsoft.aspnetcore.http.connections.client.10.0.0.nupkg.sha512",
+    "/home/erneste/.nuget/packages/microsoft.aspnetcore.signalr.client/10.0.0/microsoft.aspnetcore.signalr.client.10.0.0.nupkg.sha512",
+    "/home/erneste/.nuget/packages/microsoft.aspnetcore.signalr.client.core/10.0.0/microsoft.aspnetcore.signalr.client.core.10.0.0.nupkg.sha512",
     "/home/erneste/.nuget/packages/microsoft.data.sqlite.core/10.0.0/microsoft.data.sqlite.core.10.0.0.nupkg.sha512",
     "/home/erneste/.nuget/packages/microsoft.dotnet.hotreload.webassembly.browser/10.0.106/microsoft.dotnet.hotreload.webassembly.browser.10.0.106.nupkg.sha512",
     "/home/erneste/.nuget/packages/microsoft.entityframeworkcore/10.0.0/microsoft.entityframeworkcore.10.0.0.nupkg.sha512",

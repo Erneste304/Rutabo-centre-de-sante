@@ -369,3 +369,6 @@ C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/Hosp
 /home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/HospitalManagementSystem.API.pdb
 /home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/HospitalManagementSystem.API.genruntimeconfig.cache
 /home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/ref/HospitalManagementSystem.API.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/bin/Debug/net10.0/Microsoft.AspNetCore.Http.Connections.Client.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/bin/Debug/net10.0/Microsoft.AspNetCore.SignalR.Client.dll
+/home/erneste/Documents/Coding-web/Rutabo-centre-de-sante/HospitalManagementSystem/HospitalManagementSystem.API/bin/Debug/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.dll

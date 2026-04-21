@@ -88,8 +88,8 @@
                                     <button class="btn-icon" title="Edit" @onclick="() => EditAppointment(apt.AppointmentId)">✏️</button>
                                     @if (apt.Status == "Scheduled" || apt.Status == "Confirmed")
                                     {
-                                        <button class="btn-icon" title="Complete" @onclick="() => UpdateStatus(apt.AppointmentId, \"Completed\")">✓</button>
-                                        <button class="btn-icon btn-danger" title="Cancel" @onclick="() => UpdateStatus(apt.AppointmentId, \"Cancelled\")">✕</button>
+                                        <button class="btn-icon" title="Complete" @onclick="@(() => UpdateStatus(apt.AppointmentId, "Completed"))">✓</button>
+                                        <button class="btn-icon btn-danger" title="Cancel" @onclick="@(() => UpdateStatus(apt.AppointmentId, "Cancelled"))">✕</button>
                                     }
                                 </div>
                             </div>

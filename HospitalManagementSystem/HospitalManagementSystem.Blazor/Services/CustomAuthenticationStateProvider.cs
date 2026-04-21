@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 using Microsoft.JSInterop;
+using HospitalManagementSystem.Blazor.Models.DTOs;
 
 namespace HospitalManagementSystem.Blazor.Services
 {

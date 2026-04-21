@@ -87,6 +87,49 @@
           "build/Microsoft.AspNetCore.Components.WebAssembly.Server.targets": {}
         }
       },
+      "Microsoft.AspNetCore.Http.Connections.Client/10.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.AspNetCore.Http.Connections.Client.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.Http.Connections.Client.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SignalR.Client/10.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Connections.Client": "10.0.0",
+          "Microsoft.AspNetCore.SignalR.Client.Core": "10.0.0"
+        },
+        "compile": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SignalR.Client.Core/10.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.Data.Sqlite.Core/10.0.0": {
         "type": "package",
         "dependencies": {
@@ -490,6 +533,7 @@
         "dependencies": {
           "HospitalManagementSystem.Core": "1.0.0",
           "Microsoft.AspNetCore.Components.WebAssembly": "10.0.0",
+          "Microsoft.AspNetCore.SignalR.Client": "10.0.0",
           "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.106"
         },
         "compile": {
@@ -616,6 +660,69 @@
         "tools/BlazorDebugProxy/Microsoft.NET.WebAssembly.Webcil.dll",
         "tools/BlazorDebugProxy/Microsoft.SymbolStore.dll",
         "tools/BlazorDebugProxy/Newtonsoft.Json.dll"
+      ]
+    },
+    "Microsoft.AspNetCore.Http.Connections.Client/10.0.0": {
+      "sha512": "7nSER+de0V6mWTcdUqBJZlm1XMz+Y2mTHzL3B/msVF+JfSXXZtKNVC18TI7AeSz4PD//b5qpy8n0RQEIVByfJw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.http.connections.client/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.AspNetCore.Http.Connections.Client.dll",
+        "lib/net10.0/Microsoft.AspNetCore.Http.Connections.Client.xml",
+        "lib/net462/Microsoft.AspNetCore.Http.Connections.Client.dll",
+        "lib/net462/Microsoft.AspNetCore.Http.Connections.Client.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Connections.Client.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Http.Connections.Client.xml",
+        "lib/netstandard2.1/Microsoft.AspNetCore.Http.Connections.Client.dll",
+        "lib/netstandard2.1/Microsoft.AspNetCore.Http.Connections.Client.xml",
+        "microsoft.aspnetcore.http.connections.client.10.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.http.connections.client.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.SignalR.Client/10.0.0": {
+      "sha512": "XHPNPLqPX7CVJ5JuaumTP58sAVrQG4TqFKLFOtN1mZIwgEUHKwtDeMwL0G8dIvy9zcpi7os4CYAHvA1bUUTzVw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.signalr.client/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.dll",
+        "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.xml",
+        "lib/net462/Microsoft.AspNetCore.SignalR.Client.dll",
+        "lib/net462/Microsoft.AspNetCore.SignalR.Client.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.SignalR.Client.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.SignalR.Client.xml",
+        "microsoft.aspnetcore.signalr.client.10.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.signalr.client.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.SignalR.Client.Core/10.0.0": {
+      "sha512": "MrXjT7YNV0e1Jb3Hai6kX/Ot7X2SlONHv5IC5XNGeycTTLu3qitJ7DXZUsPPZs6yanWIOsIKjPEY58ARHdRKGg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.signalr.client.core/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.dll",
+        "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.xml",
+        "lib/net462/Microsoft.AspNetCore.SignalR.Client.Core.dll",
+        "lib/net462/Microsoft.AspNetCore.SignalR.Client.Core.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.SignalR.Client.Core.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.SignalR.Client.Core.xml",
+        "lib/netstandard2.1/Microsoft.AspNetCore.SignalR.Client.Core.dll",
+        "lib/netstandard2.1/Microsoft.AspNetCore.SignalR.Client.Core.xml",
+        "microsoft.aspnetcore.signalr.client.core.10.0.0.nupkg.sha512",
+        "microsoft.aspnetcore.signalr.client.core.nuspec"
       ]
     },
     "Microsoft.Data.Sqlite.Core/10.0.0": {
