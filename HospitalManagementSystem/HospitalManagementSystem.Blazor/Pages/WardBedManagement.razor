@@ -1,0 +1,272 @@
+@page "/ward-bed-management"
+@inject NavigationManager Navigation
+
+<PageTitle>Ward & Bed Management - Hospital Management System</PageTitle>
+
+<div class="ward-management-container">
+    <div class="page-header">
+        <div>
+            <h1>Ward & Bed Management</h1>
+            <p>Manage patient bed assignments, transfers, and discharges</p>
+        </div>
+    </div>
+
+    <div class="action-cards-grid">
+        <div class="action-card" @onclick='() => OpenForm("assign")'>
+            <div class="action-icon assign">🛏️</div>
+            <h3>Assign Bed</h3>
+            <p>Assign a bed to a newly admitted patient</p>
+            <button class="btn btn-primary">Open Form</button>
+        </div>
+
+        <div class="action-card" @onclick='() => OpenForm("transfer")'>
+            <div class="action-icon transfer">🔄</div>
+            <h3>Transfer Bed</h3>
+            <p>Move a patient to a different bed or ward</p>
+            <button class="btn btn-info">Open Form</button>
+        </div>
+
+        <div class="action-card" @onclick='() => OpenForm("reserve")'>
+            <div class="action-icon reserve">📅</div>
+            <h3>Reserve Bed</h3>
+            <p>Reserve a bed for an upcoming admission</p>
+            <button class="btn btn-warning">Open Form</button>
+        </div>
+
+        <div class="action-card" @onclick='() => OpenForm("discharge")'>
+            <div class="action-icon discharge">🚪</div>
+            <h3>Discharge Patient</h3>
+            <p>Process patient discharge and free up bed</p>
+            <button class="btn btn-danger">Open Form</button>
+        </div>
+    </div>
+
+    @if (activeForm != null)
+    {
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>@formTitle</h3>
+                    <button class="btn-close" @onclick="CloseForm">×</button>
+                </div>
+                <div class="modal-body">
+                    @if (activeForm == "assign")
+                    {
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label>Patient Name</label>
+                                <input type="text" class="form-control" placeholder="Search patient..." />
+                            </div>
+                            <div class="form-group">
+                                <label>Ward</label>
+                                <select class="form-control">
+                                    <option>General Ward</option>
+                                    <option>ICU</option>
+                                    <option>Maternity</option>
+                                    <option>Pediatrics</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Bed Number</label>
+                                <select class="form-control">
+                                    <option>B-101</option>
+                                    <option>B-102</option>
+                                    <option>B-103</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-full">
+                                <label>Admission Date & Time</label>
+                                <input type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            </div>
+                        </div>
+                    }
+                    else if (activeForm == "transfer")
+                    {
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label>Current Patient/Bed</label>
+                                <select class="form-control">
+                                    <option>John Doe (B-101)</option>
+                                    <option>Jane Smith (B-102)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>New Ward</label>
+                                <select class="form-control">
+                                    <option>General Ward</option>
+                                    <option>ICU</option>
+                                    <option>Maternity</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>New Bed Number</label>
+                                <select class="form-control">
+                                    <option>B-201</option>
+                                    <option>B-202</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-full">
+                                <label>Reason for Transfer</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    }
+                    else if (activeForm == "reserve")
+                    {
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label>Patient Name (Optional)</label>
+                                <input type="text" class="form-control" placeholder="Enter name or ID" />
+                            </div>
+                            <div class="form-group">
+                                <label>Ward</label>
+                                <select class="form-control">
+                                    <option>General Ward</option>
+                                    <option>ICU</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Bed Number</label>
+                                <select class="form-control">
+                                    <option>B-105</option>
+                                    <option>B-106</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Reservation Start</label>
+                                <input type="date" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Expected Duration (Days)</label>
+                                <input type="number" class="form-control" min="1" value="1" />
+                            </div>
+                        </div>
+                    }
+                    else if (activeForm == "discharge")
+                    {
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label>Patient to Discharge</label>
+                                <select class="form-control">
+                                    <option>John Doe (B-101)</option>
+                                    <option>Jane Smith (B-102)</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-group-full">
+                                <label>Discharge Date & Time</label>
+                                <input type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            </div>
+                            <div class="form-group form-group-full">
+                                <label>Discharge Summary</label>
+                                <textarea class="form-control" rows="3" placeholder="Final notes..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Follow-up Required?</label>
+                                <select class="form-control">
+                                    <option>No</option>
+                                    <option>Yes - 1 Week</option>
+                                    <option>Yes - 1 Month</option>
+                                </select>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseForm">Cancel</button>
+                    <button class="btn btn-primary" @onclick="SubmitForm">Submit</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .ward-management-container {
+        padding: 20px;
+    }
+
+    .action-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 24px;
+        margin-top: 30px;
+    }
+
+    .action-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid var(--border-color);
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary-color);
+    }
+
+    .action-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        border-radius: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .action-icon.assign { background: #eff6ff; }
+    .action-icon.transfer { background: #ecfeff; }
+    .action-icon.reserve { background: #fffbeb; }
+    .action-icon.discharge { background: #fef2f2; }
+
+    .action-card h3 {
+        margin-bottom: 10px;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .action-card p {
+        color: #64748b;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+    }
+
+    .action-card .btn {
+        width: 100%;
+    }
+</style>
+
+@code {
+    private string? activeForm;
+    private string formTitle = "";
+
+    private void OpenForm(string formType)
+    {
+        activeForm = formType;
+        formTitle = formType switch
+        {
+            "assign" => "Assign Bed to Patient",
+            "transfer" => "Transfer Patient Bed",
+            "reserve" => "Reserve a Bed",
+            "discharge" => "Discharge Patient",
+            _ => ""
+        };
+    }
+
+    private void CloseForm()
+    {
+        activeForm = null;
+    }
+
+    private void SubmitForm()
+    {
+        // In a real app, this would call a service
+        CloseForm();
+    }
+}

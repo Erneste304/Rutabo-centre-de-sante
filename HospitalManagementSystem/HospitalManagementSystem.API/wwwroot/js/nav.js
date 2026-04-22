@@ -5,6 +5,7 @@ export const NAV = [
   { id: 'doctors', label: 'Doctors', icon: 'fa-user-doctor', roles: ['Admin', 'Receptionist', 'Patient'] },
   { id: 'appointments', label: 'Appointments', icon: 'fa-calendar-check', roles: '*' },
   { id: 'rooms', label: 'Rooms & Beds', icon: 'fa-bed', roles: ['Admin', 'Doctor', 'Nurse'] },
+  { id: 'ward-bed-management', label: 'Ward Management', icon: 'fa-hospital-user', roles: ['Admin', 'Doctor', 'Nurse'] },
   { id: 'pharmacy', label: 'Pharmacy & Inventory', icon: 'fa-pills', roles: ['Admin', 'Doctor', 'Nurse'] },
   { id: 'billing', label: 'Billing', icon: 'fa-file-invoice-dollar', roles: ['Admin', 'Accountant', 'Receptionist', 'Patient'] },
   { id: 'emergency', label: 'Emergency', icon: 'fa-triangle-exclamation', roles: ['Admin', 'Doctor', 'Nurse'] },

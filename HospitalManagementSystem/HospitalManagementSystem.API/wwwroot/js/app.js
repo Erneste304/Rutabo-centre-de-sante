@@ -3,6 +3,7 @@ import { el, toast, initials } from './ui.js';
 import { navFor } from './nav.js';
 import { dashboard } from './views/dashboard.js';
 import { listView } from './views/list.js';
+import { wardBedManagement } from './views/wardBedManagement.js';
 
 const root = document.getElementById('root');
 
@@ -118,6 +119,7 @@ async function router() {
   const ctx = { user };
   try {
     if (route === 'dashboard') return dashboard(view, ctx);
+    if (route === 'ward-bed-management') return wardBedManagement(view, ctx);
     return listView(view, route);
   } catch (e) {
     view.replaceChildren(el('div', { class: 'alert' }, e.message || 'Failed to load page'));
