@@ -18,7 +18,6 @@ C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\HospitalManagementSystem.dll
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\HospitalManagementSystem.pdb
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.AspNetCore.Components.WebAssembly.dll
-C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.DotNet.HotReload.WebAssembly.Browser.dll
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.JSInterop.WebAssembly.dll
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\HospitalManagementSystem.Blazor.dll
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\HospitalManagementSystem.Core.dll
@@ -30,8 +29,6 @@ C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\jsmodules\jsmodules.build.manifest.json
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\scopedcss\bundle\HospitalManagementSystem.styles.css
-C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\f9o902iofb-{0}-99zm1jdh75-99zm1jdh75.gz
-C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\vt4buy84g1-{0}-0i02oychrm-0i02oychrm.gz
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\staticwebassets.development.json
@@ -45,6 +42,10 @@ C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\ref\HospitalManagementSystem.dll
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\EmbeddedAttribute.cs
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\ValidatableTypeAttribute.cs
-C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\r0k3ybbefm-{0}-2i0r6wwb69-2i0r6wwb69.gz
-C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\hk9kqftos9-{0}-iz83ucvm53-iz83ucvm53.gz
 C:\Users\user\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\zfz25osym1-{0}-q7csm1lm5i-q7csm1lm5i.gz
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.AspNetCore.Http.Connections.Client.dll
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.AspNetCore.SignalR.Client.dll
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\bin\Debug\net10.0\Microsoft.AspNetCore.SignalR.Client.Core.dll
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\vt4buy84g1-{0}-ju26yswere-ju26yswere.gz
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\r0k3ybbefm-{0}-9hsif5t8mt-9hsif5t8mt.gz
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\obj\Debug\net10.0\compressed\hk9kqftos9-{0}-dwu72t6gfx-dwu72t6gfx.gz

@@ -1,5 +1,7 @@
 using HospitalManagementSystem.Blazor;
 using HospitalManagementSystem.Blazor.Components;
+using HospitalManagementSystem.Blazor.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,16 +9,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Register HttpClient for the API
 var apiBaseAddress = builder.Configuration["ApiBaseAddress"] ?? "http://localhost:5051/";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseAddress) });
 
-// Register Blazor Services
-builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.ApiService>();
-builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.AuthService>();
-builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.DashboardService>();
-builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.NurseService>();
-builder.Services.AddScoped<HospitalManagementSystem.Blazor.Services.BillingService>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddScoped<ApiService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<NurseService>();
+builder.Services.AddScoped<ClinicalService>();
+builder.Services.AddScoped<AmbulanceService>();
+builder.Services.AddScoped<BloodBankService>();
+builder.Services.AddScoped<PatientFlowService>();
+builder.Services.AddScoped<AppointmentService>();
+builder.Services.AddScoped<BillingService>();
+builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<DoctorService>();
+builder.Services.AddScoped<InventoryService>();
+builder.Services.AddScoped<PharmacyService>();
+builder.Services.AddScoped<RealTimeService>();
 
 var app = builder.Build();
 

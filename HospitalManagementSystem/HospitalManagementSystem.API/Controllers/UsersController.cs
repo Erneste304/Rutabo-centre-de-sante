@@ -2,13 +2,14 @@ using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using HospitalManagementSystem.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using HospitalManagementSystem.Core.Services;
 
 namespace HospitalManagementSystem.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -119,52 +120,21 @@ namespace HospitalManagementSystem.API.Controllers
 
         // POST: api/Users/admin/reset-password
         [HttpPost("{username}/reset-password")]
-        public async Task<IActionResult> ResetPassword(string username, [FromBody] string newPassword)
+        public async Task<IActionResult> ResetPassword(string username, [FromBody] string? newPassword)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
             if (user == null) return NotFound();
 
-            user.PasswordHash = HashPassword(newPassword);
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 12 || newPassword.Length > 128)
+                return BadRequest("Password must be between 12 and 128 characters.");
+
+            user.PasswordHash = PasswordHasher.HashPassword(newPassword);
             user.ResetRequested = false;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Users/Login
-
-        [HttpPost("login")]
-        public async Task<ActionResult<User>> Login([FromBody] LoginRequest request)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == request.Username);
-
-            if (user == null)
-            {
-                return Unauthorized("Invalid username or password");
-            }
-
-            // In production, use proper password hashing comparison
-            var passwordHash = HashPassword(request.Password);
-            if (user.PasswordHash != passwordHash)
-            {
-                return Unauthorized("Invalid username or password");
-            }
-
-            // Update last login
-            user.LastLogin = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
-        }
-
-        private string HashPassword(string password)
-        {
-            using var sha256 = System.Security.Cryptography.SHA256.Create();
-            var bytes = System.Text.Encoding.UTF8.GetBytes(password);
-            var hash = sha256.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
     }
 
 }

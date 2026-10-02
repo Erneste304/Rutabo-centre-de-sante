@@ -1,7 +1,6 @@
 using HospitalManagementSystem.Data.Entities;
+using HospitalManagementSystem.Core.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace HospitalManagementSystem.Data.Services
 {
@@ -43,28 +42,29 @@ namespace HospitalManagementSystem.Data.Services
         {
             if (await _context.Users.AnyAsync()) return;
 
-            var passwordHash = HashPassword("Admin@123");
-
             var users = new List<User>
             {
-                new User { Username = "admin", PasswordHash = passwordHash, Email = "admin@rutabo.rw", FullName = "System Administrator", UserType = "Admin", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true },
-                new User { Username = "dr.smith", PasswordHash = passwordHash, Email = "dr.smith@rutabo.rw", FullName = "Dr. John Smith", UserType = "Doctor", Specialization = "Cardiology", Department = "Cardiology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male", DateOfBirth = new DateTime(1975, 3, 15) },
-                new User { Username = "dr.johnson", PasswordHash = passwordHash, Email = "dr.johnson@rutabo.rw", FullName = "Dr. Emily Johnson", UserType = "Doctor", Specialization = "Neurology", Department = "Neurology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female", DateOfBirth = new DateTime(1980, 7, 22) },
-                new User { Username = "dr.brown", PasswordHash = passwordHash, Email = "dr.brown@rutabo.rw", FullName = "Dr. Michael Brown", UserType = "Doctor", Specialization = "Emergency Medicine", Department = "Emergency", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male", DateOfBirth = new DateTime(1978, 11, 5) },
-                new User { Username = "dr.davis", PasswordHash = passwordHash, Email = "dr.davis@rutabo.rw", FullName = "Dr. Sarah Davis", UserType = "Doctor", Specialization = "Pediatrics", Department = "Pediatrics", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female", DateOfBirth = new DateTime(1982, 4, 18) },
-                new User { Username = "nurse.alice", PasswordHash = passwordHash, Email = "alice.nurse@rutabo.rw", FullName = "Alice Uwimana", UserType = "Nurse", Department = "ICU", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
-                new User { Username = "nurse.bob", PasswordHash = passwordHash, Email = "bob.nurse@rutabo.rw", FullName = "Bob Nkurunziza", UserType = "Nurse", Department = "Emergency", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male" },
-                new User { Username = "nurse.carol", PasswordHash = passwordHash, Email = "carol.nurse@rutabo.rw", FullName = "Carol Mukamana", UserType = "Nurse", Department = "Cardiology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
-                new User { Username = "reception", PasswordHash = passwordHash, Email = "reception@rutabo.rw", FullName = "Grace Ingabire", UserType = "Receptionist", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
-                new User { Username = "accountant", PasswordHash = passwordHash, Email = "accountant@rutabo.rw", FullName = "Patrick Habimana", UserType = "Accountant", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male" },
+                new User { Username = "admin", Email = "admin@rutabo.rw", FullName = "System Administrator", UserType = "Admin", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true },
+                new User { Username = "dr.smith", Email = "dr.smith@rutabo.rw", FullName = "Dr. John Smith", UserType = "Doctor", Specialization = "Cardiology", Department = "Cardiology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male", DateOfBirth = new DateTime(1975, 3, 15) },
+                new User { Username = "dr.johnson", Email = "dr.johnson@rutabo.rw", FullName = "Dr. Emily Johnson", UserType = "Doctor", Specialization = "Neurology", Department = "Neurology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female", DateOfBirth = new DateTime(1980, 7, 22) },
+                new User { Username = "dr.brown", Email = "dr.brown@rutabo.rw", FullName = "Dr. Michael Brown", UserType = "Doctor", Specialization = "Emergency Medicine", Department = "Emergency", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male", DateOfBirth = new DateTime(1978, 11, 5) },
+                new User { Username = "dr.davis", Email = "dr.davis@rutabo.rw", FullName = "Dr. Sarah Davis", UserType = "Doctor", Specialization = "Pediatrics", Department = "Pediatrics", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female", DateOfBirth = new DateTime(1982, 4, 18) },
+                new User { Username = "nurse.alice", Email = "alice.nurse@rutabo.rw", FullName = "Alice Uwimana", UserType = "Nurse", Department = "ICU", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
+                new User { Username = "nurse.bob", Email = "bob.nurse@rutabo.rw", FullName = "Bob Nkurunziza", UserType = "Nurse", Department = "Emergency", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male" },
+                new User { Username = "nurse.carol", Email = "carol.nurse@rutabo.rw", FullName = "Carol Mukamana", UserType = "Nurse", Department = "Cardiology", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
+                new User { Username = "reception", Email = "reception@rutabo.rw", FullName = "Grace Ingabire", UserType = "Receptionist", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Female" },
+                new User { Username = "accountant", Email = "accountant@rutabo.rw", FullName = "Patrick Habimana", UserType = "Accountant", Status = "Active", CreatedAt = DateTime.UtcNow, IsEmailVerified = true, Gender = "Male" },
                 // Patient users
-                new User { Username = "patient.john", PasswordHash = passwordHash, Email = "john.doe@email.com", FullName = "John Doe", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1988, 5, 12), PhoneNumber = "+250788001001" },
-                new User { Username = "patient.jane", PasswordHash = passwordHash, Email = "jane.smith@email.com", FullName = "Jane Smith", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1995, 8, 25), PhoneNumber = "+250788001002" },
-                new User { Username = "patient.bob", PasswordHash = passwordHash, Email = "bob.wilson@email.com", FullName = "Bob Wilson", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1972, 2, 14), PhoneNumber = "+250788001003" },
-                new User { Username = "patient.alice", PasswordHash = passwordHash, Email = "alice.brown@email.com", FullName = "Alice Brown", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1990, 11, 30), PhoneNumber = "+250788001004" },
-                new User { Username = "patient.charlie", PasswordHash = passwordHash, Email = "charlie.davis@email.com", FullName = "Charlie Davis", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1965, 7, 8), PhoneNumber = "+250788001005" },
-                new User { Username = "patient.mary", PasswordHash = passwordHash, Email = "mary.jones@email.com", FullName = "Mary Jones", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1983, 3, 19), PhoneNumber = "+250788001006" },
+                new User { Username = "patient.john", Email = "john.doe@email.com", FullName = "John Doe", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1988, 5, 12), PhoneNumber = "+250788001001" },
+                new User { Username = "patient.jane", Email = "jane.smith@email.com", FullName = "Jane Smith", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1995, 8, 25), PhoneNumber = "+250788001002" },
+                new User { Username = "patient.bob", Email = "bob.wilson@email.com", FullName = "Bob Wilson", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1972, 2, 14), PhoneNumber = "+250788001003" },
+                new User { Username = "patient.alice", Email = "alice.brown@email.com", FullName = "Alice Brown", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1990, 11, 30), PhoneNumber = "+250788001004" },
+                new User { Username = "patient.charlie", Email = "charlie.davis@email.com", FullName = "Charlie Davis", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Male", DateOfBirth = new DateTime(1965, 7, 8), PhoneNumber = "+250788001005" },
+                new User { Username = "patient.mary", Email = "mary.jones@email.com", FullName = "Mary Jones", UserType = "Patient", Status = "Active", CreatedAt = DateTime.UtcNow, Gender = "Female", DateOfBirth = new DateTime(1983, 3, 19), PhoneNumber = "+250788001006" },
             };
+
+            foreach (var user in users)
+                user.PasswordHash = PasswordHasher.HashPassword("Admin@123");
 
             await _context.Users.AddRangeAsync(users);
         }
@@ -237,12 +237,5 @@ namespace HospitalManagementSystem.Data.Services
             await _context.Billings.AddRangeAsync(billings);
         }
 
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hash = sha256.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
     }
 }

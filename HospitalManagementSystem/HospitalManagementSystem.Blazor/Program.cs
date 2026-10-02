@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using HospitalManagementSystem.Blazor;
 using HospitalManagementSystem.Blazor.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -10,6 +11,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 // Register HttpClient
 var apiBaseAddress = builder.Configuration["ApiBaseAddress"] ?? "http://localhost:5051/";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseAddress) });
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
 // Register Services
 builder.Services.AddScoped<ApiService>();

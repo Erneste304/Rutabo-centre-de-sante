@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Text.Json;
+using HospitalManagementSystem.Blazor.Models.DTOs;
+using Microsoft.JSInterop;
 
 namespace HospitalManagementSystem.Blazor.Services
 {
@@ -10,6 +13,7 @@ namespace HospitalManagementSystem.Blazor.Services
     {
         private HubConnection? _hubConnection;
         private readonly string _hubUrl;
+        private readonly IJSRuntime _jsRuntime;
 
         public event Action<object>? OnBedStatusUpdated;
         public event Action<EmergencyAlertDto>? OnEmergencyAlert;
@@ -18,11 +22,12 @@ namespace HospitalManagementSystem.Blazor.Services
 
         public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
 
-        public RealTimeService(HttpClient httpClient)
+        public RealTimeService(HttpClient httpClient, IJSRuntime jsRuntime)
         {
             // Derive hub URL from the API base address
             var baseUrl = httpClient.BaseAddress?.ToString().TrimEnd('/') ?? "http://localhost:5051";
             _hubUrl = $"{baseUrl}/hubs/hospital";
+            _jsRuntime = jsRuntime;
         }
 
         public async Task StartAsync()
@@ -30,7 +35,15 @@ namespace HospitalManagementSystem.Blazor.Services
             if (_hubConnection != null) return;
 
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl(_hubUrl)
+                .WithUrl(_hubUrl, options => options.AccessTokenProvider = async () =>
+                {
+                    var userJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
+                    if (string.IsNullOrEmpty(userJson))
+                        return null;
+
+                    return JsonSerializer.Deserialize<UserModel>(userJson,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true })?.Token;
+                })
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -71,12 +84,6 @@ namespace HospitalManagementSystem.Blazor.Services
                 Console.WriteLine($"SignalR connection failed: {ex.Message}");
                 OnConnectionChanged?.Invoke(false);
             }
-        }
-
-        public async Task JoinGroupAsync(string groupName)
-        {
-            if (IsConnected)
-                await _hubConnection!.InvokeAsync("JoinGroup", groupName);
         }
 
         public async Task StopAsync()

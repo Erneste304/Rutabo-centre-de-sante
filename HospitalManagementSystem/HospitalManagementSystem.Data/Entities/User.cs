@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace HospitalManagementSystem.Data.Entities
 {
@@ -17,6 +18,7 @@ namespace HospitalManagementSystem.Data.Entities
         
         [Required]
         [StringLength(255)]
+        [JsonIgnore]
         public string PasswordHash { get; set; } = string.Empty;
         
         [Required]

@@ -1,5 +1,3 @@
-﻿using System.Security.Cryptography;
-using System.Text;
 using HospitalManagementSystem.Core.Models;
 using HospitalManagementSystem.Core.Repositories;
 
@@ -18,15 +16,21 @@ namespace HospitalManagementSystem.Core.Services
         {
             var user = await _userRepository.GetByUsernameAsync(username);
             
-            if (user == null || !VerifyPasswordHash(password, user.PasswordHash) || !user.IsActive)
+            if (user == null || !PasswordHasher.VerifyPassword(password, user.PasswordHash) || !user.IsActive)
                 return null;
+
+            if (PasswordHasher.NeedsRehash(user.PasswordHash))
+            {
+                user.PasswordHash = PasswordHasher.HashPassword(password);
+                await _userRepository.UpdateAsync(user);
+            }
 
             return user;
         }
 
         public async Task<User> RegisterAsync(User user, string password)
         {
-            user.PasswordHash = HashPassword(password);
+            user.PasswordHash = PasswordHasher.HashPassword(password);
             // Non-patient users require admin approval
             user.IsActive = user.UserType == UserType.Patient;
             await _userRepository.AddAsync(user);
@@ -34,20 +38,6 @@ namespace HospitalManagementSystem.Core.Services
         }
 
 
-
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = Encoding.UTF8.GetBytes(password);
-            var hash = sha256.ComputeHash(bytes);
-            return Convert.ToBase64String(hash);
-        }
-
-        private bool VerifyPasswordHash(string password, string storedHash)
-        {
-            var hash = HashPassword(password);
-            return hash == storedHash;
-        }
 
         public async Task<User?> GetUserByIdAsync(int id)
         {

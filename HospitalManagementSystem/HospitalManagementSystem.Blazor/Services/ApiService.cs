@@ -20,27 +20,20 @@ namespace HospitalManagementSystem.Blazor.Services
 
         private async Task AttachTokenAsync(HttpRequestMessage request)
         {
-            try
+            if (_cachedToken == null)
             {
-                if (_cachedToken == null)
+                var userJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
+                if (!string.IsNullOrEmpty(userJson))
                 {
-                    var userJson = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "user");
-                    if (!string.IsNullOrEmpty(userJson))
-                    {
-                        var user = JsonSerializer.Deserialize<UserModel>(userJson,
-                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                        _cachedToken = user?.Token;
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(_cachedToken))
-                {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _cachedToken);
+                    var user = JsonSerializer.Deserialize<UserModel>(userJson,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    _cachedToken = user?.Token;
                 }
             }
-            catch
+
+            if (!string.IsNullOrEmpty(_cachedToken))
             {
-                // Ignore token attachment errors
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _cachedToken);
             }
         }
 
@@ -48,61 +41,48 @@ namespace HospitalManagementSystem.Blazor.Services
 
         public async Task<T?> RequestAsync<T>(string endpoint, HttpMethod? method = null, object? data = null)
         {
-            try
+            using var request = new HttpRequestMessage(method ?? HttpMethod.Get, endpoint);
+            await AttachTokenAsync(request);
+
+            if (data != null)
             {
-                var request = new HttpRequestMessage(method ?? HttpMethod.Get, endpoint);
-                await AttachTokenAsync(request);
-
-                if (data != null)
-                {
-                    request.Content = JsonContent.Create(data);
-                }
-
-                var response = await _httpClient.SendAsync(request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    return default;
-                }
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-                {
-                    return default;
-                }
-
-                return await response.Content.ReadFromJsonAsync<T>(
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                request.Content = JsonContent.Create(data);
             }
-            catch
+
+            using var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
                 return default;
             }
+
+            return await response.Content.ReadFromJsonAsync<T>(
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<UserModel?> LoginAsync(string username, string password)
         {
             // Login doesn't need a token
-            try
+            using var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/login")
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/auth/login");
-                request.Content = JsonContent.Create(new { Username = username, Password = password });
-                var response = await _httpClient.SendAsync(request);
-                if (!response.IsSuccessStatusCode) return null;
-                var user = await response.Content.ReadFromJsonAsync<UserModel>(
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                if (user?.Token != null)
-                    _cachedToken = user.Token;
-                return user;
-            }
-            catch
-            {
+                Content = JsonContent.Create(new { Username = username, Password = password })
+            };
+            using var response = await _httpClient.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 return null;
-            }
+
+            response.EnsureSuccessStatusCode();
+            var user = await response.Content.ReadFromJsonAsync<UserModel>(
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (user?.Token != null)
+                _cachedToken = user.Token;
+            return user;
         }
 
         public async Task<bool> RegisterAsync(object registerModel)
         {
-            var result = await RequestAsync<object>("api/auth/register", HttpMethod.Post, registerModel);
+            await RequestAsync<object>("api/auth/register", HttpMethod.Post, registerModel);
             return true;
         }
 
@@ -139,7 +119,7 @@ namespace HospitalManagementSystem.Blazor.Services
 
         public async Task<bool> PatchAsync(string endpoint, object data)
         {
-            var result = await RequestAsync<object>(endpoint, HttpMethod.Patch, data);
+            await RequestAsync<object>(endpoint, HttpMethod.Patch, data);
             return true;
         }
     }

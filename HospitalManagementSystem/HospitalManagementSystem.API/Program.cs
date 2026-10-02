@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Core.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
 using System.Text;
 using HospitalManagementSystem.Data.Repositories;
 using HospitalManagementSystem.Core.Repositories;
@@ -13,26 +15,51 @@ using HospitalManagementSystem.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(jwtKey) || Encoding.UTF8.GetByteCount(jwtKey) < 32 ||
+    string.IsNullOrWhiteSpace(jwtIssuer) || string.IsNullOrWhiteSpace(jwtAudience))
+{
+    throw new InvalidOperationException(
+        "JWT configuration is incomplete. Configure Jwt:Key (at least 32 UTF-8 bytes), Jwt:Issuer, and Jwt:Audience.");
+}
+
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Database connection is not configured. Set ConnectionStrings:DefaultConnection.");
+}
+
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
 
 // Add SignalR
 builder.Services.AddSignalR();
 
-builder.Services.AddCors(options =>
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+if (allowedOrigins.Length == 0)
 {
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
+    throw new InvalidOperationException("Configure at least one trusted origin in Cors:AllowedOrigins.");
+}
+
+builder.Services.AddCors(options => options.AddPolicy("TrustedOrigins", policy =>
+    policy.WithOrigins(allowedOrigins).AllowAnyMethod().AllowAnyHeader()));
+builder.Services.AddAuthorization(options =>
+{
+    var hospitalStaff = new[] { "Admin", "Doctor", "Nurse", "Receptionist", "Accountant" };
+    options.AddPolicy("HospitalStaff", policy => policy.RequireRole(hospitalStaff));
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireRole(hospitalStaff)
+        .Build();
 });
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(connectionString));
 
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -44,10 +71,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? string.Empty))
+                Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 
@@ -79,17 +106,12 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+    if (app.Environment.IsDevelopment())
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
-        context.Database.EnsureCreated();
         var seeder = services.GetRequiredService<IDatabaseSeeder>();
         await seeder.SeedAsync();
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }
 
@@ -98,14 +120,14 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseCors("AllowAll");
+app.UseCors("TrustedOrigins");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<HospitalHub>("/hubs/hospital");
+app.MapHub<HospitalHub>("/hubs/hospital").RequireAuthorization();
 
 app.MapFallback(async context =>
 {
@@ -119,6 +141,6 @@ app.MapFallback(async context =>
     {
         context.Response.StatusCode = 404;
     }
-});
+}).AllowAnonymous();
 
 app.Run();

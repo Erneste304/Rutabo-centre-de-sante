@@ -28,15 +28,6 @@ function renderLogin() {
     toggle.querySelector('i').className = isPw ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
   });
 
-  // Quick demo login chips
-  document.querySelectorAll('.chip').forEach(c => {
-    c.addEventListener('click', () => {
-      form.username.value = c.dataset.u;
-      form.password.value = 'Admin@123';
-      form.dispatchEvent(new Event('submit', { cancelable: true }));
-    });
-  });
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errBox.classList.add('hidden');

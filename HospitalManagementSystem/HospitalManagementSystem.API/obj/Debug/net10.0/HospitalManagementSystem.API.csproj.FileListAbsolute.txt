@@ -402,3 +402,6 @@ C:/Users/user/RiderProjects/Rutabo-centre-de-sante/HospitalManagementSystem/Hosp
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/compressed/87osfjsvr0-{0}-kc60nsal7j-kc60nsal7j.gz
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/compressed/1cvraudxgv-{0}-p6zwmzmon8-p6zwmzmon8.gz
 /home/runner/workspace/HospitalManagementSystem/HospitalManagementSystem.API/obj/Debug/net10.0/compressed/hvagc0h6e1-{0}-889scqf5yd-889scqf5yd.gz
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.dll
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\refint\HospitalManagementSystem.API.dll
+C:\Users\User\RiderProjects\Rutabo-centre-de-sante\HospitalManagementSystem\HospitalManagementSystem.API\obj\Debug\net10.0\HospitalManagementSystem.API.pdb

@@ -14,38 +14,58 @@
           "HospitalManagementSystem.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+      "Microsoft.AspNetCore.Components.WebAssembly/10.0.0": {
         "dependencies": {
-          "Microsoft.JSInterop.WebAssembly": "10.0.2"
+          "Microsoft.JSInterop.WebAssembly": "10.0.0"
         },
         "runtime": {
           "lib/net10.0/Microsoft.AspNetCore.Components.WebAssembly.dll": {
-            "assemblyVersion": "10.0.2.0",
-            "fileVersion": "10.0.225.61305"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
           }
         }
       },
-      "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.102": {
+      "Microsoft.AspNetCore.Http.Connections.Client/10.0.0": {
         "runtime": {
-          "lib/net10.0/Microsoft.DotNet.HotReload.WebAssembly.Browser.dll": {
-            "assemblyVersion": "10.0.102.0",
-            "fileVersion": "10.1.225.61305"
+          "lib/net10.0/Microsoft.AspNetCore.Http.Connections.Client.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
           }
         }
       },
-      "Microsoft.JSInterop.WebAssembly/10.0.2": {
+      "Microsoft.AspNetCore.SignalR.Client/10.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Connections.Client": "10.0.0",
+          "Microsoft.AspNetCore.SignalR.Client.Core": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SignalR.Client.Core/10.0.0": {
+        "runtime": {
+          "lib/net10.0/Microsoft.AspNetCore.SignalR.Client.Core.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.JSInterop.WebAssembly/10.0.0": {
         "runtime": {
           "lib/net10.0/Microsoft.JSInterop.WebAssembly.dll": {
-            "assemblyVersion": "10.0.2.0",
-            "fileVersion": "10.0.225.61305"
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
           }
         }
       },
       "HospitalManagementSystem.Blazor/1.0.0": {
         "dependencies": {
           "HospitalManagementSystem.Core": "1.0.0",
-          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.2",
-          "Microsoft.DotNet.HotReload.WebAssembly.Browser": "10.0.102"
+          "Microsoft.AspNetCore.Components.WebAssembly": "10.0.0",
+          "Microsoft.AspNetCore.SignalR.Client": "10.0.0"
         },
         "runtime": {
           "HospitalManagementSystem.Blazor.dll": {
@@ -70,26 +90,40 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.AspNetCore.Components.WebAssembly/10.0.2": {
+    "Microsoft.AspNetCore.Components.WebAssembly/10.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xJ0Qi75jnR75IhZhEwIdH04WH03wbJEAbilFND4SKYH0xgG/4oNAarb4Duvb0/5ko6/qcn4rCmzRuNJ1hF4dRw==",
-      "path": "microsoft.aspnetcore.components.webassembly/10.0.2",
-      "hashPath": "microsoft.aspnetcore.components.webassembly.10.0.2.nupkg.sha512"
+      "sha512": "sha512-ens4WMX0PBTHxRDYpS3i//VktXi+24my01qXI0P91q2rDMHcIKRN0/sdE+4kB1ZwJpHec9vYxDmmnw/JOcXCwQ==",
+      "path": "microsoft.aspnetcore.components.webassembly/10.0.0",
+      "hashPath": "microsoft.aspnetcore.components.webassembly.10.0.0.nupkg.sha512"
     },
-    "Microsoft.DotNet.HotReload.WebAssembly.Browser/10.0.102": {
+    "Microsoft.AspNetCore.Http.Connections.Client/10.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Y8Xq5gLe6l3bW82uGJODzom5Z7pn+Y71BHObnmWF0LqbKFqfOOVDg76a2vyJnRLHn0X1LmsXSec/QdCWFOPl4A==",
-      "path": "microsoft.dotnet.hotreload.webassembly.browser/10.0.102",
-      "hashPath": "microsoft.dotnet.hotreload.webassembly.browser.10.0.102.nupkg.sha512"
+      "sha512": "sha512-7nSER+de0V6mWTcdUqBJZlm1XMz+Y2mTHzL3B/msVF+JfSXXZtKNVC18TI7AeSz4PD//b5qpy8n0RQEIVByfJw==",
+      "path": "microsoft.aspnetcore.http.connections.client/10.0.0",
+      "hashPath": "microsoft.aspnetcore.http.connections.client.10.0.0.nupkg.sha512"
     },
-    "Microsoft.JSInterop.WebAssembly/10.0.2": {
+    "Microsoft.AspNetCore.SignalR.Client/10.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-XeNFL2ozbjbPe32be7OVC3peMbS+vM1hu6Cp0RZfF1HepDRTmohQ+p3LF7BVhEKETxCh1/dd5sUwYuB7I/iApw==",
-      "path": "microsoft.jsinterop.webassembly/10.0.2",
-      "hashPath": "microsoft.jsinterop.webassembly.10.0.2.nupkg.sha512"
+      "sha512": "sha512-XHPNPLqPX7CVJ5JuaumTP58sAVrQG4TqFKLFOtN1mZIwgEUHKwtDeMwL0G8dIvy9zcpi7os4CYAHvA1bUUTzVw==",
+      "path": "microsoft.aspnetcore.signalr.client/10.0.0",
+      "hashPath": "microsoft.aspnetcore.signalr.client.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.SignalR.Client.Core/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MrXjT7YNV0e1Jb3Hai6kX/Ot7X2SlONHv5IC5XNGeycTTLu3qitJ7DXZUsPPZs6yanWIOsIKjPEY58ARHdRKGg==",
+      "path": "microsoft.aspnetcore.signalr.client.core/10.0.0",
+      "hashPath": "microsoft.aspnetcore.signalr.client.core.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.JSInterop.WebAssembly/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j0lrmG+7X4OZh75IzOX00nkwAEjXSgt2Ul6kjwmVkAOBzd8JC1Q/yJ/fC4jWcIXe4h22881Qq1o46p/TnSNaRQ==",
+      "path": "microsoft.jsinterop.webassembly/10.0.0",
+      "hashPath": "microsoft.jsinterop.webassembly.10.0.0.nupkg.sha512"
     },
     "HospitalManagementSystem.Blazor/1.0.0": {
       "type": "project",

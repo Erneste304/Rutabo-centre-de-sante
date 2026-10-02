@@ -51,20 +51,13 @@
                 <span>Login</span>
             }
         </button>
+
+        @if (!string.IsNullOrEmpty(_loginError))
+        {
+            <div class="alert alert-danger" role="alert">@_loginError</div>
+        }
         
         <div class="login-footer text-center mt-3">
-            <p>Select User Type:</p>
-            <div class="user-type-buttons mb-3">
-                @foreach (var userType in _userTypes)
-                {
-                    <button type="button" 
-                            class="btn btn-sm @(userType == _selectedUserType ? "btn-primary shadow-sm" : "btn-outline-secondary")"
-                            @onclick="() => _selectedUserType = userType" style="margin-right: 5px; margin-bottom: 5px;">
-                        <i class="@GetUserTypeIcon(userType)"></i>
-                        <span>@userType</span>
-                    </button>
-                }
-            </div>
             <p>Don't have an account? <a href="javascript:void(0)" @onclick="OnSwitchToRegister" style="color: #6366f1; font-weight: bold;">Register Here</a></p>
         </div>
     </div>
@@ -106,36 +99,31 @@
     private bool _rememberMe = false;
     private bool _showPassword = false;
     private bool _isLoggingIn = false;
-    private string _selectedUserType = "Admin";
-    
-    private readonly List<string> _userTypes = new() { "Admin", "Doctor", "Nurse", "Reception", "Patient", "Accountant" };
-
-    private string GetUserTypeIcon(string userType) => userType switch
-    {
-        "Admin" => "fas fa-user-shield",
-        "Doctor" => "fas fa-user-md",
-        "Nurse" => "fas fa-user-nurse",
-        "Reception" => "fas fa-headset",
-        "Patient" => "fas fa-user-injured",
-        "Accountant" => "fas fa-calculator",
-        _ => "fas fa-user"
-    };
+    private string? _loginError;
 
     private async Task HandleLogin()
     {
         _isLoggingIn = true;
+        _loginError = null;
         try
         {
-            var user = await AuthService.LoginAsync(_username, _password, _selectedUserType);
+            var user = await AuthService.LoginAsync(_username, _password);
             if (user != null)
             {
                 await OnLoginSuccess.InvokeAsync(user);
             }
             else
             {
-                // Show error (would typically use a toast service here)
-                Console.WriteLine("Login failed");
+                _loginError = "Login failed. Check your username and password, and confirm the server is available.";
             }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        {
+            _loginError = "Patient portal access is not available yet. Please contact the health centre.";
+        }
+        catch (HttpRequestException)
+        {
+            _loginError = "The login service is unavailable. Check that the hospital server is running.";
         }
         finally
         {
