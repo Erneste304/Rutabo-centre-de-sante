@@ -3,105 +3,223 @@
 @inject PatientService PatientService
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Patients - Hospital Management System</PageTitle>
+<PageTitle>Patients – Rutabo HMS</PageTitle>
 
-<div class="patients-container">
+<div class="animate-in">
+
+    <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1>Patients</h1>
-            <p>Manage patient records and information</p>
+            <h1><i class="fas fa-user-injured" style="color:var(--brand-primary);margin-right:10px;font-size:1.4rem;"></i>Patients</h1>
+            <p>Manage patient records and clinical information</p>
         </div>
-        <a href="/patients/new" class="btn btn-primary">+ New Patient</a>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" @onclick="LoadPatients">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <a href="/patients/new" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Patient
+            </a>
+        </div>
     </div>
 
+    <!-- Summary chips -->
+    <div class="patients-summary">
+        <div class="summary-chip">
+            <span class="chip-value">@allPatients.Count</span>
+            <span class="chip-label">Total</span>
+        </div>
+        <div class="summary-chip">
+            <span class="chip-value" style="color:var(--brand-success)">@allPatients.Count(p => p.Status == "Active")</span>
+            <span class="chip-label">Active</span>
+        </div>
+        <div class="summary-chip">
+            <span class="chip-value" style="color:var(--text-muted)">@allPatients.Count(p => p.Status != "Active")</span>
+            <span class="chip-label">Inactive</span>
+        </div>
+    </div>
+
+    <!-- Main Card -->
     <div class="card">
+        <!-- Toolbar -->
         <div class="card-header">
-            <div class="search-bar">
-                <input type="text" placeholder="Search patients..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" />
-                <span class="search-icon">🔍</span>
+            <div class="search-wrapper" style="min-width:260px;">
+                <span class="search-icon"><i class="fas fa-search"></i></span>
+                <input type="text" placeholder="Search patients by name, MRN, email…"
+                       @bind="searchQuery" @oninput="OnSearchChanged"
+                       class="form-control" />
             </div>
-            <div class="filter-controls">
-                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+            <div class="d-flex gap-2 items-center flex-wrap">
+                <select @bind="selectedStatus" @bind:event="oninput" @onchange="OnFilterChanged" class="form-control" style="width:160px;">
                     <option value="">All Status</option>
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                 </select>
+                <select @bind="pageSize" @bind:event="oninput" @onchange="OnPageSizeChanged" class="form-control" style="width:120px;">
+                    <option value="10">10 / page</option>
+                    <option value="25">25 / page</option>
+                    <option value="50">50 / page</option>
+                </select>
             </div>
         </div>
 
-        <div class="card-body">
-            @if (isLoading)
-            {
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>Loading patients...</p>
+        <!-- Content -->
+        @if (isLoading)
+        {
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <span>Loading patients…</span>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-circle-exclamation"></i> @errorMessage
                 </div>
-            }
-            else if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger">@errorMessage</div>
-            }
-            else if (pagedPatients?.Count > 0)
-            {
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
+            </div>
+        }
+        else if (pagedPatients?.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>MRN</th>
+                            <th>Patient</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Age</th>
+                            <th>Blood</th>
+                            <th>Status</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var patient in pagedPatients)
+                        {
                             <tr>
-                                <th>MRN</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Age</th>
-                                <th>Blood Type</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <td>
+                                    <code style="font-size:0.78rem;background:#f0f2f8;padding:3px 7px;border-radius:5px;color:var(--brand-primary);">
+                                        @patient.MedicalRecordNumber
+                                    </code>
+                                </td>
+                                <td>
+                                    <div class="d-flex items-center gap-2">
+                                        <div class="avatar avatar-sm">
+                                            @(patient.FullName.Length > 0 ? patient.FullName[0].ToString().ToUpper() : "?")
+                                        </div>
+                                        <span class="fw-600">@patient.FullName</span>
+                                    </div>
+                                </td>
+                                <td class="text-secondary-color" style="font-size:0.82rem;">@patient.Email</td>
+                                <td class="text-secondary-color" style="font-size:0.82rem;">@(patient.PhoneNumber ?? "—")</td>
+                                <td>@(patient.Age > 0 ? $"{patient.Age} yrs" : "—")</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(patient.BloodType))
+                                    {
+                                        <span class="badge badge-danger">@patient.BloodType</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-color">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="badge @(patient.Status == "Active" ? "badge-success" : "badge-grey")">
+                                        <span class="badge-dot"></span> @patient.Status
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-end">
+                                        <button class="btn btn-ghost btn-sm btn-icon" title="View" @onclick="() => ViewPatient(patient.PatientId)">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-ghost btn-sm btn-icon" title="Edit" @onclick="() => EditPatient(patient.PatientId)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-ghost btn-sm btn-icon" title="Delete"
+                                                style="color:var(--brand-danger)"
+                                                @onclick="() => DeletePatient(patient.PatientId)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var patient in pagedPatients)
-                            {
-                                <tr>
-                                    <td><code>@patient.MedicalRecordNumber</code></td>
-                                    <td>
-                                        <div class="patient-name">
-                                            <div class="avatar">@(patient.FullName.Length > 0 ? patient.FullName[0].ToString().ToUpper() : "?")</div>
-                                            <span>@patient.FullName</span>
-                                        </div>
-                                    </td>
-                                    <td>@patient.Email</td>
-                                    <td>@(patient.PhoneNumber ?? "—")</td>
-                                    <td>@(patient.Age > 0 ? patient.Age.ToString() : "—")</td>
-                                    <td>@(patient.BloodType ?? "—")</td>
-                                    <td><span class="badge badge-@patient.Status.ToLower()">@patient.Status</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-icon" title="View" @onclick="() => ViewPatient(patient.PatientId)">👁️</button>
-                                            <button class="btn-icon" title="Edit" @onclick="() => EditPatient(patient.PatientId)">✏️</button>
-                                            <button class="btn-icon btn-danger" title="Delete" @onclick="() => DeletePatient(patient.PatientId)">🗑️</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="pagination">
-                    <button class="btn-pagination" disabled="@(currentPage == 1)" @onclick="PreviousPage">← Previous</button>
-                    <span class="page-info">Page @currentPage of @totalPages (@filteredPatients.Count total)</span>
-                    <button class="btn-pagination" disabled="@(currentPage >= totalPages)" @onclick="NextPage">Next →</button>
+            <!-- Pagination -->
+            <div class="pagination">
+                <span class="pagination-info">
+                    Showing @((currentPage - 1) * pageSize + 1) – @Math.Min(currentPage * pageSize, filteredPatients.Count) of @filteredPatients.Count patients
+                </span>
+                <div class="pagination-btns">
+                    <button class="page-btn" @onclick="PreviousPage" disabled="@(currentPage == 1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    @for (var p = Math.Max(1, currentPage - 2); p <= Math.Min(totalPages, currentPage + 2); p++)
+                    {
+                        var pCopy = p;
+                        <button class="page-btn @(pCopy == currentPage ? "active" : "")" @onclick="() => GoToPage(pCopy)">@pCopy</button>
+                    }
+                    <button class="page-btn" @onclick="NextPage" disabled="@(currentPage >= totalPages)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <p>No patients found</p>
-                    <a href="/patients/new" class="btn btn-primary mt-2">Add First Patient</a>
-                </div>
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-user-slash"></i></div>
+                <h3>No patients found</h3>
+                <p>No patients match your current search filters.</p>
+                <a href="/patients/new" class="btn btn-primary mt-4">
+                    <i class="fas fa-plus"></i> Add First Patient
+                </a>
+            </div>
+        }
     </div>
+
 </div>
+
+<style>
+    .patients-summary {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .summary-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        background: var(--surface-card);
+        border: 1px solid var(--surface-border);
+        border-radius: var(--radius-full);
+        box-shadow: var(--shadow-xs);
+    }
+
+    .chip-value {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+    }
+
+    .chip-label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .justify-end { justify-content: flex-end; }
+</style>
 
 @code {
     private List<PatientApiModel> allPatients = new();
@@ -126,13 +244,13 @@
         {
             isLoading = true;
             errorMessage = null;
+            StateHasChanged();
             allPatients = await PatientService.GetPatientsAsync();
             ApplyFilters();
         }
         catch (Exception ex)
         {
             errorMessage = $"Failed to load patients: {ex.Message}";
-            Console.WriteLine(errorMessage);
         }
         finally
         {
@@ -147,15 +265,28 @@
         ApplyFilters();
     }
 
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        currentPage = 1;
+        ApplyFilters();
+    }
+
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var ps)) pageSize = ps;
+        currentPage = 1;
+        ApplyFilters();
+    }
+
     private void ApplyFilters()
     {
         filteredPatients = allPatients
             .Where(p => string.IsNullOrEmpty(searchQuery) ||
-                   p.FullName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                   p.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                   p.MedicalRecordNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                        p.FullName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        p.Email.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        p.MedicalRecordNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
             .Where(p => string.IsNullOrEmpty(selectedStatus) ||
-                   p.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
+                        p.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
             .ToList();
 
         totalPages = Math.Max(1, (int)Math.Ceiling((double)filteredPatients.Count / pageSize));
@@ -187,13 +318,7 @@
         }
     }
 
-    private void PreviousPage()
-    {
-        if (currentPage > 1) { currentPage--; UpdatePage(); }
-    }
-
-    private void NextPage()
-    {
-        if (currentPage < totalPages) { currentPage++; UpdatePage(); }
-    }
+    private void GoToPage(int page) { currentPage = page; UpdatePage(); }
+    private void PreviousPage() { if (currentPage > 1) { currentPage--; UpdatePage(); } }
+    private void NextPage() { if (currentPage < totalPages) { currentPage++; UpdatePage(); } }
 }

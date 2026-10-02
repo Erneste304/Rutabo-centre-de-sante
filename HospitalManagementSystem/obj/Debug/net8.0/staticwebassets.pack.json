@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\wwwroot\\css\\dashboard.css",
+      "PackagePath": "staticwebassets\\css\\dashboard.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.HospitalManagementSystem.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.HospitalManagementSystem.props",
+      "PackagePath": "build\\HospitalManagementSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.HospitalManagementSystem.props",
+      "PackagePath": "buildMultiTargeting\\HospitalManagementSystem.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.HospitalManagementSystem.props",
+      "PackagePath": "buildTransitive\\HospitalManagementSystem.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

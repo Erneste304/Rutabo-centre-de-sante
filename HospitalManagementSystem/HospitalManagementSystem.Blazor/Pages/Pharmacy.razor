@@ -1,60 +1,125 @@
 @page "/pharmacy"
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
-<PageTitle>Pharmacy - Hospital Management System</PageTitle>
+<PageTitle>Pharmacy – Rutabo HMS</PageTitle>
 
-<div class="pharmacy-container">
+<div class="animate-in">
+
+    <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1>Pharmacy</h1>
-            <p>Manage prescriptions and medications</p>
+            <h1><i class="fas fa-pills" style="color:var(--brand-primary);margin-right:10px;font-size:1.4rem;"></i>Pharmacy</h1>
+            <p>Manage prescriptions, dispense medication, and track inventory</p>
         </div>
-        <a href="/pharmacy/new-prescription" class="btn btn-primary">+ New Prescription</a>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" @onclick="LoadData">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <a href="/pharmacy/new-prescription" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Prescription
+            </a>
+        </div>
     </div>
 
-    <div class="pharmacy-grid">
-        <div class="card">
-            <div class="card-header">
-                <h2>Pending Prescriptions</h2>
-                <div class="filter-controls">
-                    <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" />
+    <!-- Stat cards -->
+    <div class="stat-grid" style="margin-bottom:24px;">
+        <div class="stat-card" style="--stat-color:#7209b7;--stat-bg:rgba(114,9,183,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Pending Rx</div>
+                    <div class="stat-card-value">@prescriptions.Count(p => p.Status == "Pending")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-file-prescription"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06d6a0;--stat-bg:rgba(6,214,160,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Dispensed Today</div>
+                    <div class="stat-card-value">@prescriptions.Count(p => p.Status == "Dispensed" && p.DateIssued.Date == DateTime.Today)</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#fb8500;--stat-bg:rgba(251,133,0,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Low Stock Items</div>
+                    <div class="stat-card-value">@inventoryItems.Count(i => i.CurrentStock <= i.MaxStock * 0.2)</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-grid" style="grid-template-columns: 3fr 2fr;">
+        <!-- Left Column: Prescriptions -->
+        <div class="card h-full">
+            <div class="card-header border-bottom">
+                <div>
+                    <div class="card-title">Recent Prescriptions</div>
+                    <div class="card-subtitle">Pending and recently dispensed</div>
+                </div>
+                <div class="search-wrapper" style="width:200px;">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                    <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="OnSearchChanged" class="form-control form-control-sm" />
                 </div>
             </div>
-
-            <div class="card-body">
+            
+            <div class="card-body p-0">
                 @if (isLoading)
                 {
-                    <div class="loading-spinner">
+                    <div class="loading-container">
                         <div class="spinner"></div>
-                        <p>Loading prescriptions...</p>
                     </div>
                 }
-                else if (prescriptions?.Count > 0)
+                else if (filteredPrescriptions?.Count > 0)
                 {
-                    <div class="prescriptions-list">
-                        @foreach (var rx in prescriptions)
+                    <div class="rx-list">
+                        @foreach (var rx in filteredPrescriptions)
                         {
-                            <div class="prescription-item">
-                                <div class="rx-header">
-                                    <h3>@rx.PatientName</h3>
-                                    <span class="badge badge-@rx.Status.ToLower()">@rx.Status</span>
+                            <div class="rx-item">
+                                <div class="rx-header d-flex justify-between items-center mb-2">
+                                    <div class="d-flex items-center gap-3">
+                                        <div class="avatar avatar-sm bg-card border text-primary-color">
+                                            <i class="fas fa-file-prescription"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-0 fw-700 font-heading">@rx.PatientName</h4>
+                                            <span class="text-muted-color" style="font-size:0.75rem;">
+                                                <i class="fas fa-user-md"></i> @rx.DoctorName &bull; @rx.DateIssued.ToString("MMM dd, yyyy")
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <span class="badge @(rx.Status == "Pending" ? "badge-warning" : "badge-success")">
+                                        @rx.Status
+                                    </span>
                                 </div>
-                                <div class="rx-details">
-                                    <p><strong>Doctor:</strong> @rx.DoctorName</p>
-                                    <p><strong>Date:</strong> @rx.DateIssued.ToString("MMM dd, yyyy")</p>
+                                
+                                <div class="rx-meds bg-hover p-2 rounded-md mb-3 mt-3">
+                                    @foreach (var med in rx.Medications)
+                                    {
+                                        <div class="d-flex justify-between items-center py-1">
+                                            <div>
+                                                <span class="fw-600" style="font-size:0.85rem;">@med.Name</span>
+                                                <span class="text-muted-color ml-2" style="font-size:0.8rem;">@med.Dosage</span>
+                                            </div>
+                                            <span class="badge badge-grey">Qty: @med.Quantity</span>
+                                        </div>
+                                    }
                                 </div>
-                                <div class="rx-medications">
-                                    <strong>Medications:</strong>
-                                    <ul>
-                                        @foreach (var med in rx.Medications)
-                                        {
-                                            <li>@med.Name - @med.Dosage (@med.Quantity units)</li>
-                                        }
-                                    </ul>
-                                </div>
-                                <div class="rx-actions">
-                                    <button class="btn btn-success" @onclick="() => DispensePrescription(rx.Id)">Dispense</button>
-                                    <button class="btn btn-outline" @onclick="() => ViewPrescription(rx.Id)">View</button>
+                                
+                                <div class="d-flex justify-end gap-2">
+                                    <button class="btn btn-ghost btn-sm" @onclick="() => ViewPrescription(rx.Id)">
+                                        <i class="fas fa-eye"></i> Details
+                                    </button>
+                                    @if (rx.Status == "Pending")
+                                    {
+                                        <button class="btn btn-primary btn-sm" @onclick="() => DispensePrescription(rx.Id)">
+                                            <i class="fas fa-hand-holding-medical"></i> Dispense
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         }
@@ -63,53 +128,119 @@
                 else
                 {
                     <div class="empty-state">
-                        <p>No pending prescriptions</p>
+                        <div class="empty-state-icon"><i class="fas fa-check-circle text-success-color"></i></div>
+                        <h3>All caught up</h3>
+                        <p>No prescriptions found.</p>
                     </div>
                 }
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h2>Inventory Status</h2>
+        <!-- Right Column: Inventory -->
+        <div class="card h-full">
+            <div class="card-header border-bottom">
+                <div>
+                    <div class="card-title">Fast-Moving Inventory</div>
+                    <div class="card-subtitle">Current stock levels</div>
+                </div>
+                <button class="btn btn-ghost btn-sm btn-icon"><i class="fas fa-ellipsis-v"></i></button>
             </div>
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="inventory-list">
-                    @foreach (var item in inventoryItems)
+                    @foreach (var item in inventoryItems.OrderBy(i => i.StockPercentage))
                     {
-                        <div class="inventory-item">
-                            <div class="item-info">
-                                <h4>@item.Name</h4>
-                                <p class="item-code">@item.Code</p>
-                            </div>
-                            <div class="item-stock">
-                                <div class="stock-bar">
-                                    <div class="stock-fill" style="width: @(item.StockPercentage)%"></div>
+                        var isLow = item.StockPercentage <= 20;
+                        var isWarn = item.StockPercentage > 20 && item.StockPercentage <= 40;
+                        var barColor = isLow ? "var(--brand-danger)" : isWarn ? "var(--brand-warning)" : "var(--brand-success)";
+                        
+                        <div class="inv-item">
+                            <div class="d-flex justify-between items-center mb-1">
+                                <div>
+                                    <h4 class="mb-0 fw-600" style="font-size:0.9rem;">@item.Name</h4>
+                                    <span class="text-muted-color" style="font-size:0.75rem;">@item.Code</span>
                                 </div>
-                                <span class="stock-count">@item.CurrentStock / @item.MaxStock</span>
+                                <span class="badge @(isLow ? "badge-danger" : isWarn ? "badge-warning" : "badge-success")">
+                                    @item.CurrentStock / @item.MaxStock
+                                </span>
                             </div>
-                            <span class="stock-status badge badge-@(item.CurrentStock > item.MaxStock / 2 ? "success" : "warning")">
-                                @(item.CurrentStock > item.MaxStock / 2 ? "OK" : "Low")
-                            </span>
+                            
+                            <div class="stock-bar-container mt-2">
+                                <div class="stock-bar-fill" style="width: @(item.StockPercentage)%; background-color: @barColor;"></div>
+                            </div>
                         </div>
                     }
+                </div>
+                <div class="p-3 border-top text-center bg-hover">
+                    <a href="/inventory" class="text-primary-color fw-600" style="font-size:0.85rem;">View Full Inventory Directory <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .rx-list {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .rx-item {
+        padding: 20px;
+        border-bottom: 1px solid var(--surface-border);
+        transition: background 0.15s ease;
+    }
+    
+    .rx-item:last-child {
+        border-bottom: none;
+    }
+    
+    .rx-item:hover {
+        background: var(--surface-hover);
+    }
+    
+    .inv-item {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--surface-border);
+    }
+    
+    .inv-item:last-child {
+        border-bottom: none;
+    }
+    
+    .stock-bar-container {
+        height: 6px;
+        background: var(--surface-border);
+        border-radius: 99px;
+        overflow: hidden;
+    }
+    
+    .stock-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+</style>
+
 @code {
     private List<PrescriptionDto> prescriptions = new();
+    private List<PrescriptionDto> filteredPrescriptions = new();
     private List<InventoryItemDto> inventoryItems = new();
     private string searchQuery = "";
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
         try
         {
             isLoading = true;
+            StateHasChanged();
+            
+            await Task.Delay(300); // Simulate fetch
 
             prescriptions = new List<PrescriptionDto>
             {
@@ -118,12 +249,12 @@
                     Id = 1,
                     PatientName = "John Doe",
                     DoctorName = "Dr. Smith",
-                    DateIssued = DateTime.Now.AddDays(-1),
+                    DateIssued = DateTime.Now.AddHours(-2),
                     Status = "Pending",
                     Medications = new List<MedicationDto>
                     {
-                        new MedicationDto { Name = "Aspirin", Dosage = "500mg", Quantity = 30 },
-                        new MedicationDto { Name = "Ibuprofen", Dosage = "200mg", Quantity = 20 }
+                        new MedicationDto { Name = "Amoxicillin", Dosage = "500mg", Quantity = 21 },
+                        new MedicationDto { Name = "Ibuprofen", Dosage = "400mg", Quantity = 14 }
                     }
                 },
                 new PrescriptionDto
@@ -131,28 +262,44 @@
                     Id = 2,
                     PatientName = "Jane Smith",
                     DoctorName = "Dr. Johnson",
-                    DateIssued = DateTime.Now,
+                    DateIssued = DateTime.Now.AddHours(-5),
                     Status = "Pending",
                     Medications = new List<MedicationDto>
                     {
-                        new MedicationDto { Name = "Amoxicillin", Dosage = "250mg", Quantity = 21 }
+                        new MedicationDto { Name = "Lisinopril", Dosage = "10mg", Quantity = 30 }
+                    }
+                },
+                new PrescriptionDto
+                {
+                    Id = 3,
+                    PatientName = "Robert Taylor",
+                    DoctorName = "Dr. Davis",
+                    DateIssued = DateTime.Now.AddDays(-1),
+                    Status = "Dispensed",
+                    Medications = new List<MedicationDto>
+                    {
+                        new MedicationDto { Name = "Metformin", Dosage = "500mg", Quantity = 60 }
                     }
                 }
             };
 
             inventoryItems = new List<InventoryItemDto>
             {
-                new InventoryItemDto { Name = "Aspirin", Code = "ASP-001", CurrentStock = 450, MaxStock = 500 },
-                new InventoryItemDto { Name = "Ibuprofen", Code = "IBU-001", CurrentStock = 150, MaxStock = 300 },
-                new InventoryItemDto { Name = "Amoxicillin", Code = "AMX-001", CurrentStock = 80, MaxStock = 200 },
-                new InventoryItemDto { Name = "Paracetamol", Code = "PAR-001", CurrentStock = 600, MaxStock = 1000 },
+                new InventoryItemDto { Name = "Amoxicillin 500mg", Code = "AMX-001", CurrentStock = 45, MaxStock = 500 },
+                new InventoryItemDto { Name = "Ibuprofen 400mg", Code = "IBU-001", CurrentStock = 120, MaxStock = 300 },
+                new InventoryItemDto { Name = "Lisinopril 10mg", Code = "LIS-001", CurrentStock = 85, MaxStock = 200 },
+                new InventoryItemDto { Name = "Paracetamol 500mg", Code = "PAR-001", CurrentStock = 580, MaxStock = 1000 },
+                new InventoryItemDto { Name = "Metformin 500mg", Code = "MET-001", CurrentStock = 310, MaxStock = 400 },
             };
 
-            isLoading = false;
+            ApplyFilters();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading pharmacy data: {ex.Message}");
+        }
+        finally
+        {
             isLoading = false;
         }
     }
@@ -160,7 +307,18 @@
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchQuery = e.Value?.ToString() ?? "";
-        // Apply search filter
+        ApplyFilters();
+    }
+    
+    private void ApplyFilters()
+    {
+        filteredPrescriptions = prescriptions
+            .Where(p => string.IsNullOrEmpty(searchQuery) ||
+                        p.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        p.DoctorName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(p => p.Status == "Pending" ? 0 : 1)
+            .ThenByDescending(p => p.DateIssued)
+            .ToList();
     }
 
     private async Task DispensePrescription(int id)
@@ -169,6 +327,8 @@
         if (rx != null)
         {
             rx.Status = "Dispensed";
+            ApplyFilters();
+            await JSRuntime.InvokeVoidAsync("showToast", $"Prescription for {rx.PatientName} dispensed successfully.", "success");
         }
     }
 
@@ -180,26 +340,26 @@
     public class PrescriptionDto
     {
         public int Id { get; set; }
-        public string PatientName { get; set; }
-        public string DoctorName { get; set; }
+        public string PatientName { get; set; } = "";
+        public string DoctorName { get; set; } = "";
         public DateTime DateIssued { get; set; }
-        public string Status { get; set; }
-        public List<MedicationDto> Medications { get; set; }
+        public string Status { get; set; } = "";
+        public List<MedicationDto> Medications { get; set; } = new();
     }
 
     public class MedicationDto
     {
-        public string Name { get; set; }
-        public string Dosage { get; set; }
+        public string Name { get; set; } = "";
+        public string Dosage { get; set; } = "";
         public int Quantity { get; set; }
     }
 
     public class InventoryItemDto
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
+        public string Name { get; set; } = "";
+        public string Code { get; set; } = "";
         public int CurrentStock { get; set; }
         public int MaxStock { get; set; }
-        public int StockPercentage => (CurrentStock * 100) / MaxStock;
+        public int StockPercentage => MaxStock > 0 ? (CurrentStock * 100) / MaxStock : 0;
     }
 }

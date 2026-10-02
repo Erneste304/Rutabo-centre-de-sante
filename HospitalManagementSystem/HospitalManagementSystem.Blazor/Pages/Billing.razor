@@ -3,272 +3,354 @@
 @inject BillingService BillingService
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Billing - Hospital Management System</PageTitle>
+<PageTitle>Billing – Rutabo HMS</PageTitle>
 
-<div class="billing-container">
+<div class="animate-in">
+
+    <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1>Billing</h1>
-            <p>Manage invoices and payments</p>
+            <h1><i class="fas fa-file-invoice-dollar" style="color:var(--brand-primary);margin-right:10px;font-size:1.4rem;"></i>Billing & Finance</h1>
+            <p>Manage patient invoices, process payments, and track revenue</p>
         </div>
-        <a href="/billing/new-invoice" class="btn btn-primary">+ New Invoice</a>
-    </div>
-
-    <div class="billing-stats">
-        <div class="stat-card">
-            <h3>Total Revenue</h3>
-            <p class="stat-value">$@totalRevenue.ToString("N0")</p>
-            <span class="stat-change positive">All time</span>
-        </div>
-        <div class="stat-card">
-            <h3>Pending Payments</h3>
-            <p class="stat-value">$@pendingAmount.ToString("N0")</p>
-            <span class="stat-change">@pendingCount invoices</span>
-        </div>
-        <div class="stat-card">
-            <h3>Paid</h3>
-            <p class="stat-value">$@paidAmount.ToString("N0")</p>
-            <span class="stat-change positive">@paidCount invoices</span>
-        </div>
-        <div class="stat-card">
-            <h3>Overdue</h3>
-            <p class="stat-value">@overdueCount</p>
-            <span class="stat-change negative">invoices overdue</span>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" @onclick="LoadInvoices">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <a href="/billing/new-invoice" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Invoice
+            </a>
         </div>
     </div>
 
+    <!-- Stat chips row -->
+    <div class="stat-grid" style="margin-bottom:24px;">
+        <div class="stat-card" style="--stat-color:#4361ee;--stat-bg:rgba(67,97,238,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Total Revenue</div>
+                    <div class="stat-card-value">$@totalRevenue.ToString("N0")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-chart-line"></i></div>
+            </div>
+            <div class="stat-card-change up"><i class="fas fa-arrow-trend-up"></i> <span>All time</span></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06d6a0;--stat-bg:rgba(6,214,160,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Paid</div>
+                    <div class="stat-card-value">$@paidAmount.ToString("N0")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-check-double"></i></div>
+            </div>
+            <div class="stat-card-change up"><span>@paidCount invoices completed</span></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#fb8500;--stat-bg:rgba(251,133,0,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Pending Payments</div>
+                    <div class="stat-card-value">$@pendingAmount.ToString("N0")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-hourglass-half"></i></div>
+            </div>
+            <div class="stat-card-change"><span>@pendingCount invoices pending</span></div>
+        </div>
+        <div class="stat-card" style="--stat-color:#ef233c;--stat-bg:rgba(239,35,60,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Overdue Invoices</div>
+                    <div class="stat-card-value">@overdueCount</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-exclamation-circle"></i></div>
+            </div>
+            <div class="stat-card-change down"><i class="fas fa-arrow-trend-down"></i> <span>Requires attention</span></div>
+        </div>
+    </div>
+
+    <!-- Main Card -->
     <div class="card">
+        <!-- Toolbar -->
         <div class="card-header">
-            <h2>Invoices</h2>
-            <div class="filter-controls">
-                <input type="text" placeholder="Search patient..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" style="width:180px" />
-                <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
+            <div>
+                <div class="card-title">Invoice Directory</div>
+                <div class="card-subtitle">@filteredInvoices.Count records found</div>
+            </div>
+            <div class="d-flex gap-2 items-center flex-wrap">
+                <div class="search-wrapper" style="min-width:240px;">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                    <input type="text" placeholder="Search invoice or patient..."
+                           @bind="searchQuery" @oninput="OnSearchChanged"
+                           class="form-control" />
+                </div>
+                <select @bind="selectedStatus" @bind:event="oninput" @onchange="OnFilterChanged" class="form-control" style="width:160px;">
                     <option value="">All Status</option>
                     <option value="Paid">Paid</option>
                     <option value="Pending">Pending</option>
                     <option value="Partial">Partial</option>
                     <option value="Overdue">Overdue</option>
                 </select>
+                <select @bind="pageSize" @bind:event="oninput" @onchange="OnPageSizeChanged" class="form-control" style="width:120px;">
+                    <option value="10">10 / page</option>
+                    <option value="25">25 / page</option>
+                    <option value="50">50 / page</option>
+                </select>
             </div>
         </div>
 
-        <div class="card-body">
-            @if (isLoading)
-            {
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>Loading invoices...</p>
+        @if (isLoading)
+        {
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <span>Loading billing records...</span>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-circle-exclamation"></i> @errorMessage
                 </div>
-            }
-            else if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger">@errorMessage</div>
-            }
-            else if (filteredBillings?.Count > 0)
-            {
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Bill #</th>
-                                <th>Patient</th>
-                                <th>Total</th>
-                                <th>Paid</th>
-                                <th>Balance</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var bill in filteredBillings)
+            </div>
+        }
+        else if (pagedInvoices?.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Patient</th>
+                            <th>Date Issued</th>
+                            <th>Due Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var inv in pagedInvoices)
+                        {
+                            var statusColor = inv.Status switch
                             {
-                                <tr>
-                                    <td><strong>@bill.BillNumber</strong></td>
-                                    <td>@bill.PatientName</td>
-                                    <td class="amount">$@bill.TotalAmount.ToString("N2")</td>
-                                    <td class="amount">$@bill.PaidAmount.ToString("N2")</td>
-                                    <td class="amount @(bill.BalanceDue > 0 ? "text-danger" : "text-success")">
-                                        $@bill.BalanceDue.ToString("N2")
-                                    </td>
-                                    <td>@bill.BillDate.ToString("MMM dd, yyyy")</td>
-                                    <td><span class="badge badge-@bill.PaymentStatus.ToLower()">@bill.PaymentStatus</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-icon" title="View" @onclick="() => ViewBill(bill.BillId)">👁️</button>
-                                            @if (bill.PaymentStatus == "Pending" || bill.PaymentStatus == "Partial")
-                                            {
-                                                <button class="btn-icon" title="Record Payment" @onclick="() => RecordPayment(bill.BillId)">💳</button>
-                                            }
-                                            <button class="btn-icon" title="Print" @onclick="() => PrintBill(bill.BillId)">🖨️</button>
+                                "Paid" => "badge-success",
+                                "Pending" => "badge-warning",
+                                "Partial" => "badge-info",
+                                "Overdue" => "badge-danger",
+                                _ => "badge-grey"
+                            };
+
+                            <tr>
+                                <td>
+                                    <span class="fw-700" style="color:var(--brand-primary); font-family:var(--font-heading);">
+                                        @inv.InvoiceNumber
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex items-center gap-2">
+                                        <div class="avatar avatar-sm bg-card border text-primary-color">
+                                            <i class="fas fa-user"></i>
                                         </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                        <span class="fw-600">@inv.PatientName</span>
+                                    </div>
+                                </td>
+                                <td class="text-secondary-color" style="font-size:0.85rem;">@inv.IssueDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @if (inv.DueDate < DateTime.Now && inv.Status != "Paid")
+                                    {
+                                        <span class="text-danger-color fw-600" style="font-size:0.85rem;"><i class="fas fa-exclamation-triangle"></i> @inv.DueDate.ToString("MMM dd, yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-secondary-color" style="font-size:0.85rem;">@inv.DueDate.ToString("MMM dd, yyyy")</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="fw-700" style="font-family:var(--font-heading);">
+                                        $@inv.TotalAmount.ToString("N2")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge @statusColor">@inv.Status</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-end">
+                                        <button class="btn btn-ghost btn-sm btn-icon" title="View PDF" @onclick="() => DownloadInvoice(inv.Id)">
+                                            <i class="fas fa-file-pdf text-danger-color"></i>
+                                        </button>
+                                        @if (inv.Status != "Paid")
+                                        {
+                                            <button class="btn btn-primary btn-sm" @onclick="() => ProcessPayment(inv.Id)">
+                                                <i class="fas fa-credit-card"></i> Pay
+                                            </button>
+                                        }
+                                        <button class="btn btn-ghost btn-sm btn-icon" title="View Details" @onclick="() => ViewInvoice(inv.Id)">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <span class="pagination-info">
+                    Showing @((currentPage - 1) * pageSize + 1) – @Math.Min(currentPage * pageSize, filteredInvoices.Count) of @filteredInvoices.Count invoices
+                </span>
+                <div class="pagination-btns">
+                    <button class="page-btn" @onclick="PreviousPage" disabled="@(currentPage == 1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    @for (var p = Math.Max(1, currentPage - 2); p <= Math.Min(totalPages, currentPage + 2); p++)
+                    {
+                        var pCopy = p;
+                        <button class="page-btn @(pCopy == currentPage ? "active" : "")" @onclick="() => GoToPage(pCopy)">@pCopy</button>
+                    }
+                    <button class="page-btn" @onclick="NextPage" disabled="@(currentPage >= totalPages)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <p>No invoices found</p>
-                </div>
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-receipt"></i></div>
+                <h3>No invoices found</h3>
+                <p>No billing records match your current filters.</p>
+                <a href="/billing/new-invoice" class="btn btn-primary mt-4">
+                    <i class="fas fa-plus"></i> Create First Invoice
+                </a>
+            </div>
+        }
     </div>
 </div>
 
-<!-- Payment Modal -->
-@if (showPaymentModal && selectedBill != null)
-{
-    <div class="modal-overlay" @onclick="CloseModal">
-        <div class="modal-content" @onclick:stopPropagation="true">
-            <div class="modal-header">
-                <h3>Record Payment - @selectedBill.BillNumber</h3>
-                <button class="btn-close" @onclick="CloseModal">✕</button>
-            </div>
-            <div class="modal-body">
-                <p>Balance Due: <strong>$@selectedBill.BalanceDue.ToString("N2")</strong></p>
-                <div class="form-group">
-                    <label>Amount</label>
-                    <input type="number" @bind="paymentAmount" class="form-control" max="@selectedBill.BalanceDue" />
-                </div>
-                <div class="form-group">
-                    <label>Payment Method</label>
-                    <select @bind="paymentMethod" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Debit Card">Debit Card</option>
-                        <option value="Insurance">Insurance</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Online">Online</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
-                <button class="btn btn-primary" @onclick="SubmitPayment" disabled="@isSubmitting">
-                    @(isSubmitting ? "Processing..." : "Record Payment")
-                </button>
-            </div>
-        </div>
-    </div>
-}
-
 @code {
-    private List<BillingModel> allBillings = new();
-    private List<BillingModel> filteredBillings = new();
+    private List<InvoiceModel> invoices = new();
+    private List<InvoiceModel> filteredInvoices = new();
+    private List<InvoiceModel> pagedInvoices = new();
+    
+    private decimal totalRevenue = 0;
+    private decimal pendingAmount = 0;
+    private decimal paidAmount = 0;
+    private int pendingCount = 0;
+    private int paidCount = 0;
+    private int overdueCount = 0;
+    
     private string searchQuery = "";
     private string selectedStatus = "";
     private bool isLoading = true;
     private string? errorMessage;
-
-    // Stats
-    private decimal totalRevenue => allBillings.Sum(b => b.TotalAmount);
-    private decimal pendingAmount => allBillings.Where(b => b.PaymentStatus == "Pending").Sum(b => b.BalanceDue);
-    private int pendingCount => allBillings.Count(b => b.PaymentStatus == "Pending");
-    private decimal paidAmount => allBillings.Where(b => b.PaymentStatus == "Paid").Sum(b => b.PaidAmount);
-    private int paidCount => allBillings.Count(b => b.PaymentStatus == "Paid");
-    private int overdueCount => allBillings.Count(b => b.DueDate.HasValue && b.DueDate < DateTime.Today && b.PaymentStatus != "Paid");
-
-    // Payment modal
-    private bool showPaymentModal = false;
-    private BillingModel? selectedBill;
-    private decimal paymentAmount;
-    private string paymentMethod = "Cash";
-    private bool isSubmitting = false;
+    private int currentPage = 1;
+    private int pageSize = 10;
+    private int totalPages = 1;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadBillings();
+        await LoadInvoices();
     }
 
-    private async Task LoadBillings()
+    private async Task LoadInvoices()
     {
         try
         {
             isLoading = true;
             errorMessage = null;
-            allBillings = await BillingService.GetBillingsAsync();
+            StateHasChanged();
+            
+            invoices = await BillingService.GetInvoicesAsync();
+            CalculateStats();
             ApplyFilters();
         }
         catch (Exception ex)
         {
-            errorMessage = $"Failed to load billings: {ex.Message}";
+            errorMessage = $"Failed to load invoices: {ex.Message}";
         }
         finally
         {
             isLoading = false;
         }
     }
+    
+    private void CalculateStats()
+    {
+        totalRevenue = invoices.Sum(i => i.TotalAmount);
+        pendingAmount = invoices.Where(i => i.Status == "Pending" || i.Status == "Overdue").Sum(i => i.TotalAmount);
+        paidAmount = invoices.Where(i => i.Status == "Paid").Sum(i => i.TotalAmount);
+        
+        pendingCount = invoices.Count(i => i.Status == "Pending");
+        paidCount = invoices.Count(i => i.Status == "Paid");
+        overdueCount = invoices.Count(i => i.Status == "Overdue" || (i.DueDate < DateTime.Now && i.Status != "Paid"));
+    }
 
     private void OnSearchChanged(ChangeEventArgs e)
     {
         searchQuery = e.Value?.ToString() ?? "";
+        currentPage = 1;
+        ApplyFilters();
+    }
+    
+    private void OnFilterChanged(ChangeEventArgs e)
+    {
+        currentPage = 1;
+        ApplyFilters();
+    }
+    
+    private void OnPageSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var ps)) pageSize = ps;
+        currentPage = 1;
         ApplyFilters();
     }
 
     private void ApplyFilters()
     {
-        filteredBillings = allBillings
-            .Where(b => string.IsNullOrEmpty(searchQuery) ||
-                   b.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                   b.BillNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
-            .Where(b => string.IsNullOrEmpty(selectedStatus) ||
-                   b.PaymentStatus.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
-            .OrderByDescending(b => b.BillDate)
+        filteredInvoices = invoices
+            .Where(i => string.IsNullOrEmpty(searchQuery) ||
+                        i.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        i.InvoiceNumber.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+            .Where(i => string.IsNullOrEmpty(selectedStatus) ||
+                        i.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(i => i.IssueDate)
+            .ToList();
+
+        totalPages = Math.Max(1, (int)Math.Ceiling((double)filteredInvoices.Count / pageSize));
+        if (currentPage > totalPages) currentPage = totalPages;
+        UpdatePage();
+    }
+
+    private void UpdatePage()
+    {
+        pagedInvoices = filteredInvoices
+            .Skip((currentPage - 1) * pageSize)
+            .Take(pageSize)
             .ToList();
     }
 
-    private void ViewBill(int id) => Navigation.NavigateTo($"/billing/invoice/{id}");
-
-    private void RecordPayment(int id)
+    private void ViewInvoice(int id) => Navigation.NavigateTo($"/billing/{id}");
+    
+    private async Task DownloadInvoice(int id)
     {
-        selectedBill = allBillings.FirstOrDefault(b => b.BillId == id);
-        if (selectedBill != null)
+        await JSRuntime.InvokeVoidAsync("alert", $"Downloading PDF for invoice #{id}...");
+    }
+    
+    private async Task ProcessPayment(int id)
+    {
+        // For demo purposes
+        var inv = invoices.FirstOrDefault(i => i.Id == id);
+        if (inv != null)
         {
-            paymentAmount = selectedBill.BalanceDue;
-            paymentMethod = "Cash";
-            showPaymentModal = true;
+            inv.Status = "Paid";
+            CalculateStats();
+            ApplyFilters();
+            await JSRuntime.InvokeVoidAsync("showToast", $"Payment processed for invoice {inv.InvoiceNumber}", "success");
         }
     }
 
-    private async Task SubmitPayment()
-    {
-        if (selectedBill == null || paymentAmount <= 0) return;
-        isSubmitting = true;
-        try
-        {
-            var payment = new PaymentModel
-            {
-                BillId = selectedBill.BillId,
-                Amount = paymentAmount,
-                PaymentMethod = paymentMethod,
-                PaymentDate = DateTime.Now,
-                PaymentStatus = "Completed"
-            };
-            var success = await BillingService.ProcessPaymentAsync(selectedBill.BillId, payment);
-            if (success)
-            {
-                CloseModal();
-                await LoadBillings();
-            }
-        }
-        finally
-        {
-            isSubmitting = false;
-        }
-    }
-
-    private void CloseModal()
-    {
-        showPaymentModal = false;
-        selectedBill = null;
-    }
-
-    private async Task PrintBill(int id)
-    {
-        await JSRuntime.InvokeVoidAsync("window.print");
-    }
+    private void GoToPage(int page) { currentPage = page; UpdatePage(); }
+    private void PreviousPage() { if (currentPage > 1) { currentPage--; UpdatePage(); } }
+    private void NextPage() { if (currentPage < totalPages) { currentPage++; UpdatePage(); } }
 }

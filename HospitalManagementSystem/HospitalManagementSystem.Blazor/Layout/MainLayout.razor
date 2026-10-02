@@ -1,137 +1,181 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @inject NavigationManager Navigation
 @inject AuthService AuthService
 
-<div class="app-container">
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h2>HMS</h2>
-            <p>Hospital Management</p>
+<div class="app-layout">
+    <!-- ══════ SIDEBAR ══════ -->
+    <aside class="app-sidebar @(_sidebarOpen ? "open" : "")">
+
+        <!-- Brand -->
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">🏥</div>
+            <div class="sidebar-brand-text">
+                <div class="sidebar-brand-name">Rutabo HMS</div>
+                <div class="sidebar-brand-sub">Centre de Santé</div>
+            </div>
         </div>
 
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <NavLink href="/" class="nav-link" Match="NavLinkMatch.All">
-                    <span class="icon">📊</span>
-                    <span>Dashboard</span>
-                </NavLink>
-            </li>
+        <!-- Navigation -->
+        <nav class="sidebar-nav">
 
-            <li class="nav-section-title">Clinical</li>
-            <li class="nav-item">
-                <NavLink href="/patients" class="nav-link">
-                    <span class="icon">👥</span>
-                    <span>Patients</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/appointments" class="nav-link">
-                    <span class="icon">📅</span>
-                    <span>Appointments</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/medical-records" class="nav-link">
-                    <span class="icon">📋</span>
-                    <span>Medical Records</span>
-                </NavLink>
-            </li>
+            <div class="sidebar-section-label">Main</div>
 
-            <li class="nav-section-title">Operations</li>
-            <li class="nav-item">
-                <NavLink href="/pharmacy" class="nav-link">
-                    <span class="icon">💊</span>
-                    <span>Pharmacy</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/inventory" class="nav-link">
-                    <span class="icon">📦</span>
-                    <span>Inventory</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/blood-bank" class="nav-link">
-                    <span class="icon">🩸</span>
-                    <span>Blood Bank</span>
-                </NavLink>
-            </li>
+            <NavLink href="/" class="sidebar-nav-link" Match="NavLinkMatch.All">
+                <span class="nav-icon"><i class="fas fa-chart-pie"></i></span>
+                <span class="label">Dashboard</span>
+            </NavLink>
 
-            <li class="nav-section-title">Management</li>
-            <li class="nav-item">
-                <NavLink href="/staff" class="nav-link">
-                    <span class="icon">👨‍⚕️</span>
-                    <span>Staff</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/rooms" class="nav-link">
-                    <span class="icon">🏥</span>
-                    <span>Rooms & Beds</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/billing" class="nav-link">
-                    <span class="icon">💰</span>
-                    <span>Billing</span>
-                </NavLink>
-            </li>
+            <div class="sidebar-section-label">Clinical</div>
 
-            <li class="nav-section-title">Emergency</li>
-            <li class="nav-item">
-                <NavLink href="/ambulance" class="nav-link">
-                    <span class="icon">🚑</span>
-                    <span>Ambulance</span>
-                </NavLink>
-            </li>
-            <li class="nav-item">
-                <NavLink href="/emergency" class="nav-link">
-                    <span class="icon">🚨</span>
-                    <span>Emergency Alerts</span>
-                </NavLink>
-            </li>
+            <NavLink href="/patients" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-user-injured"></i></span>
+                <span class="label">Patients</span>
+            </NavLink>
 
-            <li class="nav-section-title">Analytics</li>
-            <li class="nav-item">
-                <NavLink href="/reports" class="nav-link">
-                    <span class="icon">📈</span>
-                    <span>Reports</span>
-                </NavLink>
-            </li>
-        </ul>
-    </nav>
+            <NavLink href="/appointments" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-calendar-check"></i></span>
+                <span class="label">Appointments</span>
+            </NavLink>
 
-    <div class="main-content">
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <button class="menu-toggle" @onclick="ToggleSidebar">☰</button>
-                <h1>Hospital Management System</h1>
+            <NavLink href="/medical-records" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-file-medical"></i></span>
+                <span class="label">Medical Records</span>
+            </NavLink>
+
+            <NavLink href="/pharmacy" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-pills"></i></span>
+                <span class="label">Pharmacy</span>
+            </NavLink>
+
+            <div class="sidebar-section-label">Operations</div>
+
+            <NavLink href="/blood-bank" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-tint"></i></span>
+                <span class="label">Blood Bank</span>
+            </NavLink>
+
+            <NavLink href="/inventory" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-boxes"></i></span>
+                <span class="label">Inventory</span>
+            </NavLink>
+
+            <NavLink href="/rooms" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-bed"></i></span>
+                <span class="label">Rooms & Beds</span>
+            </NavLink>
+
+            <div class="sidebar-section-label">Management</div>
+
+            <NavLink href="/staff" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-user-md"></i></span>
+                <span class="label">Staff</span>
+            </NavLink>
+
+            <NavLink href="/billing" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-file-invoice-dollar"></i></span>
+                <span class="label">Billing</span>
+            </NavLink>
+
+            <div class="sidebar-section-label">Emergency</div>
+
+            <NavLink href="/ambulance" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-ambulance"></i></span>
+                <span class="label">Ambulance</span>
+            </NavLink>
+
+            <NavLink href="/emergency" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                <span class="label">Emergency Alerts</span>
+            </NavLink>
+
+            <div class="sidebar-section-label">Analytics</div>
+
+            <NavLink href="/reports" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-chart-bar"></i></span>
+                <span class="label">Reports</span>
+            </NavLink>
+
+            <NavLink href="/settings" class="sidebar-nav-link">
+                <span class="nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="label">Settings</span>
+            </NavLink>
+
+        </nav>
+
+        <!-- User footer -->
+        <div class="sidebar-footer">
+            <div class="sidebar-user" @onclick="Logout">
+                <div class="sidebar-user-avatar">
+                    @(_userInitials)
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">@(_userName)</div>
+                    <div class="sidebar-user-role">Logout →</div>
+                </div>
             </div>
-            <div class="top-bar-right">
-                <div class="user-menu">
-                    <span class="user-name">Welcome, User</span>
-                    <button class="btn-logout" @onclick="Logout">Logout</button>
+        </div>
+    </aside>
+
+    <!-- ══════ MAIN AREA ══════ -->
+    <div class="app-main">
+
+        <!-- Topbar -->
+        <header class="app-topbar">
+            <div class="topbar-left">
+                <button class="topbar-action-btn" @onclick="ToggleSidebar" title="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <div class="topbar-page-title">Hospital Management System</div>
+                    <div class="topbar-breadcrumb">Rutabo Centre de Santé &bull; 2026</div>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <button class="topbar-action-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </button>
+                <div class="topbar-divider"></div>
+                <div class="topbar-user" @onclick="Logout" title="Logout">
+                    <div class="topbar-avatar">@(_userInitials)</div>
+                    <div>
+                        <div class="topbar-user-name">@(_userName)</div>
+                        <div class="topbar-user-role">@(_userRole)</div>
+                    </div>
                 </div>
             </div>
         </header>
 
+        <!-- Page content -->
         <main class="page-content">
             @Body
         </main>
-
-        <footer class="app-footer">
-            <p>&copy; 2026 Hospital Management System. All rights reserved.</p>
-        </footer>
     </div>
 </div>
 
 @code {
-    private bool sidebarOpen = true;
+    private bool _sidebarOpen = true;
+    private string _userName = "User";
+    private string _userRole = "Staff";
+    private string _userInitials = "U";
 
-    private void ToggleSidebar()
+    protected override async Task OnInitializedAsync()
     {
-        sidebarOpen = !sidebarOpen;
+        var user = AuthService.CurrentUser;
+        if (user != null)
+        {
+            _userName = user.FullName ?? user.Username ?? "User";
+            _userRole = user.UserType ?? "Staff";
+            _userInitials = string.IsNullOrEmpty(_userName) ? "U"
+                : string.Concat(_userName.Split(' ')
+                    .Where(w => w.Length > 0)
+                    .Take(2)
+                    .Select(w => w[0].ToString().ToUpper()));
+        }
     }
+
+    private void ToggleSidebar() => _sidebarOpen = !_sidebarOpen;
 
     private async Task Logout()
     {

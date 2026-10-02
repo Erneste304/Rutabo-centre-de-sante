@@ -1,0 +1,47 @@
+@page "/dashboard"
+@using HospitalManagementSystem.Blazor.Services
+@using HospitalManagementSystem.Blazor.Pages.Dashboard
+@inject AuthService AuthService
+
+@if (_isLoading)
+{
+    <div class="loading-container" style="min-height: 50vh;">
+        <div class="spinner"></div>
+        <span>Loading dashboard...</span>
+    </div>
+}
+else if (_userRole == "Admin")
+{
+    <AdminDashboard FullName="@_userName" />
+}
+else if (_userRole == "Doctor")
+{
+    <DoctorDashboard FullName="@_userName" />
+}
+else if (_userRole == "Nurse")
+{
+    <NurseDashboard FullName="@_userName" Department="General Ward" />
+}
+else
+{
+    <!-- Default dashboard if role not recognized or missing components -->
+    <AdminDashboard FullName="@_userName" />
+}
+
+@code {
+    private bool _isLoading = true;
+    private string _userRole = "Admin";
+    private string _userName = "User";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await AuthService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            _userRole = user.UserType ?? "Admin";
+            _userName = user.FullName ?? user.Username ?? "User";
+        }
+        
+        _isLoading = false;
+    }
+}

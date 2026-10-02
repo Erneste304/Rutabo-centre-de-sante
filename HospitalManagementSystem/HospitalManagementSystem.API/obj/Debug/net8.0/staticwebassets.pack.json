@@ -1,0 +1,57 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\api.js",
+      "PackagePath": "staticwebassets\\js\\api.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\app.js",
+      "PackagePath": "staticwebassets\\js\\app.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\nav.js",
+      "PackagePath": "staticwebassets\\js\\nav.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\ui.js",
+      "PackagePath": "staticwebassets\\js\\ui.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\views\\dashboard.js",
+      "PackagePath": "staticwebassets\\js\\views\\dashboard.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\views\\list.js",
+      "PackagePath": "staticwebassets\\js\\views\\list.js"
+    },
+    {
+      "Id": "C:\\Users\\User\\RiderProjects\\Rutabo-centre-de-sante\\HospitalManagementSystem\\HospitalManagementSystem.API\\wwwroot\\js\\views\\wardBedManagement.js",
+      "PackagePath": "staticwebassets\\js\\views\\wardBedManagement.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.HospitalManagementSystem.API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.HospitalManagementSystem.API.props",
+      "PackagePath": "build\\HospitalManagementSystem.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.HospitalManagementSystem.API.props",
+      "PackagePath": "buildMultiTargeting\\HospitalManagementSystem.API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.HospitalManagementSystem.API.props",
+      "PackagePath": "buildTransitive\\HospitalManagementSystem.API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

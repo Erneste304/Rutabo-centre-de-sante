@@ -3,95 +3,208 @@
 @using HospitalManagementSystem.Blazor.Components.NurseComponents
 @inject NurseService NurseService
 
-<div class="nurse-dashboard theme-blue animate-in">
-    <div class="header-top mb-4">
-        <div class="header-content">
-            <h1>Clinical Care</h1>
-            <p class="text-muted">Monitoring, medication, and shift reporting.</p>
+<div class="animate-in">
+
+    <!-- ── Welcome Banner ── -->
+    <div class="welcome-banner">
+        <div class="welcome-content">
+            <div class="welcome-text">
+                <p class="welcome-greeting">Shift: @CurrentShift</p>
+                <h1 class="welcome-name">Nurse @FullName</h1>
+                <p class="welcome-sub">@Department Department &bull; You have 4 vital sign updates due in the next hour.</p>
+            </div>
+            <div class="welcome-actions">
+                <button class="btn btn-primary" @onclick="() => ShowComponent<ShiftReport>()">
+                    <i class="fas fa-clipboard-list"></i> Start Shift Report
+                </button>
+            </div>
         </div>
-        <div class="header-actions">
-            <span class="badge bg-primary-light p-2 text-primary">@Department Department</span>
+        <div class="welcome-deco">
+            <span>🩺</span>
         </div>
     </div>
 
-    <div class="hero-card-welcome mb-5 p-4 text-white rounded-lg glass" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: 0 20px 40px rgba(67, 97, 238, 0.2);">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h2>Welcome, Nurse @FullName</h2>
-                <p class="mb-0">Your current shift is <strong>@CurrentShift</strong>. You have 4 vital sign updates due in the next hour.</p>
-            </div>
-            <div class="col-md-4 text-right">
-                <button class="btn btn-light btn-lg" @onclick="() => ShowComponent<ShiftReport>()">Start Shift Report</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="stat-grid">
-        <div class="premium-card">
-            <div class="card-icon-wrapper blue bg-theme-light">
-                <i class="fas fa-user-injured"></i>
-            </div>
-            <div class="card-value">@PatientCount</div>
-            <div class="card-label">Assigned Patients</div>
-        </div>
-        <div class="premium-card">
-            <div class="card-icon-wrapper purple bg-theme-light">
-                <i class="fas fa-heartbeat"></i>
-            </div>
-            <div class="card-value">98</div>
-            <div class="card-label">Avg. BPM Today</div>
-        </div>
-        <div class="premium-card">
-            <div class="card-icon-wrapper pink bg-theme-light">
-                <i class="fas fa-clock"></i>
-            </div>
-            <div class="card-value">2h 15m</div>
-            <div class="card-label">Shift Remaining</div>
-        </div>
-        <div class="premium-card">
-            <div class="card-icon-wrapper cyan bg-theme-light">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <div class="card-value">14/20</div>
-            <div class="card-label">Tasks Completed</div>
-        </div>
-    </div>
-
-    <div class="dashboard-actions mb-4">
-        <div class="action-btn" @onclick="ShowVitalSigns">
-            <i class="fas fa-heartbeat text-danger"></i>
-            <span>Vital Signs</span>
-        </div>
-        <div class="action-btn" @onclick="ShowMedicationAdmin">
-            <i class="fas fa-pills text-primary"></i>
-            <span>Medication</span>
-        </div>
-        <div class="action-btn" @onclick="ShowRoomManagement">
-            <i class="fas fa-bed text-info"></i>
-            <span>Room Mgmt</span>
-        </div>
-        <div class="action-btn">
-            <i class="fas fa-notes-medical text-success"></i>
-            <span>Care Plan</span>
-        </div>
-    </div>
-
-    @if (_activeComponent != null)
-    {
-        <div class="component-container animate-in mt-4">
-            <div class="premium-card">
-                <div class="d-flex justify-content-between mb-3">
-                    <h3>Task Details</h3>
-                    <button class="btn btn-sm btn-link" @onclick="() => _activeComponent = null"><i class="fas fa-times"></i> Close</button>
+    <!-- Stat Cards -->
+    <div class="stat-grid" style="margin-bottom:24px;">
+        <div class="stat-card" style="--stat-color:#4361ee;--stat-bg:rgba(67,97,238,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Assigned Patients</div>
+                    <div class="stat-card-value">@PatientCount</div>
                 </div>
-                @_activeComponent
+                <div class="stat-card-icon"><i class="fas fa-user-injured"></i></div>
             </div>
         </div>
-    }
+        <div class="stat-card" style="--stat-color:#f72585;--stat-bg:rgba(247,37,133,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Avg. BPM Today</div>
+                    <div class="stat-card-value">98</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-heartbeat"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06d6a0;--stat-bg:rgba(6,214,160,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Tasks Completed</div>
+                    <div class="stat-card-value">14<span style="font-size:1.2rem;color:var(--text-muted)">/20</span></div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#fb8500;--stat-bg:rgba(251,133,0,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Shift Remaining</div>
+                    <div class="stat-card-value">2h 15m</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-grid" style="grid-template-columns: 1fr 1fr;">
+        <!-- Quick Actions Panel -->
+        <div class="card h-full">
+            <div class="card-header border-bottom">
+                <div class="card-title">Nursing Modules</div>
+                <div class="card-subtitle">Quick access to daily tasks</div>
+            </div>
+            <div class="card-body">
+                <div class="nursing-actions-grid">
+                    <button class="nursing-action-btn" @onclick="ShowVitalSigns">
+                        <div class="icon" style="background:rgba(247,37,133,0.1);color:#f72585">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <span class="label">Vital Signs</span>
+                    </button>
+                    <button class="nursing-action-btn" @onclick="ShowMedicationAdmin">
+                        <div class="icon" style="background:rgba(67,97,238,0.1);color:#4361ee">
+                            <i class="fas fa-pills"></i>
+                        </div>
+                        <span class="label">Medication</span>
+                    </button>
+                    <button class="nursing-action-btn" @onclick="ShowRoomManagement">
+                        <div class="icon" style="background:rgba(6,214,160,0.1);color:#06d6a0">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <span class="label">Room Mgmt</span>
+                    </button>
+                    <button class="nursing-action-btn">
+                        <div class="icon" style="background:rgba(251,133,0,0.1);color:#fb8500">
+                            <i class="fas fa-notes-medical"></i>
+                        </div>
+                        <span class="label">Care Plan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Module View -->
+        <div class="card h-full">
+            <div class="card-header border-bottom">
+                <div class="card-title">Active Module</div>
+            </div>
+            <div class="card-body" style="min-height: 200px;">
+                @if (_activeComponent != null)
+                {
+                    <div class="animate-fadeIn">
+                        <div class="d-flex justify-between items-center mb-4">
+                            <h4 class="mb-0 fw-600">Task Details</h4>
+                            <button class="btn btn-ghost btn-sm btn-icon" @onclick="() => _activeComponent = null">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="bg-hover p-4 rounded-md">
+                            @_activeComponent
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <div class="empty-state-icon" style="font-size:2rem;color:var(--surface-border)"><i class="fas fa-desktop"></i></div>
+                        <p class="mt-2 text-muted-color" style="font-size:0.85rem">Select a module from the left to view details</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
 </div>
 
+<style>
+    /* Welcome banner reuse */
+    .welcome-banner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #1a1d2e 0%, #0f3460 60%, #16213e 100%);
+        border-radius: 20px;
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        position: relative;
+        color: white;
+    }
+    .welcome-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .welcome-greeting { font-size: 0.875rem; color: rgba(255,255,255,0.55); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .welcome-name { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: white; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .welcome-sub { font-size: 0.835rem; color: rgba(255,255,255,0.5); }
+    .welcome-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    .welcome-deco { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); font-size: 80px; opacity: 0.1; pointer-events: none; }
+
+    /* Nursing action grid */
+    .nursing-actions-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .nursing-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+        border: 1.5px solid var(--surface-border);
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: left;
+    }
+    .nursing-action-btn:hover {
+        border-color: var(--brand-primary);
+        background: var(--surface-overlay);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67,97,238,0.12);
+    }
+    .nursing-action-btn .icon {
+        width: 44px; height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    .nursing-action-btn .label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+</style>
+
 @code {
-    [Parameter] public string FullName { get; set; } = "";
+    [Parameter] public string FullName { get; set; } = "Unknown";
     [Parameter] public string Department { get; set; } = "General";
     
     private int PatientCount = 12;
@@ -114,8 +227,18 @@
     private void ShowVitalSigns() { 
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "text-center p-4");
-            builder.AddContent(2, "Vital Signs Recording Module Active");
+            builder.AddAttribute(1, "class", "text-center");
+            builder.OpenElement(2, "i");
+            builder.AddAttribute(3, "class", "fas fa-heartbeat mb-3");
+            builder.AddAttribute(4, "style", "font-size:2rem;color:var(--brand-danger)");
+            builder.CloseElement();
+            builder.OpenElement(5, "h5");
+            builder.AddContent(6, "Vital Signs Recording Module");
+            builder.CloseElement();
+            builder.OpenElement(7, "p");
+            builder.AddAttribute(8, "class", "text-muted-color text-sm mt-2");
+            builder.AddContent(9, "Connect to telemetry or enter manually.");
+            builder.CloseElement();
             builder.CloseElement();
         };
     }
@@ -123,8 +246,18 @@
     private void ShowMedicationAdmin() { 
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "text-center p-4");
-            builder.AddContent(2, "Medication Administration System Active");
+            builder.AddAttribute(1, "class", "text-center");
+            builder.OpenElement(2, "i");
+            builder.AddAttribute(3, "class", "fas fa-pills mb-3");
+            builder.AddAttribute(4, "style", "font-size:2rem;color:var(--brand-primary)");
+            builder.CloseElement();
+            builder.OpenElement(5, "h5");
+            builder.AddContent(6, "Medication Administration System");
+            builder.CloseElement();
+            builder.OpenElement(7, "p");
+            builder.AddAttribute(8, "class", "text-muted-color text-sm mt-2");
+            builder.AddContent(9, "Scan patient barcode to proceed.");
+            builder.CloseElement();
             builder.CloseElement();
         };
     }
@@ -132,8 +265,18 @@
     private void ShowRoomManagement() { 
         _activeComponent = builder => {
             builder.OpenElement(0, "div");
-            builder.AddAttribute(1, "class", "text-center p-4");
-            builder.AddContent(2, "Room & Bed Allocation System Active");
+            builder.AddAttribute(1, "class", "text-center");
+            builder.OpenElement(2, "i");
+            builder.AddAttribute(3, "class", "fas fa-bed mb-3");
+            builder.AddAttribute(4, "style", "font-size:2rem;color:var(--brand-success)");
+            builder.CloseElement();
+            builder.OpenElement(5, "h5");
+            builder.AddContent(6, "Room & Bed Allocation");
+            builder.CloseElement();
+            builder.OpenElement(7, "p");
+            builder.AddAttribute(8, "class", "text-muted-color text-sm mt-2");
+            builder.AddContent(9, "Manage patient transfers and bed availability.");
+            builder.CloseElement();
             builder.CloseElement();
         };
     }

@@ -3,159 +3,311 @@
 @inject AppointmentService AppointmentService
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Appointments - Hospital Management System</PageTitle>
+<PageTitle>Appointments – Rutabo HMS</PageTitle>
 
-<div class="appointments-container">
+<div class="animate-in">
+
+    <!-- Page Header -->
     <div class="page-header">
         <div>
-            <h1>Appointments</h1>
+            <h1><i class="fas fa-calendar-check" style="color:var(--brand-primary);margin-right:10px;font-size:1.4rem;"></i>Appointments</h1>
             <p>Schedule and manage patient appointments</p>
         </div>
-        <a href="/appointments/new" class="btn btn-primary">+ Schedule Appointment</a>
-    </div>
-
-    <!-- Stats row -->
-    <div class="billing-stats">
-        <div class="stat-card">
-            <h3>Total Today</h3>
-            <p class="stat-value">@appointments.Count</p>
-        </div>
-        <div class="stat-card">
-            <h3>Scheduled</h3>
-            <p class="stat-value">@appointments.Count(a => a.Status == "Scheduled")</p>
-        </div>
-        <div class="stat-card">
-            <h3>Completed</h3>
-            <p class="stat-value">@appointments.Count(a => a.Status == "Completed")</p>
-        </div>
-        <div class="stat-card">
-            <h3>Cancelled</h3>
-            <p class="stat-value">@appointments.Count(a => a.Status == "Cancelled")</p>
+        <div class="page-header-actions">
+            <button class="btn btn-secondary" @onclick="LoadAppointments">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <a href="/appointments/new" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Schedule Appointment
+            </a>
         </div>
     </div>
 
-    <div class="appointments-grid">
-        <div class="card">
-            <div class="card-header">
-                <h2>Appointments</h2>
-                <div class="filter-controls">
-                    <input type="text" placeholder="Search..." @bind="searchQuery" @oninput="OnSearchChanged" class="search-input" style="width:180px" />
-                    <select @bind="selectedStatus" @bind:event="oninput" class="filter-select">
-                        <option value="">All Status</option>
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
+    <!-- Stat chips row -->
+    <div class="stat-grid" style="margin-bottom:24px;">
+        <div class="stat-card" style="--stat-color:#4361ee;--stat-bg:rgba(67,97,238,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Total</div>
+                    <div class="stat-card-value">@appointments.Count</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-calendar-alt"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#4cc9f0;--stat-bg:rgba(76,201,240,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Scheduled</div>
+                    <div class="stat-card-value">@appointments.Count(a => a.Status == "Scheduled")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#06d6a0;--stat-bg:rgba(6,214,160,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Completed</div>
+                    <div class="stat-card-value">@appointments.Count(a => a.Status == "Completed")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="stat-card" style="--stat-color:#ef233c;--stat-bg:rgba(239,35,60,0.1);">
+            <div class="stat-card-header">
+                <div>
+                    <div class="stat-card-label">Cancelled</div>
+                    <div class="stat-card-value">@appointments.Count(a => a.Status == "Cancelled")</div>
+                </div>
+                <div class="stat-card-icon"><i class="fas fa-times-circle"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Table Card -->
+    <div class="card">
+        <!-- Toolbar -->
+        <div class="card-header">
+            <div>
+                <div class="card-title">Appointment List</div>
+                <div class="card-subtitle">@filteredAppointments.Count records</div>
+            </div>
+            <div class="d-flex gap-2 items-center flex-wrap">
+                <div class="search-wrapper" style="min-width:240px;">
+                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                    <input type="text" placeholder="Search patient or doctor…"
+                           @bind="searchQuery" @oninput="OnSearchChanged"
+                           class="form-control" />
+                </div>
+                <select @bind="selectedStatus" @bind:event="oninput" class="form-control" style="width:170px;">
+                    <option value="">All Status</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <span>Loading appointments…</span>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-circle-exclamation"></i> @errorMessage
                 </div>
             </div>
-
-            <div class="card-body">
-                @if (isLoading)
-                {
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
-                        <p>Loading appointments...</p>
-                    </div>
-                }
-                else if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    <div class="alert alert-danger">@errorMessage</div>
-                }
-                else if (filteredAppointments?.Count > 0)
-                {
-                    <div class="appointments-list">
-                        @foreach (var apt in filteredAppointments)
+        }
+        else if (filteredAppointments.Count > 0)
+        {
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in filteredAppointments)
                         {
-                            <div class="appointment-card">
-                                <div class="appointment-time">
-                                    <div class="time-badge">
-                                        <span class="time">@apt.AppointmentTime.ToString(@"hh\:mm")</span>
-                                        <span class="date">@apt.AppointmentDate.ToString("MMM dd")</span>
+                            <tr>
+                                <td>
+                                    <div class="apt-datetime">
+                                        <div class="apt-date">@a.AppointmentDate.ToString("dd MMM yyyy")</div>
+                                        <div class="apt-time">@a.AppointmentTime</div>
                                     </div>
-                                </div>
-                                <div class="appointment-details">
-                                    <h3>@apt.PatientName</h3>
-                                    <p class="doctor">👨‍⚕️ @apt.DoctorName</p>
-                                    <p class="reason">@apt.Reason</p>
-                                    <div class="appointment-meta">
-                                        <span class="badge badge-@apt.Status.ToLower().Replace(" ", "-")">@apt.Status</span>
-                                        <span class="room">@apt.AppointmentType</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex items-center gap-2">
+                                        <div class="avatar avatar-sm">
+                                            @(a.PatientName.Length > 0 ? a.PatientName[0].ToString().ToUpper() : "?")
+                                        </div>
+                                        <span class="fw-600" style="font-size:0.875rem;">@a.PatientName</span>
                                     </div>
-                                </div>
-                                <div class="appointment-actions">
-                                    <button class="btn-icon" title="Edit" @onclick="() => EditAppointment(apt.AppointmentId)">✏️</button>
-                                    @if (apt.Status == "Scheduled" || apt.Status == "Confirmed")
-                                    {
-                                        <button class="btn-icon" title="Complete" @onclick="@(() => UpdateStatus(apt.AppointmentId, "Completed"))">✓</button>
-                                        <button class="btn-icon btn-danger" title="Cancel" @onclick="@(() => UpdateStatus(apt.AppointmentId, "Cancelled"))">✕</button>
+                                </td>
+                                <td>
+                                    <div class="d-flex items-center gap-2">
+                                        <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#06d6a0,#0891b2)">
+                                            @(a.DoctorName.Length > 0 ? a.DoctorName[0].ToString().ToUpper() : "D")
+                                        </div>
+                                        <span style="font-size:0.875rem;">@a.DoctorName</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info">@(a.AppointmentType ?? "General")</span>
+                                </td>
+                                <td>
+                                    @{
+                                        var badgeClass = a.Status switch {
+                                            "Completed" => "badge-success",
+                                            "Cancelled" => "badge-danger",
+                                            "In Progress" => "badge-warning",
+                                            "Confirmed" => "badge-primary",
+                                            _ => "badge-info"
+                                        };
                                     }
-                                </div>
-                            </div>
+                                    <span class="badge @badgeClass">@a.Status</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2" style="justify-content:flex-end;">
+                                        @if (a.Status == "Scheduled" || a.Status == "Confirmed")
+                                        {
+                                            <button class="btn btn-success btn-sm" @onclick="() => UpdateStatus(a.AppointmentId, \"Completed\")">
+                                                <i class="fas fa-check"></i> Done
+                                            </button>
+                                            <button class="btn btn-danger btn-sm" @onclick="() => UpdateStatus(a.AppointmentId, \"Cancelled\")">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        }
+                                        <button class="btn btn-ghost btn-sm btn-icon" @onclick="() => EditAppointment(a.AppointmentId)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         }
-                    </div>
-                }
-                else
-                {
-                    <div class="empty-state">
-                        <p>No appointments found</p>
-                        <a href="/appointments/new" class="btn btn-primary mt-2">Schedule First Appointment</a>
-                    </div>
-                }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+                <h3>No appointments found</h3>
+                <p>No appointments match your search criteria.</p>
+                <a href="/appointments/new" class="btn btn-primary mt-4">
+                    <i class="fas fa-plus"></i> Schedule Appointment
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Mini Calendar -->
+    <div class="card mt-5">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Calendar View</div>
+                <div class="card-subtitle">Appointment density overview</div>
+            </div>
+            <div class="d-flex items-center gap-3">
+                <button class="btn btn-secondary btn-sm" @onclick="PrevMonth">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <strong style="font-family:'Outfit',sans-serif;font-size:1rem;">@currentMonth.ToString("MMMM yyyy")</strong>
+                <button class="btn btn-secondary btn-sm" @onclick="NextMonth">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h2>Calendar View</h2>
+        <div class="card-body">
+            <div class="cal-grid-head">
+                @foreach (var d in new[] { "Sun","Mon","Tue","Wed","Thu","Fri","Sat" })
+                {
+                    <div class="cal-head-cell">@d</div>
+                }
             </div>
-            <div class="card-body">
-                <div class="mini-calendar">
-                    <div class="calendar-header">
-                        <button class="btn-nav" @onclick="PrevMonth">←</button>
-                        <span class="month-year">@currentMonth.ToString("MMMM yyyy")</span>
-                        <button class="btn-nav" @onclick="NextMonth">→</button>
-                    </div>
-                    <div class="calendar-grid">
-                        <div class="day-header">Sun</div>
-                        <div class="day-header">Mon</div>
-                        <div class="day-header">Tue</div>
-                        <div class="day-header">Wed</div>
-                        <div class="day-header">Thu</div>
-                        <div class="day-header">Fri</div>
-                        <div class="day-header">Sat</div>
-
-                        @{
-                            var firstDay = new DateTime(currentMonth.Year, currentMonth.Month, 1);
-                            var startOffset = (int)firstDay.DayOfWeek;
-                            var daysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
-                            for (int i = 0; i < startOffset; i++)
-                            {
-                                <div class="calendar-day empty"></div>
-                            }
-                            for (int day = 1; day <= daysInMonth; day++)
-                            {
-                                var d = day;
-                                var date = new DateTime(currentMonth.Year, currentMonth.Month, d);
-                                var hasApt = appointments.Any(a => a.AppointmentDate.Date == date.Date);
-                                var isToday = date.Date == DateTime.Today;
-                                <div class="calendar-day @(isToday ? "today" : "") @(hasApt ? "has-appointment" : "")"
-                                     title="@(hasApt ? $"{appointments.Count(a => a.AppointmentDate.Date == date.Date)} appointment(s)" : "")">
-                                    @d
-                                    @if (hasApt)
-                                    {
-                                        <span class="apt-dot"></span>
-                                    }
-                                </div>
-                            }
+            <div class="cal-grid">
+                @{
+                    var firstDay = new DateTime(currentMonth.Year, currentMonth.Month, 1);
+                    var offset = (int)firstDay.DayOfWeek;
+                    var daysInMonth = DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month);
+                }
+                @for (int i = 0; i < offset; i++)
+                {
+                    <div class="cal-cell empty"></div>
+                }
+                @for (int day = 1; day <= daysInMonth; day++)
+                {
+                    var d = day;
+                    var date = new DateTime(currentMonth.Year, currentMonth.Month, d);
+                    var count = appointments.Count(a => a.AppointmentDate.Date == date.Date);
+                    var isToday = date.Date == DateTime.Today;
+                    <div class="cal-cell @(isToday ? "cal-today" : "") @(count > 0 ? "cal-has-apt" : "")">
+                        <span class="cal-day-num">@d</span>
+                        @if (count > 0)
+                        {
+                            <span class="cal-apt-badge">@count</span>
                         }
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>
+
 </div>
+
+<style>
+    .apt-datetime { line-height: 1.3; }
+    .apt-date { font-weight: 600; font-size: 0.855rem; color: var(--text-primary); }
+    .apt-time { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Calendar */
+    .cal-grid-head {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: 4px;
+    }
+    .cal-head-cell {
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        padding: 6px 0;
+    }
+    .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+    }
+    .cal-cell {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        position: relative;
+        gap: 2px;
+    }
+    .cal-cell:hover:not(.empty) { background: var(--surface-hover); }
+    .cal-cell.empty { cursor: default; }
+    .cal-day-num { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+    .cal-today { background: var(--brand-primary) !important; }
+    .cal-today .cal-day-num { color: white; font-weight: 700; }
+    .cal-has-apt .cal-day-num { color: var(--brand-primary); font-weight: 700; }
+    .cal-today.cal-has-apt .cal-day-num { color: white; }
+    .cal-apt-badge {
+        font-size: 0.6rem;
+        font-weight: 700;
+        background: var(--brand-primary);
+        color: white;
+        border-radius: 99px;
+        min-width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        line-height: 1;
+    }
+    .cal-today .cal-apt-badge { background: white; color: var(--brand-primary); }
+</style>
 
 @code {
     private List<AppointmentModel> appointments = new();
@@ -177,6 +329,7 @@
         {
             isLoading = true;
             errorMessage = null;
+            StateHasChanged();
             appointments = await AppointmentService.GetAppointmentsAsync();
             ApplyFilters();
         }
@@ -200,10 +353,10 @@
     {
         filteredAppointments = appointments
             .Where(a => string.IsNullOrEmpty(searchQuery) ||
-                   a.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                   a.DoctorName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                        a.PatientName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                        a.DoctorName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
             .Where(a => string.IsNullOrEmpty(selectedStatus) ||
-                   a.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
+                        a.Status.Equals(selectedStatus, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(a => a.AppointmentDate)
             .ThenBy(a => a.AppointmentTime)
             .ToList();

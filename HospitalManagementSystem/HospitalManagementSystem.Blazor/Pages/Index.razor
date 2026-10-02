@@ -2,8 +2,9 @@
 @using HospitalManagementSystem.Blazor.Services
 @inject NavigationManager Navigation
 @inject AuthService AuthService
+@layout LoginLayout
 
-<PageTitle>Hospital Management System - Home</PageTitle>
+<PageTitle>Rutabo HMS – The Future of Healthcare</PageTitle>
 
 @code {
     protected override async Task OnInitializedAsync()
@@ -16,244 +17,274 @@
     }
 }
 
-<div class="home-container">
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">Rutabo Centre de Santé</h1>
-                <p class="hero-subtitle">Advanced Hospital Management System</p>
-                <p class="hero-description">Streamline your healthcare operations with our comprehensive digital platform</p>
-                <div class="hero-buttons">
-                    <a href="/login" class="btn btn-primary btn-lg">Login</a>
-                    <a href="/register" class="btn btn-outline-primary btn-lg">Register</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-icon">🏥</div>
-            </div>
+<div class="landing-page">
+    
+    <!-- Navbar -->
+    <nav class="landing-nav">
+        <div class="landing-brand">
+            <div class="brand-icon">🏥</div>
+            <div class="brand-text">Rutabo HMS</div>
         </div>
-    </section>
+        <div class="landing-nav-links">
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="/login" class="nav-login">Sign In</a>
+            <a href="/register" class="btn btn-primary btn-sm">Register</a>
+        </div>
+    </nav>
 
-    <!-- Services Section -->
-    <section class="services-section">
-        <div class="container">
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">Complete healthcare management solutions</p>
+    <!-- Hero -->
+    <header class="landing-hero">
+        <div class="hero-bg">
+            <div class="bg-shape shape-1"></div>
+            <div class="bg-shape shape-2"></div>
+        </div>
+        <div class="hero-content text-center">
+            <span class="hero-badge">✨ Version 2.0 is Live</span>
+            <h1 class="hero-title">The Operating System for<br/><span class="text-gradient">Modern Healthcare</span></h1>
+            <p class="hero-subtitle">
+                Rutabo Centre de Santé's unified platform for managing patients, staff, pharmacies, and billing — all in one seamlessly integrated dashboard.
+            </p>
+            <div class="hero-actions">
+                <a href="/login" class="btn btn-primary btn-lg"><i class="fas fa-sign-in-alt"></i> Go to Dashboard</a>
+                <a href="#features" class="btn btn-secondary btn-lg">Explore Features</a>
+            </div>
             
-            <div class="services-grid">
-                <!-- Patient Management -->
-                <div class="service-card">
-                    <div class="service-icon">👥</div>
-                    <h3>Patient Management</h3>
-                    <p>Register, track, and manage patient information with complete medical history</p>
-                    <ul class="service-features">
-                        <li>Patient Registration</li>
-                        <li>Medical Records</li>
-                        <li>Health History</li>
-                    </ul>
+            <div class="hero-mockup animate-slideUp">
+                <div class="mockup-header">
+                    <div class="mockup-dots"><span></span><span></span><span></span></div>
+                    <div class="mockup-url">rutabo-hms.local/dashboard</div>
                 </div>
-
-                <!-- Appointments -->
-                <div class="service-card">
-                    <div class="service-icon">📅</div>
-                    <h3>Appointments</h3>
-                    <p>Schedule and manage doctor appointments with automated reminders</p>
-                    <ul class="service-features">
-                        <li>Schedule Appointments</li>
-                        <li>Doctor Availability</li>
-                        <li>Appointment Tracking</li>
-                    </ul>
-                </div>
-
-                <!-- Medical Records -->
-                <div class="service-card">
-                    <div class="service-icon">📋</div>
-                    <h3>Medical Records</h3>
-                    <p>Maintain comprehensive medical records with diagnoses and prescriptions</p>
-                    <ul class="service-features">
-                        <li>Visit History</li>
-                        <li>Diagnoses</li>
-                        <li>Prescriptions</li>
-                    </ul>
-                </div>
-
-                <!-- Pharmacy -->
-                <div class="service-card">
-                    <div class="service-icon">💊</div>
-                    <h3>Pharmacy</h3>
-                    <p>Manage medicine inventory and prescription dispensing</p>
-                    <ul class="service-features">
-                        <li>Medicine Stock</li>
-                        <li>Prescription Management</li>
-                        <li>Dispensing Workflow</li>
-                    </ul>
-                </div>
-
-                <!-- Billing -->
-                <div class="service-card">
-                    <div class="service-icon">💰</div>
-                    <h3>Billing & Payments</h3>
-                    <p>Generate invoices and track payment status with insurance integration</p>
-                    <ul class="service-features">
-                        <li>Invoice Generation</li>
-                        <li>Payment Tracking</li>
-                        <li>Insurance Claims</li>
-                    </ul>
-                </div>
-
-                <!-- Room Management -->
-                <div class="service-card">
-                    <div class="service-icon">🏥</div>
-                    <h3>Room Management</h3>
-                    <p>Track room availability and bed occupancy in real-time</p>
-                    <ul class="service-features">
-                        <li>Room Availability</li>
-                        <li>Bed Occupancy</li>
-                        <li>Room Assignments</li>
-                    </ul>
-                </div>
-
-                <!-- Inventory -->
-                <div class="service-card">
-                    <div class="service-icon">📦</div>
-                    <h3>Inventory Management</h3>
-                    <p>Monitor medical supplies and equipment stock levels</p>
-                    <ul class="service-features">
-                        <li>Stock Tracking</li>
-                        <li>Low Stock Alerts</li>
-                        <li>Reorder Management</li>
-                    </ul>
-                </div>
-
-                <!-- Blood Bank -->
-                <div class="service-card">
-                    <div class="service-icon">🩸</div>
-                    <h3>Blood Bank</h3>
-                    <p>Manage blood inventory by type and track donations</p>
-                    <ul class="service-features">
-                        <li>Blood Type Inventory</li>
-                        <li>Donation Tracking</li>
-                        <li>Request Management</li>
-                    </ul>
-                </div>
-
-                <!-- Ambulance Service -->
-                <div class="service-card">
-                    <div class="service-icon">🚑</div>
-                    <h3>Ambulance Service</h3>
-                    <p>Manage ambulance fleet and dispatch operations</p>
-                    <ul class="service-features">
-                        <li>Fleet Management</li>
-                        <li>Driver Information</li>
-                        <li>Dispatch Tracking</li>
-                    </ul>
-                </div>
-
-                <!-- Emergency Alerts -->
-                <div class="service-card">
-                    <div class="service-icon">🚨</div>
-                    <h3>Emergency Alerts</h3>
-                    <p>Priority-based alert system for critical situations</p>
-                    <ul class="service-features">
-                        <li>Alert Management</li>
-                        <li>Priority Levels</li>
-                        <li>Real-time Notifications</li>
-                    </ul>
-                </div>
-
-                <!-- Staff Management -->
-                <div class="service-card">
-                    <div class="service-icon">👨‍⚕️</div>
-                    <h3>Staff Management</h3>
-                    <p>Manage doctors, nurses, and other healthcare staff</p>
-                    <ul class="service-features">
-                        <li>Staff Profiles</li>
-                        <li>Department Assignment</li>
-                        <li>Availability Tracking</li>
-                    </ul>
-                </div>
-
-                <!-- Analytics & Reports -->
-                <div class="service-card">
-                    <div class="service-icon">📈</div>
-                    <h3>Analytics & Reports</h3>
-                    <p>Generate comprehensive reports and business intelligence</p>
-                    <ul class="service-features">
-                        <li>Performance Metrics</li>
-                        <li>Revenue Reports</li>
-                        <li>Occupancy Statistics</li>
-                    </ul>
+                <div class="mockup-body">
+                    <div class="mockup-sidebar"></div>
+                    <div class="mockup-main">
+                        <div class="mockup-cards">
+                            <div class="mock-card card-1"></div>
+                            <div class="mock-card card-2"></div>
+                            <div class="mock-card card-3"></div>
+                        </div>
+                        <div class="mock-table"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="container">
-            <h2 class="section-title">Why Choose Us</h2>
+    <!-- Features -->
+    <section id="features" class="features-section">
+        <div class="text-center mb-6">
+            <h2 class="section-title">Everything you need to run a hospital</h2>
+            <p class="section-subtitle">Designed for speed, built for reliability.</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="color:var(--brand-primary); background:rgba(67,97,238,0.1)">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Patient Management</h3>
+                <p>Register, track, and manage patient records with secure, HIPAA-compliant storage.</p>
+            </div>
             
-            <div class="features-grid">
-                <div class="feature-item">
-                    <div class="feature-icon">🔒</div>
-                    <h4>Secure & Compliant</h4>
-                    <p>HIPAA compliant with end-to-end encryption</p>
+            <div class="feature-card">
+                <div class="feature-icon" style="color:var(--brand-success); background:rgba(6,214,160,0.1)">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">⚡</div>
-                    <h4>Fast & Reliable</h4>
-                    <p>Lightning-fast performance with 99.9% uptime</p>
+                <h3>Smart Scheduling</h3>
+                <p>Avoid double-booking with our intelligent appointment tracking for all departments.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon" style="color:var(--brand-warning); background:rgba(251,133,0,0.1)">
+                    <i class="fas fa-pills"></i>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">📱</div>
-                    <h4>Mobile Friendly</h4>
-                    <p>Access from any device, anywhere, anytime</p>
+                <h3>Pharmacy & Inventory</h3>
+                <p>Real-time tracking of medical supplies and automated prescription dispensing.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon" style="color:var(--color-admin); background:rgba(114,9,183,0.1)">
+                    <i class="fas fa-file-invoice-dollar"></i>
                 </div>
-                <div class="feature-item">
-                    <div class="feature-icon">🤝</div>
-                    <h4>24/7 Support</h4>
-                    <p>Dedicated support team always ready to help</p>
-                </div>
+                <h3>Integrated Billing</h3>
+                <p>Automate invoicing, track payments, and manage insurance claims effortlessly.</p>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <h2>Ready to Transform Your Healthcare Operations?</h2>
-            <p>Join hundreds of healthcare facilities using our system</p>
-            <a href="/login" class="btn btn-primary btn-lg">Get Started Now</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h5>About</h5>
-                    <p>Rutabo Centre de Santé Hospital Management System</p>
-                </div>
-                <div class="footer-section">
-                    <h5>Quick Links</h5>
-                    <ul>
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h5>Contact</h5>
-                    <p>Email: info@rutabo.rw</p>
-                    <p>Phone: +250 XXX XXX XXX</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Rutabo Centre de Santé. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 </div>
 
-
+<style>
+    body { background: #ffffff; }
+    
+    .landing-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .landing-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .brand-icon { font-size: 24px; }
+    .brand-text { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #1a1d2e; }
+    
+    .landing-nav-links { display: flex; align-items: center; gap: 24px; }
+    .landing-nav-links a:not(.btn) { color: #5b6278; font-weight: 600; font-size: 0.9rem; transition: color 0.2s; }
+    .landing-nav-links a:hover:not(.btn) { color: #4361ee; }
+    
+    .landing-hero {
+        position: relative;
+        padding: 80px 20px 0;
+        overflow: hidden;
+    }
+    
+    .hero-bg {
+        position: absolute; inset: 0; z-index: -1;
+        overflow: hidden;
+    }
+    
+    .bg-shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
+    .shape-1 { width: 500px; height: 500px; background: #4361ee; top: -100px; left: -100px; }
+    .shape-2 { width: 400px; height: 400px; background: #06d6a0; bottom: 100px; right: -50px; }
+    
+    .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .hero-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(67,97,238,0.1);
+        color: #4361ee;
+        border-radius: 99px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        border: 1px solid rgba(67,97,238,0.2);
+    }
+    
+    .hero-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 4rem;
+        font-weight: 900;
+        line-height: 1.1;
+        color: #1a1d2e;
+        margin-bottom: 24px;
+        letter-spacing: -1.5px;
+    }
+    
+    .text-gradient {
+        background: linear-gradient(135deg, #4361ee, #7209b7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: #5b6278;
+        max-width: 600px;
+        margin: 0 auto 36px;
+        line-height: 1.6;
+    }
+    
+    .hero-actions { display: flex; gap: 16px; justify-content: center; margin-bottom: 60px; }
+    
+    .hero-mockup {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e5e8f0;
+        box-shadow: 0 24px 48px rgba(0,0,0,0.08);
+        max-width: 900px;
+        margin: 0 auto;
+        overflow: hidden;
+        height: 400px;
+    }
+    
+    .mockup-header {
+        background: #f8f9fd;
+        border-bottom: 1px solid #e5e8f0;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .mockup-dots { display: flex; gap: 6px; }
+    .mockup-dots span { width: 10px; height: 10px; border-radius: 50%; background: #e5e8f0; }
+    .mockup-dots span:nth-child(1) { background: #ff5f56; }
+    .mockup-dots span:nth-child(2) { background: #ffbd2e; }
+    .mockup-dots span:nth-child(3) { background: #27c93f; }
+    
+    .mockup-url {
+        flex: 1;
+        text-align: center;
+        background: #ffffff;
+        margin: 0 40px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        padding: 4px;
+        color: #9ba3b8;
+    }
+    
+    .mockup-body { display: flex; height: 100%; }
+    .mockup-sidebar { width: 180px; background: #1a1d2e; border-right: 1px solid #e5e8f0; }
+    .mockup-main { flex: 1; padding: 24px; background: #f0f2f8; }
+    
+    .mockup-cards { display: flex; gap: 16px; margin-bottom: 24px; }
+    .mock-card { height: 80px; background: #fff; border-radius: 8px; flex: 1; border: 1px solid #e5e8f0; }
+    .mock-table { height: 200px; background: #fff; border-radius: 8px; border: 1px solid #e5e8f0; }
+    
+    .features-section {
+        max-width: 1200px;
+        margin: 80px auto;
+        padding: 0 20px;
+    }
+    
+    .section-title { font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; color: #1a1d2e; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .section-subtitle { font-size: 1.1rem; color: #5b6278; }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .feature-card {
+        padding: 30px;
+        border-radius: 16px;
+        background: #f8f9fd;
+        border: 1px solid #e5e8f0;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    }
+    
+    .feature-icon {
+        width: 50px; height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .feature-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 0.95rem; color: #5b6278; line-height: 1.5; }
+    
+    @@media (max-width: 768px) {
+        .hero-title { font-size: 2.5rem; }
+        .hero-mockup { display: none; }
+        .landing-nav-links a:not(.btn) { display: none; }
+    }
+</style>
